@@ -12,12 +12,15 @@ import {
 	TextInput,
 	TouchableOpacity,
 	Text,
+	Switch,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getCatalogTipoVisitas } from "@gcVigilantes/store/TipoVisitas/api";
 import { RootState } from "@gcVigilantes/store";
 import { getCatalogTipoIngreso } from "@gcVigilantes/store/TipoIngreso/api";
 import { VehicleInfo } from "@gcVigilantes/Components/VehicleInfo/VehicleInfo";
+import { GuestPicker } from "@gcVigilantes/Components/GuestPicker/GuestPicker";
+import { Switcher } from "@gcVigilantes/Components/Switcher/Switcher";
 
 export const TipoVisitasIcon: { [key: string]: React.ReactNode } = {
 	Visita: <FontAwesome name='user' size={24} color='darkgray' />,
@@ -52,6 +55,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 		vehicle_model: "",
 		vehicle_color: "",
 		vehicle_plate: "",
+		multiple_entrada: false,
 	});
 
 	const dispatch = useDispatch();
@@ -190,11 +194,22 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 						}}
 					/>
 				)}
-				{formValues.tipo_ingreso === "2" && (
-					<View>
-						<Text>Guest Picker</Text>
-					</View>
-				)}
+				<Text style={{ marginLeft: 10 }}>Registar acompanante</Text>
+				<GuestPicker />
+				<Switcher
+					title='Entrada multiple:'
+					value={formValues.multiple_entrada}
+					handleOnChange={(value) => {
+						setFormValues((prev) => ({ ...prev, multiple_entrada: value }));
+					}}
+				/>
+				<Switcher
+					title='Entrada multiple:'
+					value={formValues.multiple_entrada}
+					handleOnChange={(value) => {
+						setFormValues((prev) => ({ ...prev, multiple_entrada: value }));
+					}}
+				/>
 			</ScrollView>
 		</SafeAreaView>
 	);
