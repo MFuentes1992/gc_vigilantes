@@ -22,12 +22,15 @@ import { VehicleInfo } from "@gcVigilantes/Components/VehicleInfo/VehicleInfo";
 import { GuestPicker } from "@gcVigilantes/Components/GuestPicker/GuestPicker";
 import { Switcher } from "@gcVigilantes/Components/Switcher/Switcher";
 import { VisitaDetails } from "@gcVigilantes/Components/VisitaDetails/VisitaDetails";
+import { app_colors } from "@gcVigilantes/utils/default.colors";
+import { card_styles } from "./constants";
+import { CardTitle } from "@gcVigilantes/Components/CardTitle/CardTitle";
 
 export const TipoVisitasIcon: { [key: string]: React.ReactNode } = {
-	Visita: <FontAwesome name='user' size={24} color='darkgray' />,
-	Provedor: <FontAwesome name='truck' size={24} color='darkgray' />,
+	Visita: <FontAwesome name='user' size={18} color='darkgray' />,
+	Provedor: <FontAwesome name='truck' size={18} color='darkgray' />,
 	["Servicio domestico"]: (
-		<FontAwesome name='wrench' size={24} color='darkgray' />
+		<FontAwesome name='wrench' size={18} color='darkgray' />
 	),
 	["Vehículo"]: <FontAwesome name='car' size={24} color='darkgray' />,
 	Peatonal: <FontAwesome5 name='walking' size={24} color='darkgray' />,
@@ -57,6 +60,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 		vehicle_color: "",
 		vehicle_plate: "",
 		multiple_entrada: false,
+		notificaciones: false,
 	});
 
 	const dispatch = useDispatch();
@@ -78,13 +82,13 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 					autor='analisis@dasgalu.com.mx'
 					direccion='Paseos de Tezoyuca, Benito Juarez, Morelos'
 					estatus='Activa'
+					notificaciones={formValues.notificaciones}
+					handleNotificaciones={(value) => {
+						setFormValues((prev) => ({ ...prev, notificaciones: value }));
+					}}
 				/>
-				<View
-					style={{
-						flex: 0.16,
-						justifyContent: "center",
-						alignItems: "center",
-					}}>
+				<View style={card_styles}>
+					<CardTitle title='tipo de visita' uppercase />
 					<RadioGroup
 						options={catalogVisitas.map((catalog) => ({
 							id: catalog.id,
@@ -98,23 +102,20 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 						}}
 					/>
 				</View>
-				<View
-					style={{
-						justifyContent: "center",
-						alignItems: "center",
-						marginBottom: 15,
-					}}>
+				<View style={card_styles}>
+					<CardTitle title='Nombre' uppercase />
 					<TextInput
 						style={{
-							width: "80%",
+							width: "100%",
 							height: 40,
 							borderBottomColor: "gray",
-							borderBottomWidth: 1,
+							borderBottomWidth: 0.5,
 						}}
+						placeholder='Ingrese aqui el nombre de la visita'
 						onFocus={() => {}}
 						onBlur={() => {}}
 						onChangeText={(text) => console.log("nombre visita", text)}
-						autoCapitalize='none'
+						autoCapitalize='words'
 						maxLength={50}
 					/>
 				</View>
@@ -203,13 +204,6 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 				)}
 				<Text style={{ marginLeft: 10 }}>Registar acompanante</Text>
 				<GuestPicker />
-				<Switcher
-					title='Entrada multiple:'
-					value={formValues.multiple_entrada}
-					handleOnChange={(value) => {
-						setFormValues((prev) => ({ ...prev, multiple_entrada: value }));
-					}}
-				/>
 				<Switcher
 					title='Entrada multiple:'
 					value={formValues.multiple_entrada}

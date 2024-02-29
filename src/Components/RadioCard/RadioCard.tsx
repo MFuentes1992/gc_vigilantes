@@ -22,7 +22,7 @@ export const RadioCard = ({
 			onPress={() => handleChange(id)}
 			style={
 				selected
-					? [formStyles.radioButtonsContainer, ,]
+					? [formStyles.radioButtonsContainer]
 					: formStyles.radioButtonsContainer2
 			}>
 			<View style={formStyles.descPosition}>

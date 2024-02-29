@@ -1,3 +1,6 @@
+import { app_colors } from "@gcVigilantes/utils/default.colors";
+import { ViewStyle } from "react-native";
+
 export type VisitaInfoProps = {
 	nombre: string;
 	desde: string;
@@ -17,4 +20,14 @@ export type VisitaInfoProps = {
 	ciudad: string;
 	estado: string;
 	cp: string;
+};
+
+export const card_styles: ViewStyle = {
+	margin: "5%",
+	flex: 0.16,
+	justifyContent: "center",
+	backgroundColor: app_colors.white,
+	padding: "2%",
+	borderColor: app_colors.ligth_bg,
+	borderWidth: 0.5,
 };

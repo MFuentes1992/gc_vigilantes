@@ -1,3 +1,4 @@
+import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { StyleSheet } from "react-native";
 
 export const formStyles = StyleSheet.create({
@@ -16,28 +17,28 @@ export const formStyles = StyleSheet.create({
 	radioButtonsContainer: {
 		flexDirection: "row",
 		marginHorizontal: 4,
-		borderWidth: 2,
-		borderColor: "blue",
 		width: 100,
 		height: 100,
 		borderRadius: 5,
 		marginVertical: 3,
 		margin: "2%",
+		borderColor: app_colors.secondary,
+		borderWidth: 1,
 	},
 	radioButton: {
-		height: 20,
-		width: 20,
+		height: 15,
+		width: 15,
 		borderRadius: 12,
-		borderWidth: 1.8,
-		borderColor: "blue",
+		borderWidth: 1,
+		borderColor: app_colors.secondary,
 		alignItems: "center",
 		justifyContent: "center",
 	},
 	radioButton2: {
-		height: 20,
-		width: 20,
+		height: 15,
+		width: 15,
 		borderRadius: 12,
-		borderWidth: 1.8,
+		borderWidth: 1,
 		borderColor: "gray",
 		alignItems: "center",
 		justifyContent: "center",
@@ -46,7 +47,7 @@ export const formStyles = StyleSheet.create({
 		height: 10,
 		width: 10,
 		borderRadius: 6,
-		backgroundColor: "blue",
+		backgroundColor: app_colors.secondary,
 	},
 	radioBtnPosition: {
 		//ajustar al lado derecho
@@ -73,11 +74,15 @@ export const formStyles = StyleSheet.create({
 		marginVertical: 3,
 	},
 	text2: {
-		color: "gray",
+		fontSize: 12,
+		color: app_colors.text_gray,
 	},
-	text1: {},
+	text1: {
+		fontSize: 12,
+		color: app_colors.text_gray,
+	},
 	name: {
-		fontSize: 18,
+		fontSize: 12,
 		borderBottomWidth: 0.9,
 		borderBottomColor: "black",
 		width: "95%",

@@ -6,6 +6,8 @@ export type VisitaDetailsProps = {
 	autor: string;
 	estatus: string;
 	direccion: string;
+	notificaciones: boolean;
+	handleNotificaciones: (value: boolean) => void;
 };
 
 export const details_container: ViewStyle = {
@@ -18,6 +20,15 @@ export const details_container: ViewStyle = {
 	padding: "5%",
 	borderBottomColor: app_colors.text_gray,
 	borderBottomWidth: 0.5,
+};
+
+export const details_menu: ViewStyle = {
+	flex: 1,
+	flexDirection: "row",
+	justifyContent: "space-around",
+	width: "100%",
+	backgroundColor: app_colors.white,
+	marginBottom: 15,
 };
 
 export const details_info: ViewStyle = {

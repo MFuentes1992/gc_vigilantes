@@ -19,7 +19,7 @@ export const RadioGroup = (props: RadioGroupProps) => {
 			style={{
 				flexDirection: props.orientation === "horizontal" ? "row" : "column",
 				flex: 1,
-				justifyContent: "space-around",
+				justifyContent: "space-between",
 				width: "90%",
 				margin: "auto",
 			}}>
