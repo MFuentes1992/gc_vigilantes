@@ -6,6 +6,7 @@ import { InitializeConnection, authenticate } from "./constants";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@gcVigilantes/store";
 import { setUserData } from "@gcVigilantes/store/UserData";
+import { app_colors } from "@gcVigilantes/utils/default.colors";
 
 export const HomeScreen = ({ navigation }: any) => {
 	const dispatch = useDispatch();
@@ -66,7 +67,7 @@ export const HomeScreen = ({ navigation }: any) => {
 			});
 	};
 	return (
-		<View style={{ flex: 1 }}>
+		<View style={{ flex: 1, top: "5%" }}>
 			<View
 				style={{
 					flex: 0.4,
@@ -82,7 +83,7 @@ export const HomeScreen = ({ navigation }: any) => {
 						alignItems: "center",
 						flexDirection: "row",
 						padding: 5,
-						backgroundColor: "lightgray",
+						backgroundColor: app_colors.ligth_bg,
 						borderRadius: 10,
 					}}>
 					<Image
@@ -102,6 +103,8 @@ export const HomeScreen = ({ navigation }: any) => {
 						width: "40%",
 						backgroundColor: "#5DADE2",
 						borderRadius: 5,
+						borderTopRightRadius: 0,
+						borderBottomRightRadius: 0,
 						height: 30,
 						justifyContent: "center",
 						alignItems: "center",
@@ -122,6 +125,8 @@ export const HomeScreen = ({ navigation }: any) => {
 						width: "40%",
 						backgroundColor: "#FFF",
 						borderRadius: 5,
+						borderTopLeftRadius: 0,
+						borderBottomLeftRadius: 0,
 						height: 30,
 						justifyContent: "center",
 						alignItems: "center",
