@@ -2,6 +2,8 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import TipoVisitas from "./TipoVisitas";
+import UserData from "./UserData";
+import TipoIngreso from "./TipoIngreso";
 
 const persistConfig = {
 	storage: AsyncStorage,
@@ -9,6 +11,8 @@ const persistConfig = {
 };
 const rootReducer = combineReducers({
 	tipoVisitas: TipoVisitas,
+	userData: UserData,
+	tipoIngreso: TipoIngreso,
 });
 
 export const persistedReducer = persistReducer(persistConfig, rootReducer);

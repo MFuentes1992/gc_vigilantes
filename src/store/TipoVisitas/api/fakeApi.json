@@ -1,0 +1,17 @@
+[
+	{
+		"descripcion": "Vista a casa",
+		"id": "1",
+		"tipo_visita": "Visita"
+	},
+	{
+		"descripcion": "Servicios de limpieza en general",
+		"id": "2",
+		"tipo_visita": "Servicio domestico"
+	},
+	{
+		"descripcion": "Provedor de servicios, cable, mant, etc.",
+		"id": "3",
+		"tipo_visita": "Provedor"
+	}
+]

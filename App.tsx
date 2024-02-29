@@ -6,6 +6,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "@gcVigilantes/pages/HomeScreen";
 import { PersistGate } from "redux-persist/integration/react";
+import VisitaInfo from "@gcVigilantes/pages/VisitaInfo";
 
 export default function App() {
 	const Stack = createStackNavigator();
@@ -14,8 +15,9 @@ export default function App() {
 		<Provider store={store}>
 			<PersistGate loading={null} persistor={persistor}>
 				<NavigationContainer>
-					<Stack.Navigator initialRouteName='home'>
-						<Stack.Screen name='home' component={HomeScreen} />
+					<Stack.Navigator initialRouteName='Vigilante-qr'>
+						<Stack.Screen name='Vigilante-qr' component={HomeScreen} />
+						<Stack.Screen name='VisitaInfo' component={VisitaInfo} />
 					</Stack.Navigator>
 				</NavigationContainer>
 			</PersistGate>

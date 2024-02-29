@@ -1,0 +1,12 @@
+[
+	{
+		"id": "1",
+		"tipo_ingreso": "Veh\u00edculo",
+		"descripcion": "Servicios en general o visitas que cuentan con un veh\u00edculo emplacado y registrado ante la secretaria de Movilidad."
+	},
+	{
+		"id": "2",
+		"tipo_ingreso": "Peatonal",
+		"descripcion": "Personas y servicios en general que cuenten con Identificaci\u00f3n oficial"
+	}
+]
