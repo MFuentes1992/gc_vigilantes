@@ -46,6 +46,7 @@ export const HomeScreen = ({ navigation }: any) => {
 					console.log("Detected QR code values", values);
 					navigation.navigate("VisitaInfo", {
 						uniqueID: tmpArray[tmpArray.length - 1],
+						uri: selectedImage,
 					});
 				})
 				.catch((error) => console.log("Cannot detect QR code in image", error));

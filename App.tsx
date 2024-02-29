@@ -27,7 +27,8 @@ export default function App() {
 								},
 								headerTintColor: app_colors.white,
 								headerTitleStyle: {
-									fontWeight: "100",
+									fontWeight: "normal",
+									fontSize: 16,
 								},
 							}}>
 							<Stack.Screen
@@ -35,7 +36,11 @@ export default function App() {
 								options={{ title: "Home" }}
 								component={HomeScreen}
 							/>
-							<Stack.Screen name='VisitaInfo' component={VisitaInfo} />
+							<Stack.Screen
+								name='VisitaInfo'
+								options={{ title: "Detalles de Visita" }}
+								component={VisitaInfo}
+							/>
 						</Stack.Group>
 					</Stack.Navigator>
 				</NavigationContainer>

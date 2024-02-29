@@ -6,6 +6,7 @@ export const app_colors = {
 	header: "#B39CD0",
 	white: "#FFFFFF",
 	ligth_bg: "#dadada",
+	text_gray: "#6c757d",
 };
 
 // -- Palette: https://mycolor.space/?hex=%23845EC2&sub=1

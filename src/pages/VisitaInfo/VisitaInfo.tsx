@@ -21,6 +21,7 @@ import { getCatalogTipoIngreso } from "@gcVigilantes/store/TipoIngreso/api";
 import { VehicleInfo } from "@gcVigilantes/Components/VehicleInfo/VehicleInfo";
 import { GuestPicker } from "@gcVigilantes/Components/GuestPicker/GuestPicker";
 import { Switcher } from "@gcVigilantes/Components/Switcher/Switcher";
+import { VisitaDetails } from "@gcVigilantes/Components/VisitaDetails/VisitaDetails";
 
 export const TipoVisitasIcon: { [key: string]: React.ReactNode } = {
 	Visita: <FontAwesome name='user' size={24} color='darkgray' />,
@@ -41,7 +42,7 @@ export const TipoVisitasIcon: { [key: string]: React.ReactNode } = {
 };
 
 export const VisitaInfo = ({ navigation, route }: any) => {
-	const { uniqueID } = route.params;
+	const { uniqueID, uri } = route.params;
 	const [showModal, setShowModal] = useState(false);
 	const [showModalTime, setShowModalTime] = useState(false);
 	const [formValues, setFormValues] = useState({
@@ -72,6 +73,12 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 	return (
 		<SafeAreaView>
 			<ScrollView>
+				<VisitaDetails
+					uri={uri}
+					autor='analisis@dasgalu.com.mx'
+					direccion='Paseos de Tezoyuca, Benito Juarez, Morelos'
+					estatus='Activa'
+				/>
 				<View
 					style={{
 						flex: 0.16,
