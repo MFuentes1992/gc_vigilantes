@@ -7,6 +7,7 @@ export const TABS = {
 	MAIN: "main",
 	DATE: "date",
 	GUEST: "guest",
+	SETTINGS: "settings",
 };
 
 export type VisitaInfoProps = {
@@ -33,6 +34,15 @@ export type VisitaInfoProps = {
 export type MainInfoProps = {
 	catalogVisitas: TipoVisita[];
 	catalogIngreso: TTipoIngreso[];
+};
+
+export type DateInfoProps = {
+	fromDate?: string;
+	toDate?: string;
+	dateType?: string;
+	fromHour?: number;
+	toHour?: number;
+	hourType?: string;
 };
 
 export const card_styles: ViewStyle = {

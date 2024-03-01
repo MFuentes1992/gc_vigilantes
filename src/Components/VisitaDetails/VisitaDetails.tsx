@@ -13,6 +13,7 @@ import {
 	app_text_menu,
 } from "@gcVigilantes/utils/default.styles";
 import { Switcher } from "@gcVigilantes/Components/Switcher/Switcher";
+import { TABS } from "@gcVigilantes/pages/VisitaInfo/constants";
 
 export const VisitaDetails = ({
 	uri,
@@ -21,6 +22,7 @@ export const VisitaDetails = ({
 	direccion,
 	notificaciones,
 	handleNotificaciones,
+	handleChangeTab,
 }: VisitaDetailsProps) => {
 	return (
 		<>
@@ -55,13 +57,13 @@ export const VisitaDetails = ({
 				</View>
 			</View>
 			<View style={details_menu}>
-				<TouchableOpacity>
+				<TouchableOpacity onPress={() => handleChangeTab(TABS.MAIN)}>
 					<Text style={app_text_menu}>Resumen</Text>
 				</TouchableOpacity>
-				<TouchableOpacity>
+				<TouchableOpacity onPress={() => handleChangeTab(TABS.DATE)}>
 					<Text style={app_text_menu}>Fechas</Text>
 				</TouchableOpacity>
-				<TouchableOpacity>
+				<TouchableOpacity onPress={() => handleChangeTab(TABS.SETTINGS)}>
 					<Text style={app_text_menu}>Ajustes</Text>
 				</TouchableOpacity>
 			</View>

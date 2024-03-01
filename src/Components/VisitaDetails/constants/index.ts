@@ -8,6 +8,7 @@ export type VisitaDetailsProps = {
 	direccion: string;
 	notificaciones: boolean;
 	handleNotificaciones: (value: boolean) => void;
+	handleChangeTab: (tab: string) => void;
 };
 
 export const details_container: ViewStyle = {

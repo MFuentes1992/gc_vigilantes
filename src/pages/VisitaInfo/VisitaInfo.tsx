@@ -23,6 +23,7 @@ import { TABS, card_styles } from "./constants";
 import { CardTitle } from "@gcVigilantes/Components/CardTitle/CardTitle";
 import { MainInfo } from "./MainInfo";
 import { FormSaveButtons } from "@gcVigilantes/Components/FormSaveButtons/FormSaveButtons";
+import { DateInfo } from "./DateInfo";
 
 export const VisitaInfo = ({ navigation, route }: any) => {
 	const { uniqueID, uri } = route.params;
@@ -65,6 +66,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 					handleNotificaciones={(value) => {
 						setFormValues((prev) => ({ ...prev, notificaciones: value }));
 					}}
+					handleChangeTab={(tab) => setTab(tab)}
 				/>
 				{/** Main tab: Nombre visita, tipo visita, tipo Ingreso  */}
 				{tab === TABS.MAIN && (
@@ -73,6 +75,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 						catalogIngreso={catalogIngreso}
 					/>
 				)}
+				{tab === TABS.DATE && <DateInfo />}
 				<FormSaveButtons />
 			</ScrollView>
 		</SafeAreaView>
