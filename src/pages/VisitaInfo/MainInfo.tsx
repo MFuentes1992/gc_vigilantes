@@ -135,21 +135,40 @@ export const MainInfo = ({ catalogVisitas, catalogIngreso }: MainInfoProps) => {
 									width: "100%",
 									justifyContent: "space-between",
 									alignItems: "flex-end",
+									marginBottom: 10,
 								}}>
 								<FontAwesome5
 									name='edit'
-									size={18}
+									size={16}
 									color={app_colors.text_gray}
 								/>
 								<FontAwesome5
 									name='times'
-									size={18}
+									size={16}
 									color={app_colors.text_gray}
 								/>
 							</View>
-							<Text style={app_text_body}>Ford Escape</Text>
-							<Text style={app_text_body}>Negra / 2022</Text>
-							<Text style={app_text_body}>PYH0608D</Text>
+							<View style={{ flexDirection: "row", width: "100%" }}>
+								<View
+									style={{
+										width: "30%",
+										padding: "5%",
+										borderRightWidth: 1,
+										borderRightColor: app_colors.ligth_bg,
+									}}>
+									<Image
+										width={40}
+										height={40}
+										style={{ width: 40, height: 40, resizeMode: "contain" }}
+										source={require("assets/topView.png")}
+									/>
+								</View>
+								<View style={{ width: "70%", padding: "5%" }}>
+									<Text style={app_text_body}>Ford Escape</Text>
+									<Text style={app_text_body}>Negra / 2022</Text>
+									<Text style={app_text_body}>PYH0608D</Text>
+								</View>
+							</View>
 						</Animatable.View>
 					</View>
 				</>

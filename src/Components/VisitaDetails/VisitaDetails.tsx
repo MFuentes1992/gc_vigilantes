@@ -63,6 +63,9 @@ export const VisitaDetails = ({
 				<TouchableOpacity onPress={() => handleChangeTab(TABS.DATE)}>
 					<Text style={app_text_menu}>Fechas</Text>
 				</TouchableOpacity>
+				<TouchableOpacity onPress={() => handleChangeTab(TABS.GUEST)}>
+					<Text style={app_text_menu}>Invitados</Text>
+				</TouchableOpacity>
 				<TouchableOpacity onPress={() => handleChangeTab(TABS.SETTINGS)}>
 					<Text style={app_text_menu}>Ajustes</Text>
 				</TouchableOpacity>
