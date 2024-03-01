@@ -22,6 +22,7 @@ import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { TABS, card_styles } from "./constants";
 import { CardTitle } from "@gcVigilantes/Components/CardTitle/CardTitle";
 import { MainInfo } from "./MainInfo";
+import { FormSaveButtons } from "@gcVigilantes/Components/FormSaveButtons/FormSaveButtons";
 
 export const VisitaInfo = ({ navigation, route }: any) => {
 	const { uniqueID, uri } = route.params;
@@ -72,15 +73,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 						catalogIngreso={catalogIngreso}
 					/>
 				)}
-				<Text style={{ marginLeft: 10 }}>Registar acompanante</Text>
-				<GuestPicker />
-				<Switcher
-					title='Entrada multiple:'
-					value={formValues.multiple_entrada}
-					handleOnChange={(value) => {
-						setFormValues((prev) => ({ ...prev, multiple_entrada: value }));
-					}}
-				/>
+				<FormSaveButtons />
 			</ScrollView>
 		</SafeAreaView>
 	);
