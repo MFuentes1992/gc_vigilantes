@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-	FontAwesome,
-	FontAwesome5,
-	MaterialCommunityIcons,
-} from "@expo/vector-icons";
+
 import RadioGroup from "@gcVigilantes/Components/RadioGroup";
 import {
 	View,
@@ -23,31 +19,13 @@ import { GuestPicker } from "@gcVigilantes/Components/GuestPicker/GuestPicker";
 import { Switcher } from "@gcVigilantes/Components/Switcher/Switcher";
 import { VisitaDetails } from "@gcVigilantes/Components/VisitaDetails/VisitaDetails";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
-import { card_styles } from "./constants";
+import { TABS, card_styles } from "./constants";
 import { CardTitle } from "@gcVigilantes/Components/CardTitle/CardTitle";
-
-export const TipoVisitasIcon: { [key: string]: React.ReactNode } = {
-	Visita: <FontAwesome name='user' size={18} color='darkgray' />,
-	Provedor: <FontAwesome name='truck' size={18} color='darkgray' />,
-	["Servicio domestico"]: (
-		<FontAwesome name='wrench' size={18} color='darkgray' />
-	),
-	["Vehículo"]: <FontAwesome name='car' size={24} color='darkgray' />,
-	Peatonal: <FontAwesome5 name='walking' size={24} color='darkgray' />,
-	single: <FontAwesome name='user' size={24} color='darkgray' />,
-	multiple: (
-		<MaterialCommunityIcons
-			name='account-multiple-plus'
-			size={24}
-			color='black'
-		/>
-	),
-};
+import { MainInfo } from "./MainInfo";
 
 export const VisitaInfo = ({ navigation, route }: any) => {
 	const { uniqueID, uri } = route.params;
-	const [showModal, setShowModal] = useState(false);
-	const [showModalTime, setShowModalTime] = useState(false);
+	const [tab, setTab] = useState<string>(TABS.MAIN);
 	const [formValues, setFormValues] = useState({
 		fromDate: new Date().toISOString(),
 		toDate: new Date().toISOString(),
@@ -87,119 +65,11 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 						setFormValues((prev) => ({ ...prev, notificaciones: value }));
 					}}
 				/>
-				<View style={card_styles}>
-					<CardTitle title='tipo de visita' uppercase />
-					<RadioGroup
-						options={catalogVisitas.map((catalog) => ({
-							id: catalog.id,
-							label: catalog.tipo_visita,
-							icon: TipoVisitasIcon[
-								catalog.tipo_visita
-							] as unknown as React.ReactNode,
-						}))}
-						handleChange={(value: string) => {
-							console.log("TipoVisita", value);
-						}}
-					/>
-				</View>
-				<View style={card_styles}>
-					<CardTitle title='Nombre' uppercase />
-					<TextInput
-						style={{
-							width: "100%",
-							height: 40,
-							borderBottomColor: "gray",
-							borderBottomWidth: 0.5,
-						}}
-						placeholder='Ingrese aqui el nombre de la visita'
-						onFocus={() => {}}
-						onBlur={() => {}}
-						onChangeText={(text) => console.log("nombre visita", text)}
-						autoCapitalize='words'
-						maxLength={50}
-					/>
-				</View>
-				<View
-					style={{
-						flexDirection: "row",
-						width: "100%",
-						backgroundColor: "red",
-						marginBottom: 15,
-						justifyContent: "space-around",
-					}}>
-					<View>
-						<Text style={[{ paddingVertical: 5 }]}>Desde el:</Text>
-						<Text style={[{ paddingVertical: 5 }]}>Hasta el:</Text>
-					</View>
-					<View style={{ justifyContent: "center", alignItems: "center" }}>
-						<TouchableOpacity
-							onPress={() => {
-								setFormValues((prev) => ({ ...prev, dateType: "from" }));
-								setShowModal(true);
-							}}>
-							<Text>
-								{new Date(formValues["fromDate"]).toLocaleDateString(
-									"es-MX",
-									{}
-								)}
-							</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							onPress={() => {
-								setFormValues((prev) => ({ ...prev, dateType: "to" }));
-								setShowModal(true);
-							}}>
-							<Text style={[{ paddingVertical: 5 }]}>
-								{new Date(formValues["toDate"]).toLocaleDateString("es-MX", {})}
-							</Text>
-						</TouchableOpacity>
-					</View>
-					<View style={{ justifyContent: "center", alignItems: "center" }}>
-						<Text style={[{ paddingVertical: 5 }]}>a las</Text>
-						<Text style={[{ paddingVertical: 5 }]}>a las</Text>
-					</View>
-					<View style={{ justifyContent: "center", alignItems: "center" }}>
-						<TouchableOpacity
-							style={{ paddingVertical: 5 }}
-							onPress={() => {
-								setFormValues((prev) => ({ ...prev, hourType: "from" }));
-								setShowModalTime(true);
-							}}>
-							<Text>{`${formValues["fromHour"]}:00`}</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							style={{ paddingVertical: 5 }}
-							onPress={() => {
-								setFormValues((prev) => ({ ...prev, hourType: "to" }));
-								setShowModalTime(true);
-							}}>
-							<Text>{`${formValues["toHour"]}:00`}</Text>
-						</TouchableOpacity>
-					</View>
-					<View style={{ justifyContent: "center", alignItems: "center" }}>
-						<Text style={{ paddingVertical: 5 }}>CST</Text>
-						<Text style={{ paddingVertical: 5 }}>CST</Text>
-					</View>
-				</View>
-				<View style={{ marginBottom: "5%" }}>
-					<RadioGroup
-						options={catalogIngreso.map((catalog) => ({
-							id: catalog.id,
-							label: catalog.tipo_ingreso,
-							icon: TipoVisitasIcon[
-								catalog.tipo_ingreso
-							] as unknown as React.ReactNode,
-						}))}
-						handleChange={(value: string) => {
-							setFormValues((prev) => ({ ...prev, tipo_ingreso: value }));
-						}}
-					/>
-				</View>
-				{formValues.tipo_ingreso === "1" && (
-					<VehicleInfo
-						handleData={(data: { [key: string]: string }) => {
-							setFormValues((prev) => ({ ...prev, ...data }));
-						}}
+				{/** Main tab: Nombre visita, tipo visita, tipo Ingreso  */}
+				{tab === TABS.MAIN && (
+					<MainInfo
+						catalogVisitas={catalogVisitas}
+						catalogIngreso={catalogIngreso}
 					/>
 				)}
 				<Text style={{ marginLeft: 10 }}>Registar acompanante</Text>

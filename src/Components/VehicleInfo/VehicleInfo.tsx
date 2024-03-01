@@ -1,3 +1,4 @@
+import { app_colors } from "@gcVigilantes/utils/default.colors";
 import React from "react";
 import { TextInput, View } from "react-native";
 
@@ -11,8 +12,8 @@ export const VehicleInfo = ({ handleData }: TVehicleInfo) => {
 			style={{
 				flex: 0.2,
 				alignItems: "center",
-				backgroundColor: "#dddddd",
-				width: "95%",
+				backgroundColor: app_colors.white,
+				width: "100%",
 				marginBottom: "5%",
 				borderRadius: 5,
 				paddingTop: "2%",
@@ -22,7 +23,7 @@ export const VehicleInfo = ({ handleData }: TVehicleInfo) => {
 				style={{
 					width: "80%",
 					height: 40,
-					borderBottomColor: "gray",
+					borderBottomColor: app_colors.ligth_bg,
 					borderBottomWidth: 1,
 				}}
 				onFocus={() => {}}
@@ -36,7 +37,7 @@ export const VehicleInfo = ({ handleData }: TVehicleInfo) => {
 				style={{
 					width: "80%",
 					height: 40,
-					borderBottomColor: "gray",
+					borderBottomColor: app_colors.ligth_bg,
 					borderBottomWidth: 1,
 				}}
 				onFocus={() => {}}
@@ -50,7 +51,7 @@ export const VehicleInfo = ({ handleData }: TVehicleInfo) => {
 				style={{
 					width: "80%",
 					height: 40,
-					borderBottomColor: "gray",
+					borderBottomColor: app_colors.ligth_bg,
 					borderBottomWidth: 1,
 				}}
 				onFocus={() => {}}
