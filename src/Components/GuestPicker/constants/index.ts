@@ -1,3 +1,4 @@
+import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { StyleSheet } from "react-native";
 
 export type TGuestPicker = {
@@ -6,7 +7,7 @@ export type TGuestPicker = {
 
 export const guestpicker_contaier: any = {
 	flex: 1,
-	backgroundColor: "#dddddd",
+	backgroundColor: app_colors.ligth_bg,
 	justifyContent: "space-around",
 	padding: 20,
 };
@@ -14,7 +15,7 @@ export const guestpicker_contaier: any = {
 export const add_guest: any = {
 	width: "15%",
 	backgroundColor: "white",
-	boxShadow: "5px 5px 5px 5px rgba(0,0,0,0.75)",
+	elevation: 5,
 	borderRadius: 5,
 	alignItems: "center",
 	justifyContent: "center",
@@ -33,7 +34,13 @@ export const guest_row: any = {
 
 export const guest_input: any = {
 	width: "90%",
-	height: 40,
+	height: 30,
 	borderBottomColor: "gray",
-	borderBottomWidth: 1,
+	borderRadius: 5,
+	marginTop: 5,
+	marginBottom: 5,
+	backgroundColor: app_colors.white,
+	fontSize: 12,
+	padding: 5,
+	color: app_colors.text_gray,
 };

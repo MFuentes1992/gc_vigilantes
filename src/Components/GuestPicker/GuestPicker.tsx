@@ -9,6 +9,7 @@ import {
 	guest_row,
 	guestpicker_contaier,
 } from "./constants";
+import { app_colors } from "@gcVigilantes/utils/default.colors";
 
 export const GuestPicker = ({
 	guests,
@@ -40,7 +41,11 @@ export const GuestPicker = ({
 	return (
 		<View style={guestpicker_contaier}>
 			<TouchableOpacity style={add_guest} onPress={handleAddGuest}>
-				<AntDesign name='adduser' size={24} color='black' />
+				<AntDesign
+					name='adduser'
+					size={24}
+					color={app_colors.secondary_badge}
+				/>
 			</TouchableOpacity>
 			<View style={guest_input_container}>
 				{guestForm.map((guest, index) => {
@@ -58,11 +63,7 @@ export const GuestPicker = ({
 									name='close'
 									size={18}
 									color='black'
-									style={{
-										bottom: 0,
-										position: "absolute",
-										color: "#c0c0c0",
-									}}
+									style={{ marginTop: "50%", color: app_colors.text_gray }}
 								/>
 							</TouchableOpacity>
 						</View>

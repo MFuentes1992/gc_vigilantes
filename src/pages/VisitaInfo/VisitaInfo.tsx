@@ -24,6 +24,7 @@ import { CardTitle } from "@gcVigilantes/Components/CardTitle/CardTitle";
 import { MainInfo } from "./MainInfo";
 import { FormSaveButtons } from "@gcVigilantes/Components/FormSaveButtons/FormSaveButtons";
 import { DateInfo } from "./DateInfo";
+import { GuestInfo } from "./GuestInfo";
 
 export const VisitaInfo = ({ navigation, route }: any) => {
 	const { uniqueID, uri } = route.params;
@@ -76,6 +77,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 					/>
 				)}
 				{tab === TABS.DATE && <DateInfo />}
+				{tab === TABS.GUEST && <GuestInfo />}
 				<FormSaveButtons />
 			</ScrollView>
 		</SafeAreaView>
