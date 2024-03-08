@@ -13,6 +13,7 @@ export const Switcher = ({ title, value, handleOnChange }: TSwitcher) => {
 				flex: 1,
 				flexDirection: "row",
 				alignItems: "center",
+				justifyContent: "space-between",
 			}}>
 			<Text style={{ fontSize: 12, color: "gray", marginRight: "2%" }}>
 				{title}

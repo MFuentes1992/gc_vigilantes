@@ -22,11 +22,11 @@ export const DateInfo = ({
 					style={{ width: "100%" }}
 					markingType='period'
 					markedDates={{
-						[`${fromDate?.split("T")[0]}`]: {
+						[`2024-03-04`]: {
 							startingDay: true,
 							color: app_colors.secondary,
 						},
-						[`2024-03-02`]: {
+						[`2024-03-06`]: {
 							endingDay: true,
 							color: app_colors.secondary,
 						},

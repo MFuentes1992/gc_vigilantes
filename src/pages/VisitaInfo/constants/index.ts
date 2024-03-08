@@ -45,6 +45,20 @@ export type DateInfoProps = {
 	hourType?: string;
 };
 
+export type settingsInfoProps = {
+	autor: string;
+	uniqueID: string;
+	residencial: string;
+	seccion: string;
+	calle: string;
+	num_ext: string;
+	num_int: string;
+	colonia: string;
+	ciudad: string;
+	estado: string;
+	cp: string;
+};
+
 export const card_styles: ViewStyle = {
 	margin: "5%",
 	flex: 0.16,

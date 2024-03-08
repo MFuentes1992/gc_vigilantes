@@ -25,6 +25,7 @@ import { MainInfo } from "./MainInfo";
 import { FormSaveButtons } from "@gcVigilantes/Components/FormSaveButtons/FormSaveButtons";
 import { DateInfo } from "./DateInfo";
 import { GuestInfo } from "./GuestInfo";
+import { SettingsInfo } from "./SettingsInfo";
 
 export const VisitaInfo = ({ navigation, route }: any) => {
 	const { uniqueID, uri } = route.params;
@@ -78,6 +79,21 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 				)}
 				{tab === TABS.DATE && <DateInfo />}
 				{tab === TABS.GUEST && <GuestInfo />}
+				{tab === TABS.SETTINGS && (
+					<SettingsInfo
+						autor='analisis@dasgalu.com'
+						uniqueID={uniqueID}
+						seccion='A'
+						num_int='10'
+						residencial='Paseos de Tezoyuca'
+						calle='Benito Juarez'
+						num_ext='10'
+						colonia='Centro'
+						ciudad='Tezoyuca'
+						estado='Morelos'
+						cp='55920'
+					/>
+				)}
 				<FormSaveButtons />
 			</ScrollView>
 		</SafeAreaView>
