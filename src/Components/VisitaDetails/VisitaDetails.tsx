@@ -2,7 +2,8 @@ import React from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import {
 	VisitaDetailsProps,
-	details_badge,
+	details_badge_active,
+	details_badge_inactive,
 	details_badge_text,
 	details_container,
 	details_info,
@@ -43,8 +44,11 @@ export const VisitaDetails = ({
 							justifyContent: "space-between",
 							width: "100%",
 						}}>
-						<View style={details_badge}>
-							<Text style={details_badge_text}>{estatus}</Text>
+						<View
+							style={estatus ? details_badge_active : details_badge_inactive}>
+							<Text style={details_badge_text}>
+								{estatus ? "Activa" : "Inactiva"}
+							</Text>
 						</View>
 						<View>
 							<Switcher

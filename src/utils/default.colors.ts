@@ -8,6 +8,7 @@ export const app_colors = {
 	ligth_bg: "#dadada",
 	text_gray: "#6c757d",
 	black: "#000000",
+	red_inactive_invalid: "#D03B29",
 };
 
 // -- Palette: https://mycolor.space/?hex=%23845EC2&sub=1

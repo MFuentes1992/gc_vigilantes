@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import TipoVisitas from "./TipoVisitas";
 import UserData from "./UserData";
 import TipoIngreso from "./TipoIngreso";
+import Visita from "./Visita";
 
 const persistConfig = {
 	storage: AsyncStorage,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
 	tipoVisitas: TipoVisitas,
 	userData: UserData,
 	tipoIngreso: TipoIngreso,
+	visita: Visita,
 });
 
 export const persistedReducer = persistReducer(persistConfig, rootReducer);

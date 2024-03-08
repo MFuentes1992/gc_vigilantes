@@ -38,10 +38,18 @@ export const details_info: ViewStyle = {
 	paddingLeft: "2%",
 };
 
-export const details_badge: ViewStyle = {
+export const details_badge_active: ViewStyle = {
 	width: "25%",
 	padding: "1%",
 	backgroundColor: app_colors.secondary_badge,
+	justifyContent: "center",
+	alignItems: "center",
+};
+
+export const details_badge_inactive: ViewStyle = {
+	width: "25%",
+	padding: "1%",
+	backgroundColor: app_colors.red_inactive_invalid,
 	justifyContent: "center",
 	alignItems: "center",
 };

@@ -1,31 +1,17 @@
 import React, { useEffect, useState } from "react";
-
-import RadioGroup from "@gcVigilantes/Components/RadioGroup";
-import {
-	View,
-	SafeAreaView,
-	ScrollView,
-	TextInput,
-	TouchableOpacity,
-	Text,
-	Switch,
-} from "react-native";
+import { SafeAreaView, ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getCatalogTipoVisitas } from "@gcVigilantes/store/TipoVisitas/api";
 import { RootState } from "@gcVigilantes/store";
 import { getCatalogTipoIngreso } from "@gcVigilantes/store/TipoIngreso/api";
-import { VehicleInfo } from "@gcVigilantes/Components/VehicleInfo/VehicleInfo";
-import { GuestPicker } from "@gcVigilantes/Components/GuestPicker/GuestPicker";
-import { Switcher } from "@gcVigilantes/Components/Switcher/Switcher";
 import { VisitaDetails } from "@gcVigilantes/Components/VisitaDetails/VisitaDetails";
-import { app_colors } from "@gcVigilantes/utils/default.colors";
-import { TABS, card_styles } from "./constants";
-import { CardTitle } from "@gcVigilantes/Components/CardTitle/CardTitle";
+import { TABS } from "./constants";
 import { MainInfo } from "./MainInfo";
 import { FormSaveButtons } from "@gcVigilantes/Components/FormSaveButtons/FormSaveButtons";
 import { DateInfo } from "./DateInfo";
 import { GuestInfo } from "./GuestInfo";
 import { SettingsInfo } from "./SettingsInfo";
+import { getVisitaByUniqueID } from "@gcVigilantes/store/Visita/api";
 
 export const VisitaInfo = ({ navigation, route }: any) => {
 	const { uniqueID, uri } = route.params;
@@ -52,18 +38,21 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 	const { catalogIngreso } = useSelector(
 		(state: RootState) => state.tipoIngreso
 	);
+	const visitaData = useSelector((state: RootState) => state.visita);
+
 	useEffect(() => {
 		dispatch(getCatalogTipoVisitas() as any);
 		dispatch(getCatalogTipoIngreso() as any);
+		dispatch(getVisitaByUniqueID(uniqueID) as any);
 	}, []);
 	return (
 		<SafeAreaView>
 			<ScrollView>
 				<VisitaDetails
 					uri={uri}
-					autor='analisis@dasgalu.com.mx'
-					direccion='Paseos de Tezoyuca, Benito Juarez, Morelos'
-					estatus='Activa'
+					autor={visitaData.emailAutor}
+					direccion={`${visitaData.residencial}, ${visitaData.calle}, ${visitaData.num_ext}`}
+					estatus={visitaData.estado}
 					notificaciones={formValues.notificaciones}
 					handleNotificaciones={(value) => {
 						setFormValues((prev) => ({ ...prev, notificaciones: value }));
@@ -81,17 +70,17 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 				{tab === TABS.GUEST && <GuestInfo />}
 				{tab === TABS.SETTINGS && (
 					<SettingsInfo
-						autor='analisis@dasgalu.com'
+						autor={visitaData.emailAutor}
 						uniqueID={uniqueID}
-						seccion='A'
-						num_int='10'
-						residencial='Paseos de Tezoyuca'
-						calle='Benito Juarez'
-						num_ext='10'
-						colonia='Centro'
-						ciudad='Tezoyuca'
-						estado='Morelos'
-						cp='55920'
+						seccion={visitaData.seccion}
+						num_int={visitaData.num_int}
+						residencial={visitaData.residencial}
+						calle={visitaData.calle}
+						num_ext={visitaData.num_ext}
+						colonia={visitaData.colonia}
+						ciudad={visitaData.ciudad}
+						estado={visitaData.estado}
+						cp={visitaData.cp}
 					/>
 				)}
 				<FormSaveButtons />
