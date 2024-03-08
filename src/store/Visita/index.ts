@@ -27,7 +27,24 @@ const visitaSlice = createSlice({
 	initialState,
 	reducers: {
 		setVisita(state, action: PayloadAction<IVisita>) {
-			state = action.payload;
+			state.calle = action.payload.calle;
+			state.ciudad = action.payload.ciudad;
+			state.colonia = action.payload.colonia;
+			state.cp = action.payload.cp;
+			state.desde = action.payload.desde;
+			state.emailAutor = action.payload.emailAutor;
+			state.estado = action.payload.estado;
+			state.hasta = action.payload.hasta;
+			state.multiple_entrada = action.payload.multiple_entrada;
+			state.nombre = action.payload.nombre;
+			state.notificaciones = action.payload.notificaciones;
+			state.num_ext = action.payload.num_ext;
+			state.num_int = action.payload.num_int;
+			state.residencial = action.payload.residencial;
+			state.seccion = action.payload.seccion;
+			state.tipo = action.payload.tipo;
+			state.tipo_visita = action.payload.tipo_visita;
+			state.uniqueID = action.payload.uniqueID;
 		},
 	},
 });

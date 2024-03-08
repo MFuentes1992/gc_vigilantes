@@ -45,6 +45,9 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 		dispatch(getCatalogTipoIngreso() as any);
 		dispatch(getVisitaByUniqueID(uniqueID) as any);
 	}, []);
+
+	console.log("Visita data", visitaData);
+
 	return (
 		<SafeAreaView>
 			<ScrollView>
