@@ -4,7 +4,10 @@ import { TextStyle, ViewStyle } from "react-native";
 export type VisitaDetailsProps = {
 	uri: string;
 	autor: string;
+	emailAutor: string;
 	estatus: string;
+	num_int: string;
+	seccion: string;
 	direccion: string;
 	notificaciones: boolean;
 	handleNotificaciones: (value: boolean) => void;
@@ -36,6 +39,13 @@ export const details_info: ViewStyle = {
 	flex: 1,
 	width: "80%",
 	paddingLeft: "2%",
+};
+
+export const defaultRow: ViewStyle = {
+	flex: 0.6,
+	width: "60%",
+	flexDirection: "row",
+	justifyContent: "space-between",
 };
 
 export const details_badge_active: ViewStyle = {

@@ -2,6 +2,7 @@ import React from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import {
 	VisitaDetailsProps,
+	defaultRow,
 	details_badge_active,
 	details_badge_inactive,
 	details_badge_text,
@@ -12,6 +13,7 @@ import {
 import {
 	app_text_body,
 	app_text_menu,
+	app_text_property,
 } from "@gcVigilantes/utils/default.styles";
 import { Switcher } from "@gcVigilantes/Components/Switcher/Switcher";
 import { TABS } from "@gcVigilantes/pages/VisitaInfo/constants";
@@ -19,7 +21,10 @@ import { TABS } from "@gcVigilantes/pages/VisitaInfo/constants";
 export const VisitaDetails = ({
 	uri,
 	autor,
+	emailAutor,
 	estatus,
+	num_int,
+	seccion,
 	direccion,
 	notificaciones,
 	handleNotificaciones,
@@ -29,14 +34,21 @@ export const VisitaDetails = ({
 		<>
 			<View style={details_container}>
 				<Image
-					width={64}
-					height={64}
+					width={100}
+					height={100}
 					source={{
 						uri: uri,
 					}}
 				/>
 				<View style={details_info}>
 					<Text style={app_text_body}>{autor}</Text>
+					<Text style={app_text_menu}>{emailAutor}</Text>
+					<View style={defaultRow}>
+						<Text style={app_text_property}>Num Int:</Text>
+						<Text style={app_text_body}>{num_int}</Text>
+						<Text style={app_text_property}>Seccion:</Text>
+						<Text style={app_text_body}>{seccion}</Text>
+					</View>
 					<Text style={app_text_body}>{direccion}</Text>
 					<View
 						style={{

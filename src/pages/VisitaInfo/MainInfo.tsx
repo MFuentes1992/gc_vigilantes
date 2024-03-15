@@ -32,13 +32,26 @@ export const TipoVisitasIcon: { [key: string]: React.ReactNode } = {
 	),
 };
 
-export const MainInfo = ({ catalogVisitas, catalogIngreso }: MainInfoProps) => {
-	const [tipoIngreso, setTipoIngreso] = useState<string>("");
+export const MainInfo = ({
+	tipoVisita,
+	tipoIngreso,
+	nombreVisita,
+	catalogVisitas,
+	catalogIngreso,
+}: MainInfoProps) => {
+	const [tipoVisitaState, setTipoVisita] = useState<string>(tipoVisita);
+	const [tipoIngresoState, setTipoIngreso] = useState<string>(tipoIngreso);
+	const [nombreVisitaState, setNombreVisita] = useState<string>(nombreVisita);
+
+	// console.log("Tipo ingreso props", tipoIngreso);
+	// console.log("Tipo ingreso state", tipoIngresoState);
+
 	return (
 		<>
 			<View style={card_styles}>
 				<CardTitle title='tipo de visita' uppercase />
 				<RadioGroup
+					selectedValue={tipoVisitaState}
 					options={catalogVisitas.map((catalog) => ({
 						id: catalog.id,
 						label: catalog.tipo_visita,
@@ -47,7 +60,7 @@ export const MainInfo = ({ catalogVisitas, catalogIngreso }: MainInfoProps) => {
 						] as unknown as React.ReactNode,
 					}))}
 					handleChange={(value: string) => {
-						console.log("TipoVisita", value);
+						setTipoVisita(value);
 					}}
 				/>
 			</View>
@@ -60,6 +73,7 @@ export const MainInfo = ({ catalogVisitas, catalogIngreso }: MainInfoProps) => {
 						borderBottomColor: "gray",
 						borderBottomWidth: 0.5,
 					}}
+					value={nombreVisitaState}
 					placeholder='Ingrese aqui el nombre de la visita'
 					onFocus={() => {}}
 					onBlur={() => {}}
@@ -78,13 +92,14 @@ export const MainInfo = ({ catalogVisitas, catalogIngreso }: MainInfoProps) => {
 							catalog.tipo_ingreso
 						] as unknown as React.ReactNode,
 					}))}
+					selectedValue={tipoIngresoState}
 					handleChange={(value: string) => {
 						setTipoIngreso(value);
 						console.log("TipoIngreso", value);
 					}}
 				/>
 			</View>
-			{tipoIngreso === "5" && (
+			{tipoIngresoState === "5" && (
 				<View style={card_styles}>
 					<VehicleInfo
 						handleData={(data: { [key: string]: string }) => {
@@ -93,7 +108,7 @@ export const MainInfo = ({ catalogVisitas, catalogIngreso }: MainInfoProps) => {
 					/>
 				</View>
 			)}
-			{tipoIngreso == "1" && (
+			{tipoIngresoState == "1" && (
 				<>
 					<Animatable.View
 						animation={"fadeIn"}

@@ -8,12 +8,16 @@ type RadioGroupProps = {
 		label: string;
 		icon: React.ReactNode;
 	}[];
+	selectedValue?: string;
 	orientation?: "horizontal" | "vertical";
 	handleChange: (value: string) => void;
 };
 
 export const RadioGroup = (props: RadioGroupProps) => {
-	const [selectedOption, setSelectedOption] = React.useState("");
+	const [selectedOption, setSelectedOption] = React.useState(
+		props.selectedValue
+	);
+	console.log("passed to radio group", props.selectedValue);
 	return (
 		<View
 			style={{
@@ -42,4 +46,5 @@ export const RadioGroup = (props: RadioGroupProps) => {
 
 RadioGroup.defaultProps = {
 	orientation: "horizontal",
+	selectedValue: "",
 };

@@ -34,6 +34,9 @@ export type VisitaInfoProps = {
 export type MainInfoProps = {
 	catalogVisitas: TipoVisita[];
 	catalogIngreso: TTipoIngreso[];
+	tipoVisita: string;
+	tipoIngreso: string;
+	nombreVisita: string;
 };
 
 export type DateInfoProps = {

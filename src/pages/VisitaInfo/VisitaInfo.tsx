@@ -46,14 +46,13 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 		dispatch(getVisitaByUniqueID(uniqueID) as any);
 	}, []);
 
-	console.log("Visita data", visitaData);
-
 	return (
 		<SafeAreaView>
 			<ScrollView>
 				<VisitaDetails
 					uri={uri}
-					autor={visitaData.emailAutor}
+					autor={visitaData.nameAutor}
+					emailAutor={visitaData.emailAutor}
 					direccion={`${visitaData.residencial}, ${visitaData.calle}, ${visitaData.num_ext}`}
 					estatus={visitaData.estado}
 					notificaciones={formValues.notificaciones}
@@ -61,12 +60,17 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 						setFormValues((prev) => ({ ...prev, notificaciones: value }));
 					}}
 					handleChangeTab={(tab) => setTab(tab)}
+					num_int={visitaData.num_int}
+					seccion={visitaData.seccion}
 				/>
 				{/** Main tab: Nombre visita, tipo visita, tipo Ingreso  */}
 				{tab === TABS.MAIN && (
 					<MainInfo
 						catalogVisitas={catalogVisitas}
 						catalogIngreso={catalogIngreso}
+						tipoVisita={visitaData.tipo_visita}
+						tipoIngreso={visitaData.tipo_ingreso}
+						nombreVisita={visitaData.nombre}
 					/>
 				)}
 				{tab === TABS.DATE && <DateInfo />}

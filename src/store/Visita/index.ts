@@ -5,11 +5,14 @@ const initialState: IVisita = {
 	nombre: "",
 	desde: "",
 	hasta: "",
-	tipo: "",
+	tipo_ingreso: "",
+	tipoIngresoText: "",
 	multiple_entrada: "",
 	notificaciones: "",
+	nameAutor: "",
 	emailAutor: "",
 	tipo_visita: "",
+	tipoVisitaText: "",
 	uniqueID: "",
 	seccion: "",
 	num_int: "",
@@ -32,6 +35,7 @@ const visitaSlice = createSlice({
 			state.colonia = action.payload.colonia;
 			state.cp = action.payload.cp;
 			state.desde = action.payload.desde;
+			state.nameAutor = action.payload.nameAutor;
 			state.emailAutor = action.payload.emailAutor;
 			state.estado = action.payload.estado;
 			state.hasta = action.payload.hasta;
@@ -42,8 +46,10 @@ const visitaSlice = createSlice({
 			state.num_int = action.payload.num_int;
 			state.residencial = action.payload.residencial;
 			state.seccion = action.payload.seccion;
-			state.tipo = action.payload.tipo;
 			state.tipo_visita = action.payload.tipo_visita;
+			state.tipo_ingreso = action.payload.tipo_ingreso;
+			state.tipoIngresoText = action.payload.tipoIngresoText;
+			state.tipoVisitaText = action.payload.tipoVisitaText;
 			state.uniqueID = action.payload.uniqueID;
 		},
 	},
