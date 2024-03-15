@@ -8,11 +8,20 @@ import * as Animatable from "react-native-animatable";
 import { CardTitle } from "@gcVigilantes/Components/CardTitle/CardTitle";
 import RadioGroup from "@gcVigilantes/Components/RadioGroup";
 
-import { TextInput, View, Image, Text, Animated } from "react-native";
+import {
+	TextInput,
+	View,
+	Image,
+	Text,
+	Animated,
+	TouchableOpacity,
+} from "react-native";
 import { MainInfoProps, card_styles } from "./constants";
 import { VehicleInfo } from "@gcVigilantes/Components/VehicleInfo/VehicleInfo";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { app_text_body } from "@gcVigilantes/utils/default.styles";
+import { ScrollView } from "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export const TipoVisitasIcon: { [key: string]: React.ReactNode } = {
 	Visita: <FontAwesome name='user' size={18} color='darkgray' />,
@@ -42,6 +51,36 @@ export const MainInfo = ({
 	const [tipoVisitaState, setTipoVisita] = useState<string>(tipoVisita);
 	const [tipoIngresoState, setTipoIngreso] = useState<string>(tipoIngreso);
 	const [nombreVisitaState, setNombreVisita] = useState<string>(nombreVisita);
+	const [vehicles, setVehicles] = useState<{ [key: string]: string }[]>([
+		{
+			marca: "Ford",
+			modelo: "Escape",
+			anio: "1992",
+			placas: "PBT-000A",
+			color: "Negro",
+		},
+		{
+			marca: "Ford",
+			modelo: "Focus",
+			anio: "2002",
+			placas: "PBT-000B",
+			color: "Gris",
+		},
+		{
+			marca: "Ford",
+			modelo: "Escape",
+			anio: "1992",
+			placas: "PBT-000A",
+			color: "Negro",
+		},
+		{
+			marca: "Ford",
+			modelo: "Focus",
+			anio: "2002",
+			placas: "PBT-000B",
+			color: "Gris",
+		},
+	]);
 
 	// console.log("Tipo ingreso props", tipoIngreso);
 	// console.log("Tipo ingreso state", tipoIngresoState);
@@ -82,7 +121,15 @@ export const MainInfo = ({
 					maxLength={50}
 				/>
 			</View>
-			<View style={[card_styles, { marginBottom: 0 }]}>
+			<View
+				style={[
+					card_styles,
+					{
+						marginBottom: 0,
+						zIndex: 1,
+						elevation: tipoIngresoState == "1" ? 5 : 0,
+					},
+				]}>
 				<CardTitle title='Tipo ingreso' uppercase />
 				<RadioGroup
 					options={catalogIngreso.map((catalog) => ({
@@ -111,81 +158,100 @@ export const MainInfo = ({
 			{tipoIngresoState == "1" && (
 				<>
 					<Animatable.View
-						animation={"fadeIn"}
+						animation={"slideInDown"}
 						iterationCount={1}
 						duration={1000}
 						style={{
 							width: "100%",
-							height: 100,
+							height: 150,
+							top: -10,
+							zIndex: 0,
 						}}>
 						<Image
-							style={{ width: "100%", height: "100%", overlayColor: "black" }}
-							source={require("assets/vehicle_info.png")}
+							style={{
+								width: "100%",
+								height: "100%",
+								margin: "auto",
+							}}
+							source={require("assets/image.jpg")}
 						/>
 					</Animatable.View>
-
-					<View
+					<ScrollView
 						style={{
 							width: "100%",
-							justifyContent: "center",
-							alignItems: "center",
-						}}>
-						<Animatable.View
-							animation={"fadeInUp"}
-							iterationCount={1}
-							duration={1000}
-							style={{
-								width: "60%",
-								padding: "5%",
-								borderRadius: 10,
-								backgroundColor: app_colors.white,
-								alignContent: "center",
-								alignItems: "center",
-								elevation: 7,
-								top: -50,
-							}}>
+							height: 220,
+							top: -110,
+							zIndex: 1,
+							marginBottom: 0,
+						}}
+						contentContainerStyle={{
+							top: 0,
+							width: vehicles.length * 200,
+							justifyContent: "space-around",
+						}}
+						horizontal>
+						{vehicles.map((vehicle, index) => (
 							<View
+								key={index}
 								style={{
-									flexDirection: "row",
-									width: "100%",
-									justifyContent: "space-between",
-									alignItems: "flex-end",
-									marginBottom: 10,
+									width: 180,
+									padding: "2%",
+									margin: "5%",
+									borderRadius: 10,
+									backgroundColor: app_colors.white,
+									alignContent: "center",
+									alignItems: "center",
+									elevation: 7,
+									top: 0,
 								}}>
-								<FontAwesome5
-									name='edit'
-									size={16}
-									color={app_colors.text_gray}
-								/>
-								<FontAwesome5
-									name='times'
-									size={16}
-									color={app_colors.text_gray}
-								/>
-							</View>
-							<View style={{ flexDirection: "row", width: "100%" }}>
 								<View
 									style={{
-										width: "30%",
-										padding: "5%",
-										borderRightWidth: 1,
-										borderRightColor: app_colors.ligth_bg,
+										flexDirection: "row",
+										width: "100%",
+										justifyContent: "space-between",
+										alignItems: "flex-end",
+										marginBottom: 10,
 									}}>
-									<Image
-										width={40}
-										height={40}
-										style={{ width: 40, height: 40, resizeMode: "contain" }}
-										source={require("assets/topView.png")}
+									<FontAwesome5
+										name='edit'
+										size={16}
+										color={app_colors.text_gray}
+									/>
+									<FontAwesome5
+										name='times'
+										size={16}
+										color={app_colors.text_gray}
 									/>
 								</View>
-								<View style={{ width: "70%", padding: "5%" }}>
-									<Text style={app_text_body}>Ford Escape</Text>
-									<Text style={app_text_body}>Negra / 2022</Text>
-									<Text style={app_text_body}>PYH0608D</Text>
+								<View style={{ flexDirection: "row", width: "100%" }}>
+									<View
+										style={{
+											width: "30%",
+											padding: "5%",
+											borderRightWidth: 1,
+											borderRightColor: app_colors.ligth_bg,
+										}}>
+										<Image
+											width={40}
+											height={40}
+											style={{ width: 40, height: 40, resizeMode: "contain" }}
+											source={require("assets/topView.png")}
+										/>
+									</View>
+									<View style={{ width: "70%", padding: "5%" }}>
+										<Text
+											style={
+												app_text_body
+											}>{`${vehicle.marca} ${vehicle.modelo}`}</Text>
+										<Text style={app_text_body}>
+											{`${vehicle.color} / ${vehicle.anio}`}
+										</Text>
+										<Text style={app_text_body}>{vehicle.placas}</Text>
+									</View>
 								</View>
 							</View>
-						</Animatable.View>
-					</View>
+						))}
+					</ScrollView>
 				</>
 			)}
 		</>

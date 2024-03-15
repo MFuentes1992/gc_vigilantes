@@ -1,12 +1,15 @@
-import { app_colors } from "@gcVigilantes/utils/default.colors";
 import React from "react";
+import { MaterialIcons } from "@expo/vector-icons";
 import { View, Text } from "react-native";
+import { app_colors } from "@gcVigilantes/utils/default.colors";
 
 export const CardTitle = ({
 	title,
+	editIcon,
 	uppercase,
 }: {
 	title: string;
+	editIcon?: boolean;
 	uppercase?: boolean;
 }) => {
 	return (
@@ -30,6 +33,7 @@ export const CardTitle = ({
 				}}>
 				{title}
 			</Text>
+			{editIcon && <></>}
 		</View>
 	);
 };
