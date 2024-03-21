@@ -8,20 +8,12 @@ import * as Animatable from "react-native-animatable";
 import { CardTitle } from "@gcVigilantes/Components/CardTitle/CardTitle";
 import RadioGroup from "@gcVigilantes/Components/RadioGroup";
 
-import {
-	TextInput,
-	View,
-	Image,
-	Text,
-	Animated,
-	TouchableOpacity,
-} from "react-native";
+import { TextInput, View, Image, Text } from "react-native";
 import { MainInfoProps, card_styles } from "./constants";
 import { VehicleInfo } from "@gcVigilantes/Components/VehicleInfo/VehicleInfo";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { app_text_body } from "@gcVigilantes/utils/default.styles";
 import { ScrollView } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export const TipoVisitasIcon: { [key: string]: React.ReactNode } = {
 	Visita: <FontAwesome name='user' size={18} color='darkgray' />,
@@ -51,6 +43,12 @@ export const MainInfo = ({
 	const [tipoVisitaState, setTipoVisita] = useState<string>(tipoVisita);
 	const [tipoIngresoState, setTipoIngreso] = useState<string>(tipoIngreso);
 	const [nombreVisitaState, setNombreVisita] = useState<string>(nombreVisita);
+	// -- Disabling and enabling Cards
+	const [tipoVisitaDisabled, setTipoVisitaDisabled] = useState<boolean>(true);
+	const [tipoIngresoDisabled, setTipoIngresoDisabled] = useState<boolean>(true);
+	const [nombreVisitaDisabled, setNombreVisitaDisabled] =
+		useState<boolean>(true);
+	// -- Vehicle info
 	const [vehicles, setVehicles] = useState<{ [key: string]: string }[]>([
 		{
 			marca: "Ford",
@@ -82,15 +80,18 @@ export const MainInfo = ({
 		},
 	]);
 
-	// console.log("Tipo ingreso props", tipoIngreso);
-	// console.log("Tipo ingreso state", tipoIngresoState);
-
 	return (
 		<>
 			<View style={card_styles}>
-				<CardTitle title='tipo de visita' uppercase />
+				<CardTitle
+					title='tipo de visita'
+					uppercase
+					editIcon
+					handleEdit={() => setTipoVisitaDisabled(false)}
+				/>
 				<RadioGroup
 					selectedValue={tipoVisitaState}
+					disabled={tipoVisitaDisabled}
 					options={catalogVisitas.map((catalog) => ({
 						id: catalog.id,
 						label: catalog.tipo_visita,
@@ -104,22 +105,34 @@ export const MainInfo = ({
 				/>
 			</View>
 			<View style={card_styles}>
-				<CardTitle title='Nombre' uppercase />
-				<TextInput
-					style={{
-						width: "100%",
-						height: 40,
-						borderBottomColor: "gray",
-						borderBottomWidth: 0.5,
-					}}
-					value={nombreVisitaState}
-					placeholder='Ingrese aqui el nombre de la visita'
-					onFocus={() => {}}
-					onBlur={() => {}}
-					onChangeText={(text) => console.log("nombre visita", text)}
-					autoCapitalize='words'
-					maxLength={50}
+				<CardTitle
+					title='Nombre'
+					uppercase
+					editIcon
+					handleEdit={() => setNombreVisitaDisabled(false)}
 				/>
+				{nombreVisitaDisabled && (
+					<Text style={{ color: app_colors.text_dark, left: 10 }}>
+						{nombreVisita}
+					</Text>
+				)}
+				{!nombreVisitaDisabled && (
+					<TextInput
+						style={{
+							width: "90%",
+							height: 40,
+							borderBottomColor: "gray",
+							borderBottomWidth: 0.5,
+							left: 10,
+							color: app_colors.text_dark,
+						}}
+						value={nombreVisitaState}
+						placeholder='Ingrese aqui el nombre de la visita'
+						onChangeText={setNombreVisita}
+						autoCapitalize='words'
+						maxLength={50}
+					/>
+				)}
 			</View>
 			<View
 				style={[
@@ -130,7 +143,12 @@ export const MainInfo = ({
 						elevation: tipoIngresoState == "1" ? 5 : 0,
 					},
 				]}>
-				<CardTitle title='Tipo ingreso' uppercase />
+				<CardTitle
+					title='Tipo ingreso'
+					uppercase
+					editIcon
+					handleEdit={() => setTipoIngresoDisabled(false)}
+				/>
 				<RadioGroup
 					options={catalogIngreso.map((catalog) => ({
 						id: catalog.id,
@@ -140,6 +158,7 @@ export const MainInfo = ({
 						] as unknown as React.ReactNode,
 					}))}
 					selectedValue={tipoIngresoState}
+					disabled={tipoIngresoDisabled}
 					handleChange={(value: string) => {
 						setTipoIngreso(value);
 						console.log("TipoIngreso", value);
@@ -173,7 +192,7 @@ export const MainInfo = ({
 								height: "100%",
 								margin: "auto",
 							}}
-							source={require("assets/image.jpg")}
+							source={require("assets/vehicle_info.png")}
 						/>
 					</Animatable.View>
 					<ScrollView

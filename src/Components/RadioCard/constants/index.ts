@@ -22,7 +22,6 @@ export const formStyles = StyleSheet.create({
 		borderRadius: 5,
 		marginVertical: 3,
 		margin: "2%",
-		borderColor: app_colors.secondary,
 		borderWidth: 1,
 	},
 	radioButton: {
@@ -30,7 +29,6 @@ export const formStyles = StyleSheet.create({
 		width: 15,
 		borderRadius: 12,
 		borderWidth: 1,
-		borderColor: app_colors.secondary,
 		alignItems: "center",
 		justifyContent: "center",
 	},
@@ -47,7 +45,6 @@ export const formStyles = StyleSheet.create({
 		height: 10,
 		width: 10,
 		borderRadius: 6,
-		backgroundColor: app_colors.secondary,
 	},
 	radioBtnPosition: {
 		//ajustar al lado derecho

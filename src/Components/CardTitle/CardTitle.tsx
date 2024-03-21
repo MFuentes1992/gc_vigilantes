@@ -1,23 +1,27 @@
 import React from "react";
-import { MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 import { View, Text } from "react-native";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export const CardTitle = ({
 	title,
 	editIcon,
 	uppercase,
+	handleEdit,
 }: {
 	title: string;
 	editIcon?: boolean;
 	uppercase?: boolean;
+	handleEdit?: () => void;
 }) => {
 	return (
 		<View
 			style={{
 				borderColor: app_colors.ligth_bg,
 				width: "100%",
-				justifyContent: "flex-start",
+				flexDirection: "row",
+				justifyContent: "space-between",
 				alignItems: "flex-start",
 			}}>
 			<Text
@@ -33,7 +37,11 @@ export const CardTitle = ({
 				}}>
 				{title}
 			</Text>
-			{editIcon && <></>}
+			{editIcon && (
+				<TouchableOpacity style={{ marginTop: 10 }} onPress={handleEdit}>
+					<FontAwesome5 name='edit' size={16} color={app_colors.text_gray} />
+				</TouchableOpacity>
+			)}
 		</View>
 	);
 };

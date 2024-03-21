@@ -8,6 +8,7 @@ type RadioGroupProps = {
 		label: string;
 		icon: React.ReactNode;
 	}[];
+	disabled?: boolean;
 	selectedValue?: string;
 	orientation?: "horizontal" | "vertical";
 	handleChange: (value: string) => void;
@@ -32,11 +33,14 @@ export const RadioGroup = (props: RadioGroupProps) => {
 					key={option.id}
 					label={option.label}
 					id={option.id}
+					disabled={props.disabled}
 					icon={option.icon}
 					selected={selectedOption === option.id}
 					handleChange={() => {
-						setSelectedOption(option.id);
-						props.handleChange(option.id);
+						if (!props.disabled) {
+							setSelectedOption(option.id);
+							props.handleChange(option.id);
+						}
 					}}
 				/>
 			))}
@@ -47,4 +51,5 @@ export const RadioGroup = (props: RadioGroupProps) => {
 RadioGroup.defaultProps = {
 	orientation: "horizontal",
 	selectedValue: "",
+	disabled: false,
 };
