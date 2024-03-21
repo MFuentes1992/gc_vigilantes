@@ -80,15 +80,14 @@ export const card_styles: ViewStyle = {
 export const mainInfoVehicleScrollStyles: ViewStyle = {
 	width: "100%",
 	height: 200,
-	top: -10,
 	zIndex: 1,
 	marginBottom: 0,
 };
 
 export const getVehicleInfoStyles = (vehicles: any[]): ViewStyle => {
 	return {
-		top: 0,
-		width: vehicles.length * 200,
-		justifyContent: "space-around",
+		padding: "5%",
+		width: vehicles.length * 220,
+		justifyContent: vehicles.length > 1 ? "space-around" : "center",
 	};
 };

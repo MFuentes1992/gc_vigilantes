@@ -13,8 +13,7 @@ export type VehicleCardProp = {
 
 export const vehicleCardStyles: ViewStyle = {
 	width: 180,
-	padding: "2%",
-	margin: "5%",
+	padding: 10,
 	borderRadius: 10,
 	backgroundColor: app_colors.white,
 	alignContent: "center",

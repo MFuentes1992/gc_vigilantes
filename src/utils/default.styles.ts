@@ -11,7 +11,7 @@ export const app_text_property: TextStyle = {
 export const app_text_body: TextStyle = {
 	fontSize: 12,
 	fontWeight: "normal",
-	color: app_colors.text_gray,
+	color: app_colors.text_dark,
 	marginBottom: 3,
 };
 

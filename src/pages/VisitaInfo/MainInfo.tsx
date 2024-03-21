@@ -65,7 +65,7 @@ export const MainInfo = ({
 		{
 			marca: "Ford",
 			modelo: "Focus",
-			anio: "2002",
+			anio: "2004",
 			placas: "PBT-000B",
 			color: "Gris",
 		},
@@ -79,7 +79,21 @@ export const MainInfo = ({
 		{
 			marca: "Ford",
 			modelo: "Focus",
-			anio: "2002",
+			anio: "2004",
+			placas: "PBT-000B",
+			color: "Gris",
+		},
+		{
+			marca: "Ford",
+			modelo: "Escape",
+			anio: "1992",
+			placas: "PBT-000A",
+			color: "Negro",
+		},
+		{
+			marca: "Ford",
+			modelo: "Focus",
+			anio: "2004",
 			placas: "PBT-000B",
 			color: "Gris",
 		},

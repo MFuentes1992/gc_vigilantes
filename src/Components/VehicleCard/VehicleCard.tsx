@@ -32,7 +32,9 @@ export const VehicleCard = ({ vehicle }: VehicleCardProp) => {
 					<Text style={app_text_body}>
 						{`${vehicle.color} / ${vehicle.anio}`}
 					</Text>
-					<Text style={app_text_body}>{vehicle.placas}</Text>
+					<Text style={[app_text_body, { fontWeight: "bold" }]}>
+						{vehicle.placas}
+					</Text>
 				</View>
 			</View>
 		</View>
