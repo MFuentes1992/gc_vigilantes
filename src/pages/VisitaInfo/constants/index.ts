@@ -10,6 +10,11 @@ export const TABS = {
 	SETTINGS: "settings",
 };
 
+export const TIPO_INGRESO = {
+	VEHICULO: { label: "Vehículo", id: "1" },
+	PEATONAL: { label: "Peatonal", id: "2" },
+};
+
 export type VisitaInfoProps = {
 	nombre: string;
 	desde: string;
@@ -70,4 +75,20 @@ export const card_styles: ViewStyle = {
 	padding: "2%",
 	borderColor: app_colors.ligth_bg,
 	borderWidth: 0.5,
+};
+
+export const mainInfoVehicleScrollStyles: ViewStyle = {
+	width: "100%",
+	height: 220,
+	top: -110,
+	zIndex: 1,
+	marginBottom: 0,
+};
+
+export const getVehicleInfoStyles = (vehicles: any[]): ViewStyle => {
+	return {
+		top: 0,
+		width: vehicles.length * 200,
+		justifyContent: "space-around",
+	};
 };
