@@ -86,7 +86,7 @@ export const MainInfo = ({
 	]);
 
 	return (
-		<>
+		<View>
 			<View style={card_styles}>
 				<CardTitle
 					title='tipo de visita'
@@ -172,25 +172,6 @@ export const MainInfo = ({
 			</View>
 			{tipoIngresoState == TIPO_INGRESO.VEHICULO.id && (
 				<>
-					<Animatable.View
-						animation={"slideInDown"}
-						iterationCount={1}
-						duration={1000}
-						style={{
-							width: "100%",
-							height: 150,
-							top: -10,
-							zIndex: 0,
-						}}>
-						<Image
-							style={{
-								width: "100%",
-								height: "100%",
-								margin: "auto",
-							}}
-							source={require("assets/vehicle_info.png")}
-						/>
-					</Animatable.View>
 					<ScrollView
 						style={mainInfoVehicleScrollStyles}
 						contentContainerStyle={getVehicleInfoStyles(vehicles)}
@@ -201,6 +182,6 @@ export const MainInfo = ({
 					</ScrollView>
 				</>
 			)}
-		</>
+		</View>
 	);
 };

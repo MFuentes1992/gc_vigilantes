@@ -79,8 +79,8 @@ export const card_styles: ViewStyle = {
 
 export const mainInfoVehicleScrollStyles: ViewStyle = {
 	width: "100%",
-	height: 220,
-	top: -110,
+	height: 200,
+	top: -10,
 	zIndex: 1,
 	marginBottom: 0,
 };
