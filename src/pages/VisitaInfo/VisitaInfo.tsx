@@ -81,7 +81,9 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 						nombreVisita={visitaData.nombre}
 					/>
 				)}
-				{tab === TABS.DATE && <DateInfo />}
+				{tab === TABS.DATE && (
+					<DateInfo fromDate={visitaData.desde} toDate={visitaData.hasta} />
+				)}
 				{tab === TABS.GUEST && <GuestInfo />}
 				{tab === TABS.SETTINGS && (
 					<SettingsInfo
