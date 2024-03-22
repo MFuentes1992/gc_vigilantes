@@ -27,7 +27,7 @@ export const getVehicles = (uniqueID: string) => (dispatch: any) => {
 	fetch(url)
 		.then((response) => response.json())
 		.then((data) => {
-			dispatch(setVehicles([data] as VehiclesResType[]));
+			dispatch(setVehicles([...data] as VehiclesResType[]));
 		})
 		.catch((error) => {
 			console.error("Error:", error);
