@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { getCatalogTipoVisitas } from "@gcVigilantes/store/TipoVisitas/api";
 import { RootState } from "@gcVigilantes/store";
 import { getCatalogTipoIngreso } from "@gcVigilantes/store/TipoIngreso/api";
@@ -11,7 +13,10 @@ import { FormSaveButtons } from "@gcVigilantes/Components/FormSaveButtons/FormSa
 import { DateInfo } from "./DateInfo";
 import { GuestInfo } from "./GuestInfo";
 import { SettingsInfo } from "./SettingsInfo";
-import { getVisitaByUniqueID } from "@gcVigilantes/store/Visita/api";
+import {
+	getVehicles,
+	getVisitaByUniqueID,
+} from "@gcVigilantes/store/Visita/api";
 
 export const VisitaInfo = ({ navigation, route }: any) => {
 	const { uniqueID, uri } = route.params;
@@ -39,11 +44,13 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 		(state: RootState) => state.tipoIngreso
 	);
 	const visitaData = useSelector((state: RootState) => state.visita);
+	const Tab = createBottomTabNavigator();
 
 	useEffect(() => {
 		dispatch(getCatalogTipoVisitas() as any);
 		dispatch(getCatalogTipoIngreso() as any);
 		dispatch(getVisitaByUniqueID(uniqueID) as any);
+		dispatch(getVehicles(uniqueID) as any);
 	}, []);
 
 	return (
@@ -62,6 +69,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 					handleChangeTab={(tab) => setTab(tab)}
 					num_int={visitaData.num_int}
 					seccion={visitaData.seccion}
+					selectedTab={tab}
 				/>
 				{/** Main tab: Nombre visita, tipo visita, tipo Ingreso  */}
 				{tab === TABS.MAIN && (

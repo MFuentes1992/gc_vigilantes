@@ -1,6 +1,7 @@
 export const app_colors = {
 	primary: "#845EC2",
 	secondary: "#FF9671",
+	third: "#00C9A7",
 	secondary_badge: "#00C9A7",
 	secondary_badge_vivid: "#C7EA46",
 	header: "#B39CD0",

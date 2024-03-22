@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
 	FontAwesome,
 	FontAwesome5,
@@ -19,6 +19,9 @@ import {
 import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { ScrollView } from "react-native-gesture-handler";
 import { VehicleCard } from "@gcVigilantes/Components/VehicleCard/VehicleCard";
+import { useSelector } from "react-redux";
+import { RootState } from "@gcVigilantes/store";
+import { VehiclesResType } from "@gcVigilantes/store/Visita/types";
 
 export const TipoVisitasIcon: { [key: string]: React.ReactNode } = {
 	Visita: <FontAwesome name='user' size={18} color='darkgray' />,
@@ -54,50 +57,12 @@ export const MainInfo = ({
 	const [nombreVisitaDisabled, setNombreVisitaDisabled] =
 		useState<boolean>(true);
 	// -- Vehicle info
-	const [vehicles, setVehicles] = useState<{ [key: string]: string }[]>([
-		{
-			marca: "Ford",
-			modelo: "Escape",
-			anio: "1992",
-			placas: "PBT-000A",
-			color: "Negro",
-		},
-		{
-			marca: "Ford",
-			modelo: "Focus",
-			anio: "2004",
-			placas: "PBT-000B",
-			color: "Gris",
-		},
-		{
-			marca: "Ford",
-			modelo: "Escape",
-			anio: "1992",
-			placas: "PBT-000A",
-			color: "Negro",
-		},
-		{
-			marca: "Ford",
-			modelo: "Focus",
-			anio: "2004",
-			placas: "PBT-000B",
-			color: "Gris",
-		},
-		{
-			marca: "Ford",
-			modelo: "Escape",
-			anio: "1992",
-			placas: "PBT-000A",
-			color: "Negro",
-		},
-		{
-			marca: "Ford",
-			modelo: "Focus",
-			anio: "2004",
-			placas: "PBT-000B",
-			color: "Gris",
-		},
-	]);
+	const visita = useSelector((state: RootState) => state.visita);
+	const [vehicles, setVehicles] = useState<VehiclesResType[]>([]);
+
+	useEffect(() => {
+		if (visita.vehicles?.length > 0) setVehicles(visita.vehicles);
+	}, [visita.vehicles]);
 
 	return (
 		<View>
@@ -159,7 +124,6 @@ export const MainInfo = ({
 					{
 						marginBottom: 0,
 						zIndex: 1,
-						elevation: tipoIngresoState == "1" ? 5 : 0,
 					},
 				]}>
 				<CardTitle

@@ -1,6 +1,6 @@
 import { ENDPOINTS } from "@gcVigilantes/utils";
-import { setVisita } from "@gcVigilantes/store/Visita";
-import { IVisita } from "../types";
+import { setVisita, setVehicles } from "@gcVigilantes/store/Visita";
+import { IVisita, VehiclesResType } from "../types";
 import data_mock from "./data.json";
 
 export const getVisitaByUniqueID = (uniqueID: string) => (dispatch: any) => {
@@ -8,14 +8,28 @@ export const getVisitaByUniqueID = (uniqueID: string) => (dispatch: any) => {
 		"{qr}",
 		uniqueID
 	)}`;
-	dispatch(setVisita(data_mock as IVisita));
 	fetch(url)
 		.then((response) => response.json())
 		.then((data) => {
-			console.log("Visita data", data);
-			// dispatch(setVisita(data_mock as IVisita));
+			dispatch(setVisita(data as IVisita));
 		})
 
+		.catch((error) => {
+			console.error("Error:", error);
+		});
+};
+
+export const getVehicles = (uniqueID: string) => (dispatch: any) => {
+	const url = `${ENDPOINTS.BASE_URL}${ENDPOINTS.VISITAS.VEHICLES.replace(
+		"{qr}",
+		uniqueID
+	)}`;
+	fetch(url)
+		.then((response) => response.json())
+		.then((data) => {
+			console.log("Vehicle Data:", data);
+			dispatch(setVehicles([data] as VehiclesResType[]));
+		})
 		.catch((error) => {
 			console.error("Error:", error);
 		});

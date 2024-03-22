@@ -4,6 +4,7 @@ export const ENDPOINTS = {
 	CATALOG_TIPO_INGRESO: "/visita/catalogs/GetTipoIngreso/index.php",
 	VISITAS: {
 		BY_UNIQUEID: "/visita/read-qr/index.php?qr={qr}",
+		VEHICLES: "/visita/getVisitVehicles/index.php?qr={qr}",
 	},
 };
 

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IVisita } from "./types";
+import { IVisita, VehiclesResType } from "./types";
 
 const initialState: IVisita = {
 	nombre: "",
@@ -23,6 +23,7 @@ const initialState: IVisita = {
 	ciudad: "",
 	estado: "",
 	cp: "",
+	vehicles: [],
 };
 
 const visitaSlice = createSlice({
@@ -52,8 +53,11 @@ const visitaSlice = createSlice({
 			state.tipoVisitaText = action.payload.tipoVisitaText;
 			state.uniqueID = action.payload.uniqueID;
 		},
+		setVehicles(state, action: PayloadAction<VehiclesResType[]>) {
+			state.vehicles = action.payload;
+		},
 	},
 });
 
-export const { setVisita } = visitaSlice.actions;
+export const { setVisita, setVehicles } = visitaSlice.actions;
 export default visitaSlice.reducer;

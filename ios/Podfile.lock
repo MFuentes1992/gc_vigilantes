@@ -1078,6 +1078,8 @@ PODS:
     - React-jsi (= 0.73.4)
     - React-logger (= 0.73.4)
     - React-perflogger (= 0.73.4)
+  - RNCAsyncStorage (1.22.2):
+    - React-Core
   - RNGestureHandler (2.15.0):
     - glog
     - RCT-Folly (= 2022.05.16.00)
@@ -1151,6 +1153,7 @@ DEPENDENCIES:
   - React-runtimescheduler (from `../node_modules/react-native/ReactCommon/react/renderer/runtimescheduler`)
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNQrGenerator (from `../node_modules/rn-qr-generator`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -1276,6 +1279,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/utils"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-async-storage/async-storage"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNQrGenerator:
@@ -1342,6 +1347,7 @@ SPEC CHECKSUMS:
   React-runtimescheduler: ed48e5faac6751e66ee1261c4bd01643b436f112
   React-utils: 6e5ad394416482ae21831050928ae27348f83487
   ReactCommon: 840a955d37b7f3358554d819446bffcf624b2522
+  RNCAsyncStorage: 014a78b2cc8cc107c9e92ee428dc0c1ac3223416
   RNGestureHandler: deda62b8339496ba721a45e0f3e2d7a319932cee
   RNQrGenerator: 1676221c08bfabec978242989c733810dad20959
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17

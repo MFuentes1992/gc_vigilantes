@@ -17,7 +17,6 @@ export const app_text_body: TextStyle = {
 
 export const app_text_menu: TextStyle = {
 	fontSize: 10,
-	fontWeight: "normal",
-	color: app_colors.text_gray,
+	fontWeight: "bold",
 	marginBottom: 3,
 };

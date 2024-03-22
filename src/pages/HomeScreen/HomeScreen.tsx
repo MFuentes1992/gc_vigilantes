@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Image, View, Button, Text, TouchableOpacity } from "react-native";
+import {
+	Image,
+	View,
+	Button,
+	Text,
+	TouchableOpacity,
+	Alert,
+} from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
 import RNQRGenerator from "rn-qr-generator";
 import { InitializeConnection, authenticate } from "./constants";
@@ -44,10 +51,15 @@ export const HomeScreen = ({ navigation }: any) => {
 					const { values } = response;
 					const tmpArray = values.toString().split("/");
 					console.log("Detected QR code values", values);
-					navigation.navigate("VisitaInfo", {
-						uniqueID: tmpArray[tmpArray.length - 1],
-						uri: selectedImage,
-					});
+					if (values.toString().includes("http")) {
+						navigation.navigate("VisitaInfo", {
+							uniqueID: tmpArray[tmpArray.length - 1],
+							uri: selectedImage,
+						});
+					} else {
+						setSelectedImage("");
+						Alert.alert("Error", "QR code not valid");
+					}
 				})
 				.catch((error) => console.log("Cannot detect QR code in image", error));
 		}

@@ -1,5 +1,8 @@
 import React from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 import {
 	VisitaDetailsProps,
 	defaultRow,
@@ -17,6 +20,7 @@ import {
 } from "@gcVigilantes/utils/default.styles";
 import { Switcher } from "@gcVigilantes/Components/Switcher/Switcher";
 import { TABS } from "@gcVigilantes/pages/VisitaInfo/constants";
+import { app_colors } from "@gcVigilantes/utils/default.colors";
 
 export const VisitaDetails = ({
 	uri,
@@ -27,6 +31,7 @@ export const VisitaDetails = ({
 	seccion,
 	direccion,
 	notificaciones,
+	selectedTab,
 	handleNotificaciones,
 	handleChangeTab,
 }: VisitaDetailsProps) => {
@@ -42,7 +47,9 @@ export const VisitaDetails = ({
 				/>
 				<View style={details_info}>
 					<Text style={app_text_body}>{autor}</Text>
-					<Text style={app_text_menu}>{emailAutor}</Text>
+					<Text style={[app_text_menu, { color: app_colors.text_dark }]}>
+						{emailAutor}
+					</Text>
 					<View style={defaultRow}>
 						<Text style={app_text_property}>Num Int:</Text>
 						<Text style={app_text_body}>{num_int}</Text>
@@ -73,17 +80,117 @@ export const VisitaDetails = ({
 				</View>
 			</View>
 			<View style={details_menu}>
-				<TouchableOpacity onPress={() => handleChangeTab(TABS.MAIN)}>
-					<Text style={app_text_menu}>Resumen</Text>
+				<TouchableOpacity
+					style={{
+						paddingTop: 5,
+						justifyContent: "center",
+						alignItems: "center",
+					}}
+					onPress={() => handleChangeTab(TABS.MAIN)}>
+					<MaterialCommunityIcons
+						name='file-document-multiple'
+						size={24}
+						color={
+							selectedTab === TABS.MAIN ? app_colors.third : app_colors.ligth_bg
+						}
+					/>
+					<Text
+						style={[
+							app_text_menu,
+							{
+								color:
+									selectedTab === TABS.MAIN
+										? app_colors.third
+										: app_colors.text_gray,
+							},
+						]}>
+						RESUMEN
+					</Text>
 				</TouchableOpacity>
-				<TouchableOpacity onPress={() => handleChangeTab(TABS.DATE)}>
-					<Text style={app_text_menu}>Fechas</Text>
+				<TouchableOpacity
+					style={{
+						paddingTop: 5,
+						justifyContent: "center",
+						alignItems: "center",
+					}}
+					onPress={() => handleChangeTab(TABS.DATE)}>
+					<FontAwesome
+						name='calendar'
+						size={24}
+						color={
+							selectedTab === TABS.DATE ? app_colors.third : app_colors.ligth_bg
+						}
+					/>
+					<Text
+						style={[
+							app_text_menu,
+							{
+								color:
+									selectedTab === TABS.DATE
+										? app_colors.third
+										: app_colors.text_gray,
+							},
+						]}>
+						FECHAS
+					</Text>
 				</TouchableOpacity>
-				<TouchableOpacity onPress={() => handleChangeTab(TABS.GUEST)}>
-					<Text style={app_text_menu}>Invitados</Text>
+				<TouchableOpacity
+					style={{
+						paddingTop: 5,
+						justifyContent: "center",
+						alignItems: "center",
+					}}
+					onPress={() => handleChangeTab(TABS.GUEST)}>
+					<MaterialIcons
+						name='people-alt'
+						size={24}
+						color={
+							selectedTab === TABS.GUEST
+								? app_colors.third
+								: app_colors.ligth_bg
+						}
+					/>
+					<Text
+						style={[
+							app_text_menu,
+							{
+								color:
+									selectedTab === TABS.GUEST
+										? app_colors.third
+										: app_colors.text_gray,
+							},
+						]}>
+						INVITADOS
+					</Text>
 				</TouchableOpacity>
-				<TouchableOpacity onPress={() => handleChangeTab(TABS.SETTINGS)}>
-					<Text style={app_text_menu}>Ajustes</Text>
+				<TouchableOpacity
+					style={{
+						paddingTop: 5,
+						justifyContent: "center",
+						alignItems: "center",
+					}}
+					onPress={() => handleChangeTab(TABS.SETTINGS)}>
+					<MaterialIcons
+						name='settings'
+						size={24}
+						color={
+							selectedTab === TABS.SETTINGS
+								? app_colors.third
+								: app_colors.ligth_bg
+						}
+					/>
+					<Text
+						style={[
+							app_text_menu,
+							{
+								color:
+									selectedTab === TABS.SETTINGS
+										? app_colors.third
+										: app_colors.text_gray,
+							},
+						]}>
+						AJUSTES
+					</Text>
 				</TouchableOpacity>
 			</View>
 		</>

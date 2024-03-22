@@ -1,3 +1,11 @@
+export type VehiclesResType = {
+	marca: string;
+	modelo: string;
+	anio: string;
+	placas: string;
+	color: string;
+};
+
 export interface IVisita {
 	nombre: string;
 	desde: string;
@@ -20,4 +28,5 @@ export interface IVisita {
 	ciudad: string;
 	estado: string;
 	cp: string;
+	vehicles: VehiclesResType[];
 }
