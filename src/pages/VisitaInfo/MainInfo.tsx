@@ -154,8 +154,8 @@ export const MainInfo = ({
 						style={mainInfoVehicleScrollStyles}
 						contentContainerStyle={getVehicleInfoStyles(vehicles)}
 						horizontal>
-						{vehicles.map((vehicle: any, index) => (
-							<VehicleCard vehicle={vehicle} />
+						{vehicles.map((vehicle: VehiclesResType) => (
+							<VehicleCard key={vehicle.placas} vehicle={vehicle} />
 						))}
 					</ScrollView>
 				</>

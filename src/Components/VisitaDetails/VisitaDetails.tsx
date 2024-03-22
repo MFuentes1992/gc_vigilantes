@@ -69,13 +69,6 @@ export const VisitaDetails = ({
 								{estatus ? "Activa" : "Inactiva"}
 							</Text>
 						</View>
-						<View>
-							<Switcher
-								title='Alertas'
-								value={notificaciones}
-								handleOnChange={handleNotificaciones}
-							/>
-						</View>
 					</View>
 				</View>
 			</View>
