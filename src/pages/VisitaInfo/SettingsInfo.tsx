@@ -51,13 +51,13 @@ export const SettingsInfo = (props: settingsInfoProps) => {
 			<View style={card_styles}>
 				<CardTitle title='Ajustes generales' uppercase />
 				<Switcher
-					title='Alertas:'
-					value={false}
+					title='Notificaciones:'
+					value={props.notificaciones}
 					handleOnChange={(value: boolean) => console.log(value)}
 				/>
 				<Switcher
 					title='Multiple entrada:'
-					value={true}
+					value={props.multiple_entrada}
 					handleOnChange={(value: boolean) => console.log(value)}
 				/>
 			</View>

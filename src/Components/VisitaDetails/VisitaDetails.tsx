@@ -69,13 +69,6 @@ export const VisitaDetails = ({
 								{estatus ? "Activa" : "Inactiva"}
 							</Text>
 						</View>
-						<View>
-							<Switcher
-								title='Alertas'
-								value={notificaciones}
-								handleOnChange={handleNotificaciones}
-							/>
-						</View>
 					</View>
 				</View>
 			</View>
@@ -89,7 +82,7 @@ export const VisitaDetails = ({
 					onPress={() => handleChangeTab(TABS.MAIN)}>
 					<MaterialCommunityIcons
 						name='file-document-multiple'
-						size={24}
+						size={18}
 						color={
 							selectedTab === TABS.MAIN ? app_colors.third : app_colors.ligth_bg
 						}
@@ -116,7 +109,7 @@ export const VisitaDetails = ({
 					onPress={() => handleChangeTab(TABS.DATE)}>
 					<FontAwesome
 						name='calendar'
-						size={24}
+						size={18}
 						color={
 							selectedTab === TABS.DATE ? app_colors.third : app_colors.ligth_bg
 						}
@@ -143,7 +136,7 @@ export const VisitaDetails = ({
 					onPress={() => handleChangeTab(TABS.GUEST)}>
 					<MaterialIcons
 						name='people-alt'
-						size={24}
+						size={18}
 						color={
 							selectedTab === TABS.GUEST
 								? app_colors.third
@@ -172,7 +165,7 @@ export const VisitaDetails = ({
 					onPress={() => handleChangeTab(TABS.SETTINGS)}>
 					<MaterialIcons
 						name='settings'
-						size={24}
+						size={18}
 						color={
 							selectedTab === TABS.SETTINGS
 								? app_colors.third

@@ -7,7 +7,7 @@ import { getCatalogTipoVisitas } from "@gcVigilantes/store/TipoVisitas/api";
 import { RootState } from "@gcVigilantes/store";
 import { getCatalogTipoIngreso } from "@gcVigilantes/store/TipoIngreso/api";
 import { VisitaDetails } from "@gcVigilantes/Components/VisitaDetails/VisitaDetails";
-import { TABS } from "./constants";
+import { SWITCHER_VALUES, TABS } from "./constants";
 import { MainInfo } from "./MainInfo";
 import { FormSaveButtons } from "@gcVigilantes/Components/FormSaveButtons/FormSaveButtons";
 import { DateInfo } from "./DateInfo";
@@ -62,7 +62,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 					emailAutor={visitaData.emailAutor}
 					direccion={`${visitaData.residencial}, ${visitaData.calle}, ${visitaData.num_ext}`}
 					estatus={visitaData.estado}
-					notificaciones={formValues.notificaciones}
+					notificaciones={visitaData.notificaciones === SWITCHER_VALUES.TRUE}
 					handleNotificaciones={(value) => {
 						setFormValues((prev) => ({ ...prev, notificaciones: value }));
 					}}
@@ -81,7 +81,9 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 						nombreVisita={visitaData.nombre}
 					/>
 				)}
-				{tab === TABS.DATE && <DateInfo />}
+				{tab === TABS.DATE && (
+					<DateInfo fromDate={visitaData.desde} toDate={visitaData.hasta} />
+				)}
 				{tab === TABS.GUEST && <GuestInfo />}
 				{tab === TABS.SETTINGS && (
 					<SettingsInfo
@@ -96,6 +98,10 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 						ciudad={visitaData.ciudad}
 						estado={visitaData.estado}
 						cp={visitaData.cp}
+						notificaciones={visitaData.notificaciones === SWITCHER_VALUES.TRUE}
+						multiple_entrada={
+							visitaData.multiple_entrada === SWITCHER_VALUES.TRUE
+						}
 					/>
 				)}
 				<FormSaveButtons />

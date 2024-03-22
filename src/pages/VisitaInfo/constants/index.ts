@@ -15,6 +15,11 @@ export const TIPO_INGRESO = {
 	PEATONAL: { label: "Peatonal", id: "2" },
 };
 
+export const SWITCHER_VALUES = {
+	TRUE: "1",
+	FALSE: "0",
+};
+
 export type VisitaInfoProps = {
 	nombre: string;
 	desde: string;
@@ -65,6 +70,8 @@ export type settingsInfoProps = {
 	ciudad: string;
 	estado: string;
 	cp: string;
+	notificaciones: boolean;
+	multiple_entrada: boolean;
 };
 
 export const card_styles: ViewStyle = {

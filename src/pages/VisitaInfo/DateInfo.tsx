@@ -14,6 +14,8 @@ export const DateInfo = ({
 	toHour,
 }: DateInfoProps) => {
 	const timeZone = new Date().getTimezoneOffset();
+	const [startDate, setStartDate] = React.useState(fromDate?.split("T")[0]);
+	const [endDate, setEndate] = React.useState(toDate?.split("T")[0]);
 	return (
 		<>
 			<View style={card_styles}>
@@ -22,13 +24,19 @@ export const DateInfo = ({
 					style={{ width: "100%" }}
 					markingType='period'
 					markedDates={{
-						[`2024-03-04`]: {
+						[`${startDate}`]: {
 							startingDay: true,
-							color: app_colors.secondary,
-						},
-						[`2024-03-06`]: {
 							endingDay: true,
 							color: app_colors.secondary,
+							textColor: app_colors.white,
+							selected: true,
+						},
+						[`${endDate}`]: {
+							startingDay: true,
+							endingDay: true,
+							color: app_colors.secondary,
+							textColor: app_colors.white,
+							selected: true,
 						},
 					}}
 					onDayPress={(day) => {
@@ -53,7 +61,7 @@ export const DateInfo = ({
 							color: app_colors.black,
 							fontWeight: "bold",
 						}}>
-						{fromHour}:{toHour}
+						{fromDate?.split("T")[1].substring(0, 4)}
 					</Text>
 					<Text style={app_text_body}>{getTimeZone(timeZone)}</Text>
 				</View>
@@ -71,7 +79,7 @@ export const DateInfo = ({
 							color: app_colors.black,
 							fontWeight: "bold",
 						}}>
-						{fromHour}:{toHour}
+						{toDate?.split("T")[1].substring(0, 4)}
 					</Text>
 					<Text style={app_text_body}>{getTimeZone(timeZone)}</Text>
 				</View>
