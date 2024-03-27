@@ -1,0 +1,25 @@
+#!/bin/bash
+CURRENTEPOCTIME=`date +"%Y-%m-%d-%T"`
+CURR_DIR=$PWD
+UNIVERSAL_BUNDLE=universal_bundle.apks
+RELEASE_DEV=release_dev.apk
+
+pwd
+eas build --platform android --local --non-interactive
+
+
+for file in *.aab 
+do
+    FILE_NAME=$file
+done 
+
+echo "Compiled app: $FILE_NAME"
+mkdir $CURR_DIR/release$CURRENTEPOCTIME
+bundletool build-apks --bundle=$FILE_NAME --output=$UNIVERSAL_BUNDLE --mode=universal --ks="$HOME/development/FrontEnd/Cirkuits/cirkuits-app/cirkuits-pipeline/cirkuits_certificate.keystore" --ks-pass=file:"$HOME/development/FrontEnd/Cirkuits/cirkuits-app/cirkuits-pipeline/ks_pwd.pwd" --ks-key-alias=cirkuits_cert --key-pass=file:"$HOME/development/FrontEnd/Cirkuits/cirkuits-app/cirkuits-pipeline/ks_pwd.pwd"
+mv $UNIVERSAL_BUNDLE $CURR_DIR/release$CURRENTEPOCTIME
+rm $FILE_NAME   
+cd $CURR_DIR/release$CURRENTEPOCTIME
+
+unzip -p $UNIVERSAL_BUNDLE universal.apk > $RELEASE_DEV
+
+ls -l

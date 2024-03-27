@@ -27,6 +27,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "2356f437-fa62-41fc-ba64-56ba37e7774d"
+      }
+    },
+    "owner": "mfuentes1992"
   }
 }
