@@ -1,3 +1,5 @@
+import lang_es from "@gcVigilantes/utils/Messages/lang_esp.json";
+
 export const ENDPOINTS = {
 	BASE_URL: "https://apimovilgc.dasgalu.net",
 	CATALOG_TIPO_VISITAS: "/visita/catalogs/GetTipoVisita/index.php",
@@ -6,6 +8,15 @@ export const ENDPOINTS = {
 		BY_UNIQUEID: "/visita/read-qr/index.php?qr={qr}",
 		VEHICLES: "/visita/getVisitVehicles/index.php?qr={qr}",
 	},
+	VIGILANTE: {
+		CODE: "/vigilante/activationCode/index.php",
+	},
+};
+
+export const ROUTES = {
+	ACTIVATION_CODE: "activation-code",
+	HOME: "Vigilante-qr",
+	VISIT_INFO: "VisitaInfo",
 };
 
 const TIME_ZONES = {
@@ -27,3 +38,17 @@ export const timeFormat = (time: number) =>
 
 export const timeZone = "es-MX";
 export const dateFormat = "YYYY-MM-DD";
+
+export const getLabelApp = (lang: string, key: string) => {
+	let language = "";
+	switch (lang) {
+		case "es":
+			language = JSON.stringify(lang_es);
+			break;
+		default:
+			language = JSON.stringify(lang_es);
+			break;
+	}
+	const labels = JSON.parse(language);
+	return labels[key];
+};
