@@ -24,6 +24,7 @@ export const ActivationCode = ({ navigation }: any) => {
 	const dispatch = useDispatch();
 	const [activationCode, setActivationCode] = useState<string>("");
 	const { access_token } = useSelector((state: RootState) => state.userData);
+	const [loading, setLoading] = useState<boolean>(true);
 	const preferences = useSelector((state: RootState) => state.preferences);
 
 	useEffect(() => {
@@ -47,6 +48,8 @@ export const ActivationCode = ({ navigation }: any) => {
 						.then((token_ins) => {
 							if (token_ins !== null) {
 								navigation.navigate(ROUTES.HOME);
+							} else {
+								setLoading(false);
 							}
 						})
 						.catch(() => {
@@ -104,35 +107,42 @@ export const ActivationCode = ({ navigation }: any) => {
 
 	return (
 		<ScrollView>
-			<View style={container}>
-				<View style={title_container}>
-					<Text style={app_text_title}>
-						{getLabelApp(preferences.language, "app_activation_code")}
-					</Text>
-				</View>
-				<View style={card_styles}>
-					<TextInput
-						style={{
-							fontSize: 16,
-							height: 40,
-							padding: 10,
-						}}
-						value={activationCode}
-						onChangeText={handleTextChange}
-						placeholder={getLabelApp(
-							preferences.language,
-							"app_activation_code_placeholder"
-						)}
-					/>
-				</View>
-				<View style={card_styles}>
-					<TouchableOpacity style={submit_button} onPress={handleSubmit}>
-						<Text style={{ color: app_colors.white }}>
-							{getLabelApp(preferences.language, "app_submit_continue")}
+			{!loading && (
+				<View style={container}>
+					<View style={title_container}>
+						<Text style={app_text_title}>
+							{getLabelApp(preferences.language, "app_activation_code")}
 						</Text>
-					</TouchableOpacity>
+					</View>
+					<View style={card_styles}>
+						<TextInput
+							style={{
+								fontSize: 16,
+								height: 40,
+								padding: 10,
+							}}
+							value={activationCode}
+							onChangeText={handleTextChange}
+							placeholder={getLabelApp(
+								preferences.language,
+								"app_activation_code_placeholder"
+							)}
+						/>
+					</View>
+					<View style={card_styles}>
+						<TouchableOpacity style={submit_button} onPress={handleSubmit}>
+							<Text style={{ color: app_colors.white }}>
+								{getLabelApp(preferences.language, "app_submit_continue")}
+							</Text>
+						</TouchableOpacity>
+					</View>
 				</View>
-			</View>
+			)}
+			{loading && (
+				<View style={container}>
+					<Text>Cargando...</Text>
+				</View>
+			)}
 		</ScrollView>
 	);
 };
