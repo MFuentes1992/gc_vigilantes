@@ -1,46 +1,13 @@
 import React, { useEffect, useState } from "react";
-import {
-	Image,
-	View,
-	Button,
-	Text,
-	TouchableOpacity,
-	Alert,
-} from "react-native";
+import { Image, View, Text, TouchableOpacity, Alert } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
 import RNQRGenerator from "rn-qr-generator";
-import { InitializeConnection, authenticate } from "./constants";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@gcVigilantes/store";
-import { setUserData } from "@gcVigilantes/store/UserData";
+import { useDispatch } from "react-redux";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
 
 export const HomeScreen = ({ navigation }: any) => {
 	const dispatch = useDispatch();
 	const [selectedImage, setSelectedImage] = useState<string>("");
-	const { access_token } = useSelector((state: RootState) => state.userData);
-
-	useEffect(() => {
-		if (access_token === "") {
-			InitializeConnection(
-				"analisis@dasgalu.com.mx",
-				"123456",
-				"PXWUQ3V3Y9",
-				authenticate
-			)
-				.then((response) => {
-					dispatch(
-						setUserData({
-							access_token: response.access_token,
-							name: response.name,
-							residence: response.residence,
-							id: response.id,
-						})
-					);
-				})
-				.catch((error) => console.log("Error authenticating", error));
-		}
-	}, []);
 
 	useEffect(() => {
 		if (selectedImage !== "") {
@@ -64,6 +31,14 @@ export const HomeScreen = ({ navigation }: any) => {
 				.catch((error) => console.log("Cannot detect QR code in image", error));
 		}
 	}, [selectedImage]);
+
+	useEffect(() => {
+		navigation.addListener("beforeRemove", (e: any) => {
+			if (e.data.action.type != "GO_BACK") {
+				e.preventDefault();
+			}
+		});
+	}, []);
 
 	const handleOpenLibrary = () => {
 		launchImageLibrary({
