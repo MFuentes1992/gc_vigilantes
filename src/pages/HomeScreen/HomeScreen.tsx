@@ -4,9 +4,12 @@ import { launchImageLibrary } from "react-native-image-picker";
 import RNQRGenerator from "rn-qr-generator";
 import { useDispatch } from "react-redux";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
+import { useCameraPermission } from "react-native-vision-camera";
+import { ROUTES } from "@gcVigilantes/utils";
 
 export const HomeScreen = ({ navigation }: any) => {
 	const dispatch = useDispatch();
+	const { hasPermission, requestPermission } = useCameraPermission();
 	const [selectedImage, setSelectedImage] = useState<string>("");
 
 	useEffect(() => {
@@ -54,6 +57,15 @@ export const HomeScreen = ({ navigation }: any) => {
 				console.error(error);
 			});
 	};
+
+	const handleOpenCamera = () => {
+		if (!hasPermission) {
+			requestPermission();
+		} else {
+			navigation.navigate(ROUTES.CAMERA);
+		}
+	};
+
 	return (
 		<View style={{ flex: 1, top: "5%" }}>
 			<View
@@ -122,7 +134,7 @@ export const HomeScreen = ({ navigation }: any) => {
 						borderStyle: "solid",
 						borderWidth: 1,
 					}}
-					onPress={handleOpenLibrary}>
+					onPress={handleOpenCamera}>
 					<Text
 						style={{
 							color: "#3498DB",

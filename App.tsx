@@ -7,9 +7,10 @@ import HomeScreen from "@gcVigilantes/pages/HomeScreen";
 import { PersistGate } from "redux-persist/integration/react";
 import VisitaInfo from "@gcVigilantes/pages/VisitaInfo";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
-import { getLabelApp } from "@gcVigilantes/utils";
+import { ROUTES, getLabelApp } from "@gcVigilantes/utils";
 import { ActivationCode } from "@gcVigilantes/pages/ActivationCode/ActivationCode";
 import { Alerts } from "@gcVigilantes/Components/Alerts/Alerts";
+import { CameraScreen } from "@gcVigilantes/pages/CameraScreen/CameraScreen";
 
 export default function App() {
 	const Stack = createStackNavigator();
@@ -47,6 +48,11 @@ export default function App() {
 									name='VisitaInfo'
 									options={{ title: "Detalles de Visita" }}
 									component={VisitaInfo}
+								/>
+								<Stack.Screen
+									name={ROUTES.CAMERA}
+									options={{ title: "Escanear código" }}
+									component={() => <CameraScreen type='back' />}
 								/>
 							</Stack.Group>
 						</Stack.Navigator>

@@ -17,6 +17,7 @@ export const ROUTES = {
 	ACTIVATION_CODE: "activation-code",
 	HOME: "Vigilante-qr",
 	VISIT_INFO: "VisitaInfo",
+	CAMERA: "Camera",
 };
 
 const TIME_ZONES = {
