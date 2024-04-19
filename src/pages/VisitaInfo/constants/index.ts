@@ -73,6 +73,7 @@ export type settingsInfoProps = {
 	cp: string;
 	notificaciones: boolean;
 	multiple_entrada: boolean;
+	handleOnchange: (key: string, value: string) => void;
 };
 
 export const card_styles: ViewStyle = {

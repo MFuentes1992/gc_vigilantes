@@ -117,7 +117,7 @@ export const MainInfo = ({
 							left: 10,
 							color: app_colors.text_dark,
 						}}
-						value={nombreVisitaState}
+						value={nombreVisita}
 						placeholder='Ingrese aqui el nombre de la visita'
 						onChangeText={(value: string) => {
 							setNombreVisita(value);

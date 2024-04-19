@@ -53,12 +53,16 @@ export const SettingsInfo = (props: settingsInfoProps) => {
 				<Switcher
 					title='Notificaciones:'
 					value={props.notificaciones}
-					handleOnChange={(value: boolean) => console.log(value)}
+					handleOnChange={(value: boolean) =>
+						props.handleOnchange("notificaciones", value ? "1" : "0")
+					}
 				/>
 				<Switcher
 					title='Multiple entrada:'
 					value={props.multiple_entrada}
-					handleOnChange={(value: boolean) => console.log(value)}
+					handleOnChange={(value: boolean) =>
+						props.handleOnchange("multiple_entrada", value ? "1" : "0")
+					}
 				/>
 			</View>
 		</>
