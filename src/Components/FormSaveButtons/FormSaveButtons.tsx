@@ -3,7 +3,12 @@ import React from "react";
 import { TouchableOpacity, View, Text } from "react-native";
 import { save_buttons } from "./constants";
 
-export const FormSaveButtons = () => {
+type FormSaveButtonsProps = {
+	onCancel: () => void;
+	onSave: () => void;
+};
+
+export const FormSaveButtons = ({ onSave, onCancel }: FormSaveButtonsProps) => {
 	return (
 		<View style={save_buttons}>
 			<TouchableOpacity
@@ -12,10 +17,11 @@ export const FormSaveButtons = () => {
 					padding: 10,
 					borderRadius: 5,
 					width: "40%",
+					maxHeight: 40,
 					alignItems: "center",
 					marginBottom: 10,
 				}}
-				onPress={() => {}}>
+				onPress={onCancel}>
 				<Text style={{ color: app_colors.white }}>Cancelar</Text>
 			</TouchableOpacity>
 			<TouchableOpacity
@@ -24,10 +30,11 @@ export const FormSaveButtons = () => {
 					padding: 10,
 					borderRadius: 5,
 					width: "40%",
+					maxHeight: 40,
 					alignItems: "center",
 					marginBottom: 10,
 				}}
-				onPress={() => {}}>
+				onPress={onSave}>
 				<Text style={{ color: app_colors.white }}>Guardar</Text>
 			</TouchableOpacity>
 		</View>

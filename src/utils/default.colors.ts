@@ -10,6 +10,7 @@ export const app_colors = {
 	text_gray: "#6c757d",
 	text_dark: "#343a40",
 	black: "#000000",
+	red: "#D03B29",
 	red_inactive_invalid: "#D03B29",
 };
 

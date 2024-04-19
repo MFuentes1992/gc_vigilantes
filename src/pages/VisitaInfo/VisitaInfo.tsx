@@ -126,7 +126,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 						}
 					/>
 				)}
-				<FormSaveButtons />
+				<FormSaveButtons onCancel={() => {}} onSave={() => {}} />
 			</ScrollView>
 		</SafeAreaView>
 	);

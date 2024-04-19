@@ -1,6 +1,7 @@
 import React from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { View, Image, Text } from "react-native-animatable";
+import { TouchableOpacity } from "react-native";
 import { app_text_body } from "@gcVigilantes/utils/default.styles";
 import {
 	VehicleCardProp,
@@ -10,11 +11,13 @@ import {
 } from "./constants";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
 
-export const VehicleCard = ({ vehicle }: VehicleCardProp) => {
+export const VehicleCard = ({ id, vehicle, openModal }: VehicleCardProp) => {
 	return (
 		<View style={vehicleCardStyles}>
 			<View style={vehicleCardEditStyles}>
-				<FontAwesome5 name='edit' size={16} color={app_colors.text_gray} />
+				<TouchableOpacity onPress={() => openModal(id)}>
+					<FontAwesome5 name='edit' size={16} color={app_colors.text_gray} />
+				</TouchableOpacity>
 				<FontAwesome5 name='times' size={16} color={app_colors.text_gray} />
 			</View>
 			<View style={{ flexDirection: "row", width: "100%" }}>

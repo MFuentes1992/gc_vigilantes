@@ -8,7 +8,7 @@ import * as Animatable from "react-native-animatable";
 import { CardTitle } from "@gcVigilantes/Components/CardTitle/CardTitle";
 import RadioGroup from "@gcVigilantes/Components/RadioGroup";
 
-import { TextInput, View, Image, Text } from "react-native";
+import { TextInput, View, Image, Text, Modal } from "react-native";
 import {
 	MainInfoProps,
 	TIPO_INGRESO,
@@ -22,6 +22,7 @@ import { VehicleCard } from "@gcVigilantes/Components/VehicleCard/VehicleCard";
 import { useSelector } from "react-redux";
 import { RootState } from "@gcVigilantes/store";
 import { VehiclesResType } from "@gcVigilantes/store/Visita/types";
+import { EditVehicles } from "@gcVigilantes/Components/EditVehicles/EditVehicles";
 
 export const TipoVisitasIcon: { [key: string]: React.ReactNode } = {
 	Visita: <FontAwesome name='user' size={18} color='darkgray' />,
@@ -58,6 +59,13 @@ export const MainInfo = ({
 	// -- Vehicle info
 	const visita = useSelector((state: RootState) => state.visita);
 	const [vehicles, setVehicles] = useState<VehiclesResType[]>([]);
+	const [editVehicle, setEditVehicle] = useState<{
+		id: number | undefined;
+		visible: boolean;
+	}>({
+		id: undefined,
+		visible: false,
+	});
 
 	useEffect(() => {
 		if (visita.vehicles?.length > 0) setVehicles(visita.vehicles);
@@ -155,11 +163,42 @@ export const MainInfo = ({
 						style={mainInfoVehicleScrollStyles}
 						contentContainerStyle={getVehicleInfoStyles(vehicles)}
 						horizontal>
-						{vehicles.map((vehicle: VehiclesResType) => (
-							<VehicleCard key={vehicle.placas} vehicle={vehicle} />
+						{vehicles.map((vehicle: VehiclesResType, index: number) => (
+							<VehicleCard
+								key={vehicle.placas}
+								id={index}
+								vehicle={vehicle}
+								openModal={(id) => setEditVehicle({ id, visible: true })}
+							/>
 						))}
 					</ScrollView>
 				</>
+			)}
+			{editVehicle.visible && (
+				<EditVehicles
+					id={editVehicle.id || 0}
+					visible={editVehicle.visible}
+					brand={vehicles[editVehicle?.id || 0]?.marca}
+					model={vehicles[editVehicle?.id || 0]?.modelo}
+					year={vehicles[editVehicle?.id || 0]?.anio}
+					color={vehicles[editVehicle?.id || 0]?.color}
+					plate={vehicles[editVehicle?.id || 0]?.placas}
+					handleOnChange={(index: number, key: string, value: string) => {
+						const newVehicles = vehicles.map((vehicle, i) => {
+							if (i === index) {
+								return {
+									...vehicle,
+									[key]: value,
+								};
+							}
+							return vehicle;
+						});
+						setVehicles(newVehicles);
+					}}
+					handleClose={() => {
+						setEditVehicle({ id: undefined, visible: false });
+					}}
+				/>
 			)}
 		</View>
 	);

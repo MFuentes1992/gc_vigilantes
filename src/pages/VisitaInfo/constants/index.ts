@@ -85,6 +85,17 @@ export const card_styles: ViewStyle = {
 	borderWidth: 0.5,
 };
 
+export const card_styles_extended: ViewStyle = {
+	margin: "5%",
+	flex: 1,
+	justifyContent: "center",
+	backgroundColor: app_colors.white,
+	paddingLeft: "5%",
+	paddingRight: "5%",
+	borderColor: app_colors.ligth_bg,
+	borderWidth: 0.5,
+};
+
 export const mainInfoVehicleScrollStyles: ViewStyle = {
 	width: "100%",
 	height: 200,
