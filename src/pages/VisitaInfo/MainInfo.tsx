@@ -49,8 +49,6 @@ export const MainInfo = ({
 	catalogIngreso,
 	handleOnChange,
 }: MainInfoProps) => {
-	const [tipoVisitaState, setTipoVisita] = useState<string>(tipoVisita);
-	const [tipoIngresoState, setTipoIngreso] = useState<string>(tipoIngreso);
 	const [nombreVisitaState, setNombreVisita] = useState<string>(nombreVisita);
 	// -- Disabling and enabling Cards
 	const [tipoVisitaDisabled, setTipoVisitaDisabled] = useState<boolean>(true);
@@ -75,7 +73,7 @@ export const MainInfo = ({
 					handleEdit={() => setTipoVisitaDisabled(false)}
 				/>
 				<RadioGroup
-					selectedValue={tipoVisitaState}
+					selectedValue={tipoVisita}
 					disabled={tipoVisitaDisabled}
 					options={catalogVisitas.map((catalog) => ({
 						id: catalog.id,
@@ -85,7 +83,6 @@ export const MainInfo = ({
 						] as unknown as React.ReactNode,
 					}))}
 					handleChange={(value: string) => {
-						setTipoVisita(value);
 						handleOnChange("tipo_visita", value);
 					}}
 				/>
@@ -145,15 +142,14 @@ export const MainInfo = ({
 							catalog.tipo_ingreso
 						] as unknown as React.ReactNode,
 					}))}
-					selectedValue={tipoIngresoState}
+					selectedValue={tipoIngreso}
 					disabled={tipoIngresoDisabled}
 					handleChange={(value: string) => {
-						setTipoIngreso(value);
 						handleOnChange("tipo_ingreso", value);
 					}}
 				/>
 			</View>
-			{tipoIngresoState == TIPO_INGRESO.VEHICULO.id && (
+			{tipoIngreso == TIPO_INGRESO.VEHICULO.id && (
 				<>
 					<ScrollView
 						style={mainInfoVehicleScrollStyles}
