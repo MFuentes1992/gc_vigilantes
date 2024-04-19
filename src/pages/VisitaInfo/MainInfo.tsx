@@ -47,6 +47,7 @@ export const MainInfo = ({
 	nombreVisita,
 	catalogVisitas,
 	catalogIngreso,
+	handleOnChange,
 }: MainInfoProps) => {
 	const [tipoVisitaState, setTipoVisita] = useState<string>(tipoVisita);
 	const [tipoIngresoState, setTipoIngreso] = useState<string>(tipoIngreso);
@@ -85,6 +86,7 @@ export const MainInfo = ({
 					}))}
 					handleChange={(value: string) => {
 						setTipoVisita(value);
+						handleOnChange("tipo_visita", value);
 					}}
 				/>
 			</View>
@@ -112,7 +114,10 @@ export const MainInfo = ({
 						}}
 						value={nombreVisitaState}
 						placeholder='Ingrese aqui el nombre de la visita'
-						onChangeText={setNombreVisita}
+						onChangeText={(value: string) => {
+							setNombreVisita(value);
+							handleOnChange("nombre_visita", value);
+						}}
 						autoCapitalize='words'
 						maxLength={50}
 					/>
@@ -144,7 +149,7 @@ export const MainInfo = ({
 					disabled={tipoIngresoDisabled}
 					handleChange={(value: string) => {
 						setTipoIngreso(value);
-						console.log("TipoIngreso", value);
+						handleOnChange("tipo_ingreso", value);
 					}}
 				/>
 			</View>

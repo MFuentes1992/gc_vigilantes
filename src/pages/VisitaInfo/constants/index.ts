@@ -47,6 +47,7 @@ export type MainInfoProps = {
 	tipoVisita: string;
 	tipoIngreso: string;
 	nombreVisita: string;
+	handleOnChange: (key: string, value: string) => void;
 };
 
 export type DateInfoProps = {

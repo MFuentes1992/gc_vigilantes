@@ -29,4 +29,5 @@ export interface IVisita {
 	estado: string;
 	cp: string;
 	vehicles: VehiclesResType[];
+	[key: string]: string | VehiclesResType[];
 }
