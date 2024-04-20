@@ -111,3 +111,8 @@ export const getVehicleInfoStyles = (vehicles: any[]): ViewStyle => {
 		justifyContent: vehicles.length > 1 ? "space-around" : "center",
 	};
 };
+
+export const DATE_TYPES = {
+	START: 1,
+	END: 2,
+};

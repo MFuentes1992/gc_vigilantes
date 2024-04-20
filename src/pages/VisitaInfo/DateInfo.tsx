@@ -1,11 +1,21 @@
-import React from "react";
-import { View, Text } from "react-native";
-import { DateInfoProps, card_styles } from "./constants";
+import React, { useEffect } from "react";
+import { View, Text, Alert, TouchableOpacity, Modal } from "react-native";
+import { DATE_TYPES, DateInfoProps, card_styles } from "./constants";
 import { Calendar } from "react-native-calendars";
 import { CardTitle } from "@gcVigilantes/Components/CardTitle/CardTitle";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
-import { app_text_body } from "@gcVigilantes/utils/default.styles";
-import { getTimeZone, timeFormat } from "@gcVigilantes/utils";
+import {
+	app_text_body,
+	app_text_title,
+} from "@gcVigilantes/utils/default.styles";
+import {
+	getTimeZone,
+	militarToTwelveHours,
+	timeFormat,
+} from "@gcVigilantes/utils";
+import { HourPicker } from "@gcVigilantes/Components/HourPicker/HourPicker";
+import { SingleButton } from "@gcVigilantes/Components/SingleButton/SingleButton";
+import { Picker } from "@react-native-picker/picker";
 
 export const DateInfo = ({
 	fromDate,
@@ -14,34 +24,124 @@ export const DateInfo = ({
 	toHour,
 }: DateInfoProps) => {
 	const timeZone = new Date().getTimezoneOffset();
-	const [startDate, setStartDate] = React.useState(fromDate?.split("T")[0]);
-	const [endDate, setEndate] = React.useState(toDate?.split("T")[0]);
+	const [startDate, setStartDate] = React.useState<string>(
+		fromDate?.split("T")[0] || ""
+	);
+	const [endDate, setEndDate] = React.useState<string>(
+		toDate?.split("T")[0] || ""
+	);
+	const [startHour, setStartHour] = React.useState<number>(
+		militarToTwelveHours(fromHour || 0).hour
+	);
+	const [endHour, setEndHour] = React.useState<number>(
+		militarToTwelveHours(toHour || 0).hour
+	);
+	const [startHourAmPm, setStartHourAmPm] = React.useState<string>(
+		militarToTwelveHours(fromHour || 0).ampm
+	);
+	const [endHourAmPm, setEndHourAmPm] = React.useState<string>(
+		militarToTwelveHours(toHour || 0).ampm
+	);
+	const [dateType, setDateType] = React.useState<number>(DATE_TYPES.START);
+	const [dateRange, setDateRange] = React.useState<{ [key: string]: any }>({});
+	const [hourPicker, setHourPicker] = React.useState<{
+		type: "start" | "end";
+		visible: boolean;
+	}>({ type: "start", visible: false });
+	const [formatPicker, setFormatPicker] = React.useState<{
+		type: "start" | "end";
+		visible: boolean;
+	}>({ type: "start", visible: false });
+
+	useEffect(() => {
+		if (startDate !== "" && endDate !== "") {
+			const diffDays = Math.abs(
+				new Date(endDate || "").getDate() - new Date(startDate || "").getDate()
+			);
+			let tmp = {} as any;
+			new Array(diffDays).fill(0).forEach((_, index) => {
+				const year = new Date(startDate || "").getFullYear();
+				const month = new Date(startDate || "").getMonth() + 1;
+				const day = new Date(startDate || "").getDate() + index + 1;
+				tmp[
+					`${new Date(`${year}-${month}-${day}`).toISOString().split("T")[0]}`
+				] = {
+					startingDay: index === 0,
+					endingDay: false,
+					color:
+						index === 0 ? app_colors.calendar_active : app_colors.calendar_pale,
+					textColor: app_colors.white,
+				};
+			});
+			tmp[`${endDate}`] = {
+				startingDay: false,
+				endingDay: true,
+				color: app_colors.calendar_active,
+				textColor: app_colors.white,
+			};
+			setDateRange(tmp);
+		}
+	}, [startDate, endDate]);
+
+	const openHourPicker = (type: "start" | "end") => {
+		setHourPicker({ type, visible: true });
+	};
+
 	return (
 		<>
 			<View style={card_styles}>
-				<CardTitle title='Vigencia' uppercase />
+				<CardTitle
+					title='Vigencia'
+					uppercase
+					editIcon
+					handleEdit={() => {
+						Alert.alert("Fecha de vigencia", "¿Cual fecha deseas editar?", [
+							{
+								text: "Cancelar",
+								onPress: () => console.log("Cancel Pressed"),
+								style: "cancel",
+							},
+							{
+								text: "Inicio",
+								onPress: () => {
+									setDateType(DATE_TYPES.START);
+								},
+							},
+							{
+								text: "Fin",
+								onPress: () => {
+									setDateType(DATE_TYPES.END);
+								},
+							},
+						]);
+					}}
+				/>
 				<Calendar
 					style={{ width: "100%" }}
 					markingType='period'
 					markedDates={{
-						[`${startDate}`]: {
-							startingDay: true,
-							endingDay: true,
-							color: app_colors.secondary,
-							textColor: app_colors.white,
-							selected: true,
-						},
-						[`${endDate}`]: {
-							startingDay: true,
-							endingDay: true,
-							color: app_colors.secondary,
-							textColor: app_colors.white,
-							selected: true,
-						},
+						...dateRange,
 					}}
 					onDayPress={(day) => {
-						console.log(day.dateString);
+						if (dateType === DATE_TYPES.START) {
+							setStartDate(`${day.dateString}`);
+							const year = new Date(day.dateString).getFullYear();
+							const month = new Date(day.dateString).getMonth() + 1;
+							const currDay = new Date(day.dateString).getDate() + 2;
+							setEndDate(`${year}-${month}-${currDay}`);
+						} else if (dateType === DATE_TYPES.END) {
+							if (new Date(day.dateString) < new Date(startDate)) {
+								Alert.alert(
+									"Error",
+									"La fecha de fin no puede ser menor a la de inicio"
+								);
+								return;
+							}
+							setEndDate(`${day.dateString}`);
+						}
 					}}
+					current={startDate.split("T")[0]}
+					minDate={fromDate?.split("T")[0]}
 					shouldRasterizeIOS={true}
 				/>
 			</View>
@@ -51,18 +151,23 @@ export const DateInfo = ({
 					style={{
 						flexDirection: "row",
 						width: "100%",
-						alignItems: "center",
 						justifyContent: "space-around",
 					}}>
-					<Text style={app_text_body}>{`Ingreso: `}</Text>
-					<Text
-						style={{
-							fontSize: 28,
-							color: app_colors.black,
-							fontWeight: "bold",
-						}}>
-						{fromDate?.split("T")[1].substring(0, 4)}
-					</Text>
+					<Text style={[app_text_body, { width: "20%" }]}>{`Ingreso: `}</Text>
+					<TouchableOpacity onPress={() => openHourPicker("start")}>
+						<Text
+							style={{
+								fontSize: 28,
+								color: app_colors.black,
+								fontWeight: "bold",
+							}}>
+							{`${timeFormat(startHour)}:00`}
+						</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						onPress={() => setFormatPicker({ type: "start", visible: true })}>
+						<Text style={app_text_title}>{` ${startHourAmPm}`}</Text>
+					</TouchableOpacity>
 					<Text style={app_text_body}>{getTimeZone(timeZone)}</Text>
 				</View>
 				<View
@@ -72,18 +177,80 @@ export const DateInfo = ({
 						alignItems: "center",
 						justifyContent: "space-around",
 					}}>
-					<Text style={app_text_body}>{`Salida: `}</Text>
-					<Text
-						style={{
-							fontSize: 28,
-							color: app_colors.black,
-							fontWeight: "bold",
-						}}>
-						{toDate?.split("T")[1].substring(0, 4)}
-					</Text>
+					<Text style={[app_text_body, { width: "20%" }]}>{`Salida: `}</Text>
+					<TouchableOpacity onPress={() => openHourPicker("end")}>
+						<Text
+							style={{
+								fontSize: 28,
+								color: app_colors.black,
+								fontWeight: "bold",
+							}}>
+							{`${timeFormat(endHour)}:00`}
+						</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						onPress={() => setFormatPicker({ type: "end", visible: true })}>
+						<Text style={app_text_title}>{` ${endHourAmPm}`}</Text>
+					</TouchableOpacity>
 					<Text style={app_text_body}>{getTimeZone(timeZone)}</Text>
 				</View>
 			</View>
+			<Modal
+				animationType='slide'
+				transparent={false}
+				visible={hourPicker.visible}>
+				<View>
+					<HourPicker
+						totalHours={12}
+						currValue={hourPicker.type === "start" ? startHour : endHour}
+						handleChange={(value: number) => {
+							switch (hourPicker.type) {
+								case "start":
+									setStartHour(value);
+									break;
+								case "end":
+									setEndHour(value);
+									break;
+								default:
+									break;
+							}
+						}}
+					/>
+					<SingleButton
+						label='Aceptar'
+						onPress={() => setHourPicker({ type: "start", visible: false })}
+					/>
+				</View>
+			</Modal>
+			<Modal
+				animationType='slide'
+				transparent={false}
+				visible={formatPicker.visible}>
+				<Picker
+					selectedValue={
+						formatPicker.type === "start" ? startHourAmPm : endHourAmPm
+					}
+					onValueChange={(value: string) => {
+						switch (formatPicker.type) {
+							case "start":
+								setStartHourAmPm(value);
+								break;
+							case "end":
+								setEndHourAmPm(value);
+								break;
+							default:
+								break;
+						}
+					}}>
+					{["AM", "PM"].map((value, index) => (
+						<Picker.Item key={index} label={value} value={value} />
+					))}
+				</Picker>
+				<SingleButton
+					label='Aceptar'
+					onPress={() => setFormatPicker({ type: "start", visible: false })}
+				/>
+			</Modal>
 		</>
 	);
 };

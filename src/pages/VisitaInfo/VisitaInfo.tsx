@@ -123,7 +123,10 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 					/>
 				)}
 				{tab === TABS.DATE && (
-					<DateInfo fromDate={formValues?.desde} toDate={formValues?.hasta} />
+					<DateInfo
+						fromDate={formValues?.fromDate}
+						toDate={formValues?.toDate}
+					/>
 				)}
 				{tab === TABS.GUEST && <GuestInfo />}
 				{tab === TABS.SETTINGS && (

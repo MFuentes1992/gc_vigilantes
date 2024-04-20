@@ -21,6 +21,7 @@ export const app_text_body: TextStyle = {
 	fontWeight: "normal",
 	color: app_colors.text_dark,
 	marginBottom: 3,
+	marginRight: 5,
 };
 
 export const app_text_menu: TextStyle = {
