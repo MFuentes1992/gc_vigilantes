@@ -47,6 +47,7 @@ export type MainInfoProps = {
 	tipoVisita: string;
 	tipoIngreso: string;
 	nombreVisita: string;
+	handleOnChange: (key: string, value: string) => void;
 };
 
 export type DateInfoProps = {
@@ -72,6 +73,7 @@ export type settingsInfoProps = {
 	cp: string;
 	notificaciones: boolean;
 	multiple_entrada: boolean;
+	handleOnchange: (key: string, value: string) => void;
 };
 
 export const card_styles: ViewStyle = {
@@ -80,6 +82,17 @@ export const card_styles: ViewStyle = {
 	justifyContent: "center",
 	backgroundColor: app_colors.white,
 	padding: "2%",
+	borderColor: app_colors.ligth_bg,
+	borderWidth: 0.5,
+};
+
+export const card_styles_extended: ViewStyle = {
+	margin: "5%",
+	flex: 1,
+	justifyContent: "center",
+	backgroundColor: app_colors.white,
+	paddingLeft: "5%",
+	paddingRight: "5%",
 	borderColor: app_colors.ligth_bg,
 	borderWidth: 0.5,
 };
@@ -97,4 +110,9 @@ export const getVehicleInfoStyles = (vehicles: any[]): ViewStyle => {
 		width: vehicles.length * 220,
 		justifyContent: vehicles.length > 1 ? "space-around" : "center",
 	};
+};
+
+export const DATE_TYPES = {
+	START: 1,
+	END: 2,
 };

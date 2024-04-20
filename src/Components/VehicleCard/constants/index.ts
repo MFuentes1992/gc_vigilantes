@@ -2,6 +2,7 @@ import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { ViewStyle } from "react-native";
 
 export type VehicleCardProp = {
+	id: number;
 	vehicle: {
 		marca: string;
 		modelo: string;
@@ -9,6 +10,7 @@ export type VehicleCardProp = {
 		anio: string;
 		placas: string;
 	};
+	openModal: (_id: number) => void;
 };
 
 export const vehicleCardStyles: ViewStyle = {

@@ -53,3 +53,19 @@ export const getLabelApp = (lang: string, key: string) => {
 	const labels = JSON.parse(language);
 	return labels[key];
 };
+
+export const militarToTwelveHours = (
+	hour: number
+): { hour: number; ampm: string } => {
+	const ampm = hour >= 12 ? "PM" : "AM";
+	if (hour > 12) {
+		return {
+			hour: hour - 12,
+			ampm,
+		};
+	}
+	return {
+		hour,
+		ampm,
+	};
+};

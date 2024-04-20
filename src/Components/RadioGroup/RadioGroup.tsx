@@ -15,10 +15,6 @@ type RadioGroupProps = {
 };
 
 export const RadioGroup = (props: RadioGroupProps) => {
-	const [selectedOption, setSelectedOption] = React.useState(
-		props.selectedValue
-	);
-	console.log("passed to radio group", props.selectedValue);
 	return (
 		<View
 			style={{
@@ -35,10 +31,9 @@ export const RadioGroup = (props: RadioGroupProps) => {
 					id={option.id}
 					disabled={props.disabled}
 					icon={option.icon}
-					selected={selectedOption === option.id}
+					selected={props.selectedValue === option.id}
 					handleChange={() => {
 						if (!props.disabled) {
-							setSelectedOption(option.id);
 							props.handleChange(option.id);
 						}
 					}}
