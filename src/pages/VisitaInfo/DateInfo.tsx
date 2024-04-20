@@ -12,6 +12,7 @@ import {
 	getTimeZone,
 	militarToTwelveHours,
 	timeFormat,
+	toMilitarHours,
 } from "@gcVigilantes/utils";
 import { HourPicker } from "@gcVigilantes/Components/HourPicker/HourPicker";
 import { SingleButton } from "@gcVigilantes/Components/SingleButton/SingleButton";
@@ -22,6 +23,7 @@ export const DateInfo = ({
 	toDate,
 	fromHour,
 	toHour,
+	handleOnChange,
 }: DateInfoProps) => {
 	const timeZone = new Date().getTimezoneOffset();
 	const [startDate, setStartDate] = React.useState<string>(
@@ -80,8 +82,29 @@ export const DateInfo = ({
 				textColor: app_colors.white,
 			};
 			setDateRange(tmp);
+			handleOnChange("fromDate", startDate);
+			handleOnChange("toDate", endDate);
 		}
 	}, [startDate, endDate]);
+
+	useEffect(() => {
+		handleOnChange(
+			"fromHour",
+			`${
+				toMilitarHours(startHour, startHourAmPm) < 10
+					? `0${toMilitarHours(startHour, startHourAmPm)}`
+					: toMilitarHours(startHour, startHourAmPm)
+			}`
+		);
+		handleOnChange(
+			"toHour",
+			`${
+				toMilitarHours(endHour, endHourAmPm) < 10
+					? `0${toMilitarHours(endHour, endHourAmPm)}`
+					: toMilitarHours(endHour, endHourAmPm)
+			}`
+		);
+	}, [startHour, endHour, startHourAmPm, endHourAmPm]);
 
 	const openHourPicker = (type: "start" | "end") => {
 		setHourPicker({ type, visible: true });

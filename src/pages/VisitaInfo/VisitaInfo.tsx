@@ -91,7 +91,12 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 		}
 	}, [visitaRedux]);
 
-	console.log("formValues", formValues);
+	console.log("dates", {
+		fromDate: formValues?.fromDate,
+		toDate: formValues?.toDate,
+		fromHour: formValues.fromHour,
+		toHour: formValues.toHour,
+	});
 
 	return (
 		<SafeAreaView>
@@ -126,6 +131,9 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 					<DateInfo
 						fromDate={formValues?.fromDate}
 						toDate={formValues?.toDate}
+						fromHour={formValues?.fromDate.split("T")[1]?.split(":")[0]}
+						toHour={formValues?.toDate.split("T")[1]?.split(":")[0]}
+						handleOnChange={handleOnChange}
 					/>
 				)}
 				{tab === TABS.GUEST && <GuestInfo />}
