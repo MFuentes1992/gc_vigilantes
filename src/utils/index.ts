@@ -69,3 +69,10 @@ export const militarToTwelveHours = (
 		ampm,
 	};
 };
+
+export const toMilitarHours = (hour: number, ampm: string) => {
+	if (ampm === "PM") {
+		return hour + 12;
+	}
+	return hour;
+};

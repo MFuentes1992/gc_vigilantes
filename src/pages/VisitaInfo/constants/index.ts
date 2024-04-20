@@ -57,6 +57,7 @@ export type DateInfoProps = {
 	fromHour?: number;
 	toHour?: number;
 	hourType?: string;
+	handleOnChange: (key: string, value: string) => void;
 };
 
 export type settingsInfoProps = {
