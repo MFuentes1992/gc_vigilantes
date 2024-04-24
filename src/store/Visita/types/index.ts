@@ -7,6 +7,7 @@ export type VehiclesResType = {
 };
 
 export interface IVisita {
+	visita_id: string;
 	nombre: string;
 	desde: string;
 	hasta: string;

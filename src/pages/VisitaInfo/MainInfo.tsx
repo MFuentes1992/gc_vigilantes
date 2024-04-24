@@ -48,6 +48,7 @@ export const MainInfo = ({
 	nombreVisita,
 	catalogVisitas,
 	catalogIngreso,
+	visitVehicles,
 	handleOnChange,
 }: MainInfoProps) => {
 	const [nombreVisitaState, setNombreVisita] = useState<string>(nombreVisita);
@@ -57,7 +58,7 @@ export const MainInfo = ({
 	const [nombreVisitaDisabled, setNombreVisitaDisabled] =
 		useState<boolean>(true);
 	// -- Vehicle info
-	const visita = useSelector((state: RootState) => state.visita);
+
 	const [vehicles, setVehicles] = useState<VehiclesResType[]>([]);
 	const [editVehicle, setEditVehicle] = useState<{
 		id: number | undefined;
@@ -68,8 +69,8 @@ export const MainInfo = ({
 	});
 
 	useEffect(() => {
-		if (visita.vehicles?.length > 0) setVehicles(visita.vehicles);
-	}, [visita.vehicles]);
+		setVehicles(visitVehicles);
+	}, [visitVehicles]);
 
 	return (
 		<View>
@@ -163,7 +164,7 @@ export const MainInfo = ({
 						style={mainInfoVehicleScrollStyles}
 						contentContainerStyle={getVehicleInfoStyles(vehicles)}
 						horizontal>
-						{vehicles.map((vehicle: VehiclesResType, index: number) => (
+						{vehicles?.map((vehicle: VehiclesResType, index: number) => (
 							<VehicleCard
 								key={vehicle.placas}
 								id={index}
@@ -184,7 +185,7 @@ export const MainInfo = ({
 					color={vehicles[editVehicle?.id || 0]?.color}
 					plate={vehicles[editVehicle?.id || 0]?.placas}
 					handleOnChange={(index: number, key: string, value: string) => {
-						const newVehicles = vehicles.map((vehicle, i) => {
+						const newVehicles = vehicles?.map((vehicle, i) => {
 							if (i === index) {
 								return {
 									...vehicle,
@@ -193,7 +194,7 @@ export const MainInfo = ({
 							}
 							return vehicle;
 						});
-						setVehicles(newVehicles);
+						handleOnChange("vehicles", newVehicles as any);
 					}}
 					handleClose={() => {
 						setEditVehicle({ id: undefined, visible: false });

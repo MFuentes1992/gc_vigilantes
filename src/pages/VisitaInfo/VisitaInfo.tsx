@@ -16,14 +16,22 @@ import {
 	getVehicles,
 	getVisitaByUniqueID,
 } from "@gcVigilantes/store/Visita/api";
+import { VehiclesResType } from "@gcVigilantes/store/Visita/types";
 
 export const VisitaInfo = ({ navigation, route }: any) => {
 	const { uniqueID, uri } = route.params;
 	const [tab, setTab] = useState<string>(TABS.MAIN);
 	// -- const [formValues, setformValues] = useState<IVisita>();
 	const [formValues, setFormValues] = useState<{
-		[key: string]: string | boolean | any;
+		[key: string]:
+			| string
+			| boolean
+			| any
+			| VehiclesResType[]
+			| string[]
+			| number;
 	}>({
+		visita_id: "",
 		nombre_visita: "",
 		fromDate: new Date().toISOString(),
 		toDate: new Date().toISOString(),
@@ -38,6 +46,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 		vehicle_plate: "",
 		multiple_entrada: false,
 		notificaciones: false,
+		vehicles: [],
 	});
 
 	const dispatch = useDispatch();
@@ -68,6 +77,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 	useEffect(() => {
 		if (visitaRedux) {
 			setFormValues(() => ({
+				idVisita: visitaRedux.visita_id,
 				nameAutor: visitaRedux.nameAutor,
 				emailAutor: visitaRedux.emailAutor,
 				residencial: visitaRedux.residencial,
@@ -87,16 +97,10 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 				tipo_visita: visitaRedux.tipo_visita,
 				multiple_entrada: visitaRedux.multiple_entrada,
 				notificaciones: visitaRedux.notificaciones,
+				vehicles: visitaRedux.vehicles,
 			}));
 		}
 	}, [visitaRedux]);
-
-	console.log("dates", {
-		fromDate: formValues?.fromDate,
-		toDate: formValues?.toDate,
-		fromHour: formValues.fromHour,
-		toHour: formValues.toHour,
-	});
 
 	return (
 		<SafeAreaView>
@@ -124,6 +128,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 						tipoVisita={formValues?.tipo_visita || ""}
 						tipoIngreso={formValues?.tipo_ingreso || ""}
 						nombreVisita={formValues?.nombre_visita || ""}
+						visitVehicles={formValues?.vehicles || []}
 						handleOnChange={handleOnChange}
 					/>
 				)}
@@ -157,7 +162,23 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 						handleOnchange={handleOnChange}
 					/>
 				)}
-				<FormSaveButtons onCancel={() => {}} onSave={() => {}} />
+				<FormSaveButtons
+					onCancel={() => {}}
+					onSave={() => {
+						const payload = {
+							idVisita: formValues?.idVisita,
+							tipoVisita: formValues?.tipo_visita,
+							tipoIngreso: formValues?.tipo_ingreso,
+							fechaIngreso: `${formValues?.fromDate}T${formValues?.fromHour}`,
+							fechaSalida: `${formValues?.toDate}T${formValues?.toHour}`,
+							multiEntrada: formValues?.multiple_entrada,
+							notificaciones: formValues?.notificaciones,
+							nombreVisita: formValues?.nombre_visita,
+							vehicles: formValues?.vehicles,
+						};
+						console.log("Saving form", formValues);
+					}}
+				/>
 			</ScrollView>
 		</SafeAreaView>
 	);

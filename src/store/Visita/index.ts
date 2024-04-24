@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IVisita, VehiclesResType } from "./types";
 
 const initialState: IVisita = {
+	visita_id: "",
 	nombre: "",
 	desde: "",
 	hasta: "",
@@ -31,6 +32,7 @@ const visitaSlice = createSlice({
 	initialState,
 	reducers: {
 		setVisita(state, action: PayloadAction<IVisita>) {
+			state.visita_id = action.payload.visita_id;
 			state.calle = action.payload.calle;
 			state.ciudad = action.payload.ciudad;
 			state.colonia = action.payload.colonia;
