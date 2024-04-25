@@ -15,13 +15,13 @@ import { SettingsInfo } from "./SettingsInfo";
 import {
 	getVehicles,
 	getVisitaByUniqueID,
+	updateVisita,
 } from "@gcVigilantes/store/Visita/api";
 import { VehiclesResType } from "@gcVigilantes/store/Visita/types";
 
 export const VisitaInfo = ({ navigation, route }: any) => {
 	const { uniqueID, uri } = route.params;
 	const [tab, setTab] = useState<string>(TABS.MAIN);
-	// -- const [formValues, setformValues] = useState<IVisita>();
 	const [formValues, setFormValues] = useState<{
 		[key: string]:
 			| string
@@ -36,8 +36,8 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 		fromDate: new Date().toISOString(),
 		toDate: new Date().toISOString(),
 		dateType: "",
-		fromHour: new Date().getHours(),
-		toHour: new Date().getHours(),
+		fromHour: "",
+		toHour: "",
 		hourType: "",
 		tipo_ingreso: "",
 		tipo_visita: "",
@@ -90,8 +90,8 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 				fromDate: visitaRedux.desde,
 				toDate: visitaRedux.hasta,
 				dateType: visitaRedux.tipo_fecha,
-				fromHour: visitaRedux.hora_desde,
-				toHour: visitaRedux.hora_hasta,
+				fromHour: visitaRedux.desde.split("T")[1]?.split(":")[0],
+				toHour: visitaRedux.hasta.split("T")[1]?.split(":")[0],
 				hourType: visitaRedux.tipo_hora,
 				tipo_ingreso: visitaRedux.tipo_ingreso,
 				tipo_visita: visitaRedux.tipo_visita,
@@ -136,8 +136,8 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 					<DateInfo
 						fromDate={formValues?.fromDate}
 						toDate={formValues?.toDate}
-						fromHour={formValues?.fromDate.split("T")[1]?.split(":")[0]}
-						toHour={formValues?.toDate.split("T")[1]?.split(":")[0]}
+						fromHour={formValues?.fromHour}
+						toHour={formValues?.toHour}
 						handleOnChange={handleOnChange}
 					/>
 				)}
@@ -169,14 +169,23 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 							idVisita: formValues?.idVisita,
 							tipoVisita: formValues?.tipo_visita,
 							tipoIngreso: formValues?.tipo_ingreso,
-							fechaIngreso: `${formValues?.fromDate}T${formValues?.fromHour}`,
-							fechaSalida: `${formValues?.toDate}T${formValues?.toHour}`,
+							fechaIngreso: `${formValues?.fromDate}T${formValues?.fromHour}:00:00`,
+							fechaSalida: `${formValues?.toDate}T${formValues?.toHour}:00:00`,
 							multiEntrada: formValues?.multiple_entrada,
 							notificaciones: formValues?.notificaciones,
 							nombreVisita: formValues?.nombre_visita,
-							vehicles: formValues?.vehicles,
+							vehicles: JSON.stringify(
+								[...formValues?.vehicles].map((vehicle) => ({
+									vehicle_id: vehicle.vehicle_id,
+									brand: vehicle.marca,
+									model: vehicle.modelo,
+									plates: vehicle.placas,
+									year: vehicle.anio,
+									color: vehicle.color,
+								}))
+							),
 						};
-						console.log("Saving form", formValues);
+						dispatch(updateVisita(payload) as any);
 					}}
 				/>
 			</ScrollView>

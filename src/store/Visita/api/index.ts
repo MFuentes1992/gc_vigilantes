@@ -33,3 +33,26 @@ export const getVehicles = (uniqueID: string) => (dispatch: any) => {
 			console.error("Error:", error);
 		});
 };
+
+export const updateVisita =
+	(visita: { [key: string]: any }) => (dispatch: any) => {
+		const url = `${ENDPOINTS.BASE_URL}${ENDPOINTS.VISITAS.UPDATE}`;
+		const formData = new FormData();
+		Object.keys(visita).forEach((key) => {
+			formData.append(key, visita[key]);
+		});
+		fetch(url, {
+			method: "POST",
+			headers: {
+				"Content-Type": "form-data",
+			},
+			body: formData,
+		})
+			.then((response) => response.json())
+			.then((data) => {
+				console.log("Success:", data);
+			})
+			.catch((error) => {
+				console.error("Error:", error);
+			});
+	};

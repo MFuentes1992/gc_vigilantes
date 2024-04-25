@@ -7,6 +7,7 @@ export const ENDPOINTS = {
 	VISITAS: {
 		BY_UNIQUEID: "/visita/read-qr/index.php?qr={qr}",
 		VEHICLES: "/visita/getVisitVehicles/index.php?qr={qr}",
+		UPDATE: "/visita/update/index.php",
 	},
 	VIGILANTE: {
 		CODE: "/vigilante/activationCode/index.php",
