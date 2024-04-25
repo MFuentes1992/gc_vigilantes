@@ -43,9 +43,6 @@ export const updateVisita =
 		});
 		fetch(url, {
 			method: "POST",
-			headers: {
-				"Content-Type": "form-data",
-			},
 			body: formData,
 		})
 			.then((response) => response.json())

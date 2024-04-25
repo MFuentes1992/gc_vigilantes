@@ -27,12 +27,8 @@ export const DateInfo = ({
 }: DateInfoProps) => {
 	const timeZone = new Date().getTimezoneOffset();
 	const [dateEdit, setDateEdit] = React.useState<boolean>(false);
-	const [startDate, setStartDate] = React.useState<string>(
-		fromDate?.split("T")[0] || ""
-	);
-	const [endDate, setEndDate] = React.useState<string>(
-		toDate?.split("T")[0] || ""
-	);
+	const [startDate, setStartDate] = React.useState<string>(fromDate || "");
+	const [endDate, setEndDate] = React.useState<string>(toDate || "");
 	const [startHour, setStartHour] = React.useState<number>(
 		militarToTwelveHours(Number.parseInt(`${fromHour}`, 10) || 0).hour
 	);
