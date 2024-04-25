@@ -1,4 +1,5 @@
 export type VehiclesResType = {
+	vehicle_id: string;
 	marca: string;
 	modelo: string;
 	anio: string;
@@ -7,6 +8,7 @@ export type VehiclesResType = {
 };
 
 export interface IVisita {
+	visita_id: string;
 	nombre: string;
 	desde: string;
 	hasta: string;

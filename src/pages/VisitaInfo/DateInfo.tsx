@@ -26,6 +26,7 @@ export const DateInfo = ({
 	handleOnChange,
 }: DateInfoProps) => {
 	const timeZone = new Date().getTimezoneOffset();
+	const [dateEdit, setDateEdit] = React.useState<boolean>(false);
 	const [startDate, setStartDate] = React.useState<string>(
 		fromDate?.split("T")[0] || ""
 	);
@@ -33,16 +34,16 @@ export const DateInfo = ({
 		toDate?.split("T")[0] || ""
 	);
 	const [startHour, setStartHour] = React.useState<number>(
-		militarToTwelveHours(fromHour || 0).hour
+		militarToTwelveHours(Number.parseInt(`${fromHour}`, 10) || 0).hour
 	);
 	const [endHour, setEndHour] = React.useState<number>(
-		militarToTwelveHours(toHour || 0).hour
+		militarToTwelveHours(Number.parseInt(`${toHour}`, 10) || 0).hour
 	);
 	const [startHourAmPm, setStartHourAmPm] = React.useState<string>(
-		militarToTwelveHours(fromHour || 0).ampm
+		militarToTwelveHours(Number.parseInt(`${fromHour}`, 10) || 0).ampm
 	);
 	const [endHourAmPm, setEndHourAmPm] = React.useState<string>(
-		militarToTwelveHours(toHour || 0).ampm
+		militarToTwelveHours(Number.parseInt(`${toHour}`, 10) || 0).ampm
 	);
 	const [dateType, setDateType] = React.useState<number>(DATE_TYPES.START);
 	const [dateRange, setDateRange] = React.useState<{ [key: string]: any }>({});
@@ -91,17 +92,20 @@ export const DateInfo = ({
 		handleOnChange(
 			"fromHour",
 			`${
-				toMilitarHours(startHour, startHourAmPm) < 10
-					? `0${toMilitarHours(startHour, startHourAmPm)}`
-					: toMilitarHours(startHour, startHourAmPm)
+				toMilitarHours(Number.parseInt(`${startHour}`, 10), startHourAmPm) < 10
+					? `0${toMilitarHours(
+							Number.parseInt(`${startHour}`, 10),
+							startHourAmPm
+					  )}`
+					: toMilitarHours(Number.parseInt(`${startHour}`, 10), startHourAmPm)
 			}`
 		);
 		handleOnChange(
 			"toHour",
 			`${
-				toMilitarHours(endHour, endHourAmPm) < 10
-					? `0${toMilitarHours(endHour, endHourAmPm)}`
-					: toMilitarHours(endHour, endHourAmPm)
+				toMilitarHours(Number.parseInt(`${endHour}`, 10), endHourAmPm) < 10
+					? `0${toMilitarHours(Number.parseInt(`${endHour}`, 10), endHourAmPm)}`
+					: toMilitarHours(Number.parseInt(`${endHour}`, 10), endHourAmPm)
 			}`
 		);
 	}, [startHour, endHour, startHourAmPm, endHourAmPm]);
@@ -137,6 +141,7 @@ export const DateInfo = ({
 								},
 							},
 						]);
+						setDateEdit(true);
 					}}
 				/>
 				<Calendar
@@ -146,13 +151,14 @@ export const DateInfo = ({
 						...dateRange,
 					}}
 					onDayPress={(day) => {
-						if (dateType === DATE_TYPES.START) {
+						if (dateType === DATE_TYPES.START && dateEdit) {
 							setStartDate(`${day.dateString}`);
 							const year = new Date(day.dateString).getFullYear();
 							const month = new Date(day.dateString).getMonth() + 1;
 							const currDay = new Date(day.dateString).getDate() + 2;
 							setEndDate(`${year}-${month}-${currDay}`);
-						} else if (dateType === DATE_TYPES.END) {
+							setDateEdit(false);
+						} else if (dateType === DATE_TYPES.END && dateEdit) {
 							if (new Date(day.dateString) < new Date(startDate)) {
 								Alert.alert(
 									"Error",
@@ -161,6 +167,7 @@ export const DateInfo = ({
 								return;
 							}
 							setEndDate(`${day.dateString}`);
+							setDateEdit(false);
 						}
 					}}
 					current={startDate.split("T")[0]}
@@ -184,7 +191,7 @@ export const DateInfo = ({
 								color: app_colors.black,
 								fontWeight: "bold",
 							}}>
-							{`${timeFormat(startHour)}:00`}
+							{`${startHour}:00`}
 						</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
@@ -208,7 +215,7 @@ export const DateInfo = ({
 								color: app_colors.black,
 								fontWeight: "bold",
 							}}>
-							{`${timeFormat(endHour)}:00`}
+							{`${endHour}:00`}
 						</Text>
 					</TouchableOpacity>
 					<TouchableOpacity

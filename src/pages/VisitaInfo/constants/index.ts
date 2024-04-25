@@ -1,5 +1,6 @@
 import { TTipoIngreso } from "@gcVigilantes/store/TipoIngreso/types";
 import { TipoVisita } from "@gcVigilantes/store/TipoVisitas/types";
+import { VehiclesResType } from "@gcVigilantes/store/Visita/types";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { ViewStyle } from "react-native";
 
@@ -47,6 +48,7 @@ export type MainInfoProps = {
 	tipoVisita: string;
 	tipoIngreso: string;
 	nombreVisita: string;
+	visitVehicles: VehiclesResType[];
 	handleOnChange: (key: string, value: string) => void;
 };
 

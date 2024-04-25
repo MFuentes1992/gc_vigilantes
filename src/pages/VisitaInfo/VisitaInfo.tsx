@@ -15,21 +15,29 @@ import { SettingsInfo } from "./SettingsInfo";
 import {
 	getVehicles,
 	getVisitaByUniqueID,
+	updateVisita,
 } from "@gcVigilantes/store/Visita/api";
+import { VehiclesResType } from "@gcVigilantes/store/Visita/types";
 
 export const VisitaInfo = ({ navigation, route }: any) => {
 	const { uniqueID, uri } = route.params;
 	const [tab, setTab] = useState<string>(TABS.MAIN);
-	// -- const [formValues, setformValues] = useState<IVisita>();
 	const [formValues, setFormValues] = useState<{
-		[key: string]: string | boolean | any;
+		[key: string]:
+			| string
+			| boolean
+			| any
+			| VehiclesResType[]
+			| string[]
+			| number;
 	}>({
+		visita_id: "",
 		nombre_visita: "",
 		fromDate: new Date().toISOString(),
 		toDate: new Date().toISOString(),
 		dateType: "",
-		fromHour: new Date().getHours(),
-		toHour: new Date().getHours(),
+		fromHour: "",
+		toHour: "",
 		hourType: "",
 		tipo_ingreso: "",
 		tipo_visita: "",
@@ -38,6 +46,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 		vehicle_plate: "",
 		multiple_entrada: false,
 		notificaciones: false,
+		vehicles: [],
 	});
 
 	const dispatch = useDispatch();
@@ -68,6 +77,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 	useEffect(() => {
 		if (visitaRedux) {
 			setFormValues(() => ({
+				idVisita: visitaRedux.visita_id,
 				nameAutor: visitaRedux.nameAutor,
 				emailAutor: visitaRedux.emailAutor,
 				residencial: visitaRedux.residencial,
@@ -80,23 +90,17 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 				fromDate: visitaRedux.desde,
 				toDate: visitaRedux.hasta,
 				dateType: visitaRedux.tipo_fecha,
-				fromHour: visitaRedux.hora_desde,
-				toHour: visitaRedux.hora_hasta,
+				fromHour: visitaRedux.desde.split("T")[1]?.split(":")[0],
+				toHour: visitaRedux.hasta.split("T")[1]?.split(":")[0],
 				hourType: visitaRedux.tipo_hora,
 				tipo_ingreso: visitaRedux.tipo_ingreso,
 				tipo_visita: visitaRedux.tipo_visita,
 				multiple_entrada: visitaRedux.multiple_entrada,
 				notificaciones: visitaRedux.notificaciones,
+				vehicles: visitaRedux.vehicles,
 			}));
 		}
 	}, [visitaRedux]);
-
-	console.log("dates", {
-		fromDate: formValues?.fromDate,
-		toDate: formValues?.toDate,
-		fromHour: formValues.fromHour,
-		toHour: formValues.toHour,
-	});
 
 	return (
 		<SafeAreaView>
@@ -124,6 +128,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 						tipoVisita={formValues?.tipo_visita || ""}
 						tipoIngreso={formValues?.tipo_ingreso || ""}
 						nombreVisita={formValues?.nombre_visita || ""}
+						visitVehicles={formValues?.vehicles || []}
 						handleOnChange={handleOnChange}
 					/>
 				)}
@@ -131,8 +136,8 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 					<DateInfo
 						fromDate={formValues?.fromDate}
 						toDate={formValues?.toDate}
-						fromHour={formValues?.fromDate.split("T")[1]?.split(":")[0]}
-						toHour={formValues?.toDate.split("T")[1]?.split(":")[0]}
+						fromHour={formValues?.fromHour}
+						toHour={formValues?.toHour}
 						handleOnChange={handleOnChange}
 					/>
 				)}
@@ -157,7 +162,32 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 						handleOnchange={handleOnChange}
 					/>
 				)}
-				<FormSaveButtons onCancel={() => {}} onSave={() => {}} />
+				<FormSaveButtons
+					onCancel={() => {}}
+					onSave={() => {
+						const payload = {
+							idVisita: formValues?.idVisita,
+							tipoVisita: formValues?.tipo_visita,
+							tipoIngreso: formValues?.tipo_ingreso,
+							fechaIngreso: `${formValues?.fromDate}T${formValues?.fromHour}:00:00`,
+							fechaSalida: `${formValues?.toDate}T${formValues?.toHour}:00:00`,
+							multiEntrada: formValues?.multiple_entrada,
+							notificaciones: formValues?.notificaciones,
+							nombreVisita: formValues?.nombre_visita,
+							vehicles: JSON.stringify(
+								[...formValues?.vehicles].map((vehicle) => ({
+									vehicle_id: vehicle.vehicle_id,
+									brand: vehicle.marca,
+									model: vehicle.modelo,
+									plates: vehicle.placas,
+									year: vehicle.anio,
+									color: vehicle.color,
+								}))
+							),
+						};
+						dispatch(updateVisita(payload) as any);
+					}}
+				/>
 			</ScrollView>
 		</SafeAreaView>
 	);
