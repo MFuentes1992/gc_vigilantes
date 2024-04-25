@@ -47,7 +47,7 @@ export const ActivationCode = ({ navigation }: any) => {
 					AsyncStorage.getItem("token_instalacion")
 						.then((token_ins) => {
 							if (token_ins !== null) {
-								navigation.navigate(ROUTES.HOME);
+								navigation.replace(ROUTES.HOME);
 							} else {
 								setLoading(false);
 							}
@@ -75,7 +75,7 @@ export const ActivationCode = ({ navigation }: any) => {
 							console.log("data", data);
 							AsyncStorage.setItem("token_instalacion", data.token_instalacion)
 								.then(() => {
-									navigation.navigate(ROUTES.HOME);
+									navigation.replace(ROUTES.HOME);
 								})
 								.catch((error) => {
 									dispatch(
