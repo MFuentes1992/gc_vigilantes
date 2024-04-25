@@ -47,7 +47,20 @@ export const ActivationCode = ({ navigation }: any) => {
 					AsyncStorage.getItem("token_instalacion")
 						.then((token_ins) => {
 							if (token_ins !== null) {
-								navigation.navigate(ROUTES.HOME);
+								AsyncStorage.getItem("token_activacion").then(
+									(tokeActivacion) => {
+										getActivationCode(`${tokeActivacion}`)
+											.then((res) => res.json())
+											.then((data) => {
+												const resp = JSON.parse(JSON.stringify(data));
+												if (resp.code === 203 || resp.code === "203") {
+													navigation.navigate(ROUTES.HOME);
+												} else {
+													setLoading(false);
+												}
+											});
+									}
+								);
 							} else {
 								setLoading(false);
 							}
@@ -72,12 +85,13 @@ export const ActivationCode = ({ navigation }: any) => {
 					.then((data) => {
 						const resp = JSON.parse(JSON.stringify(data));
 						if (resp.code === 200 || resp.code === "200") {
-							console.log("data", data);
 							AsyncStorage.setItem("token_instalacion", data.token_instalacion)
 								.then(() => {
+									AsyncStorage.setItem("token_activacion", activationCode);
 									navigation.navigate(ROUTES.HOME);
 								})
 								.catch((error) => {
+									setLoading(false);
 									dispatch(
 										setShowAlert({
 											showAlert: true,
@@ -87,6 +101,7 @@ export const ActivationCode = ({ navigation }: any) => {
 									);
 								});
 						} else {
+							setLoading(false);
 							dispatch(
 								setShowAlert({
 									showAlert: true,
