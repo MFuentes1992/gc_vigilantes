@@ -1,5 +1,8 @@
 {
 	"app_activation_code": "Por favor, Ingresa el código de activación de la aplicación.",
+	"app_database_code": "Por favor, Ingresa el código de la base de datos.",
+	"app_database_code_placeholder": "DB Código.",
+	"app_empty_field": "Por favor, rellene todos los campos.",
 	"app_activation_code_placeholder": "Código.",
 	"app_submit_button": "Aceptar",
 	"app_submit_continue": "Continuar"
