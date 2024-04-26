@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState = {
 	access_token: "",
+	database_code: "",
 	name: "",
 	residence: "",
 	id: "",
