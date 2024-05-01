@@ -9,6 +9,13 @@ export const app_text_title: TextStyle = {
 	textAlign: "justify",
 };
 
+export const app_text_subtitle: TextStyle = {
+	fontSize: 14,
+	fontWeight: "bold",
+	color: app_colors.text_dark,
+	marginBottom: 3,
+};
+
 export const app_text_property: TextStyle = {
 	fontSize: 12,
 	fontWeight: "normal",

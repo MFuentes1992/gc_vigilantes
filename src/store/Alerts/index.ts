@@ -1,10 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TAlerts } from "./types";
+import { ALERT_TYPES } from "@gcVigilantes/Components/Alerts/constants";
 
 const initialState: TAlerts = {
 	showAlert: false,
 	title: "",
 	message: "",
+	type: ALERT_TYPES.SUCCESS,
 };
 
 const alertsSlice = createSlice({
@@ -15,6 +17,7 @@ const alertsSlice = createSlice({
 			state.showAlert = action.payload.showAlert;
 			state.title = action.payload.title;
 			state.message = action.payload.message;
+			state.type = action.payload.type;
 		},
 	},
 });
