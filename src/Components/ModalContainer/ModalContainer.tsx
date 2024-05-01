@@ -18,7 +18,7 @@ export const ModalContainer = ({
 	return (
 		<Modal
 			animationType={animationType}
-			transparent={true}
+			transparent
 			visible={visible}
 			onRequestClose={onClose}>
 			<View style={ModalContainerStyles}>{children}</View>
