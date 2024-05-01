@@ -17,7 +17,7 @@ export const LoadingScreen = (props: LoadingScreenProps) => {
 	return (
 		<>
 			{props.children}
-			<ModalContainer visible={isLoading}>
+			<ModalContainer visible={isLoading} animationType='fade'>
 				<View style={LoadingScreenStyles}>
 					<Text style={app_text_title}>Cargando...</Text>
 					<LottieView

@@ -18,6 +18,7 @@ import {
 	updateVisita,
 } from "@gcVigilantes/store/Visita/api";
 import { VehiclesResType } from "@gcVigilantes/store/Visita/types";
+import { setLoading } from "@gcVigilantes/store/UI";
 
 export const VisitaInfo = ({ navigation, route }: any) => {
 	const { uniqueID, uri } = route.params;
@@ -60,6 +61,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 	const Tab = createBottomTabNavigator();
 
 	useEffect(() => {
+		dispatch(setLoading(true));
 		dispatch(getCatalogTipoVisitas() as any);
 		dispatch(getCatalogTipoIngreso() as any);
 		dispatch(getVisitaByUniqueID(uniqueID) as any);
@@ -99,6 +101,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 				notificaciones: visitaRedux.notificaciones,
 				vehicles: visitaRedux.vehicles,
 			}));
+			dispatch(setLoading(false));
 		}
 	}, [visitaRedux]);
 
