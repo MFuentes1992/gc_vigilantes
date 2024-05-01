@@ -19,14 +19,15 @@ export const LoadingScreen = (props: LoadingScreenProps) => {
 			{props.children}
 			<ModalContainer visible={isLoading} animationType='fade'>
 				<View style={LoadingScreenStyles}>
-					<Text style={app_text_title}>Cargando...</Text>
 					<LottieView
 						source={require("../../../assets/loading.json")}
 						ref={animation}
 						style={{
 							width: "100%",
-							height: "70%",
+							height: 200,
 						}}
+						resizeMode='center'
+						renderMode='AUTOMATIC'
 						autoPlay
 						loop
 					/>
