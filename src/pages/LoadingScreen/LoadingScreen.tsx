@@ -26,8 +26,6 @@ export const LoadingScreen = (props: LoadingScreenProps) => {
 							width: "100%",
 							height: 200,
 						}}
-						resizeMode='center'
-						renderMode='AUTOMATIC'
 						autoPlay
 						loop
 					/>

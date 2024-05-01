@@ -4,6 +4,14 @@ import { app_colors } from "@gcVigilantes/utils/default.colors";
 
 export const container: ViewStyle = {
 	flex: 1,
+	width: "100%",
+};
+
+export const container_animation: ViewStyle = {
+	flex: 1,
+	width: "100%",
+	justifyContent: "center",
+	alignItems: "center",
 };
 
 export const title_container: ViewStyle = {
@@ -33,11 +41,14 @@ export const InitializeConnection = async (
 		body: formdata,
 	};
 	const response = await fetch(`${ENDPOINTS.BASE_URL}`, requestOptions);
+	const data = await response.json();
 
 	if (response.status === 200) {
 		const res = await callback(email, password);
 		if (res.code === "200" && res.access_token) return res;
 		else throw new Error(res.message);
+	} else {
+		throw new Error(data.message);
 	}
 };
 

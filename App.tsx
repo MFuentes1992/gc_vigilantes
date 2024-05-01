@@ -19,14 +19,14 @@ export default function App() {
 	return (
 		<Provider store={store}>
 			<PersistGate loading={null} persistor={persistor}>
+				<Header
+					containerStyle={{
+						backgroundColor: app_colors.header,
+						minHeight: 50,
+					}}
+				/>
 				<LoadingScreen>
 					<Alerts>
-						<Header
-							containerStyle={{
-								backgroundColor: app_colors.header,
-								minHeight: 50,
-							}}
-						/>
 						<NavigationContainer>
 							<Stack.Navigator initialRouteName='activation-code'>
 								<Stack.Group

@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
 	authenticate,
 	container,
+	container_animation,
 	getActivationCode,
 	submit_button,
 	title_container,
@@ -19,6 +20,8 @@ import { card_styles } from "../VisitaInfo/constants";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { ScrollView } from "react-native-gesture-handler";
 import { setShowAlert } from "@gcVigilantes/store/Alerts";
+import { ALERT_TYPES } from "@gcVigilantes/Components/Alerts/constants";
+import LottieView from "lottie-react-native";
 
 export const ActivationCode = ({ navigation }: any) => {
 	const dispatch = useDispatch();
@@ -31,16 +34,16 @@ export const ActivationCode = ({ navigation }: any) => {
 	useEffect(() => {
 		setLoading(true);
 		AsyncStorage.getItem("database_code")
-			.then((res) => {
-				if (res === "" || res === null) {
+			.then((dbCode) => {
+				if (dbCode === "" || dbCode === null) {
 					setLoading(false);
 				}
-				if (res) {
-					setDataBaseCod(res);
+				if (dbCode) {
+					setDataBaseCod(dbCode);
 					AsyncStorage.getItem("token_instalacion")
 						.then((res) => {
 							if (res) {
-								Authenticate(dataBaseCode).then((res) => {
+								Authenticate(dbCode).then((res) => {
 									if (res) {
 										AsyncStorage.getItem("activation_code")
 											.then((res) => {
@@ -77,6 +80,8 @@ export const ActivationCode = ({ navigation }: any) => {
 											});
 									}
 								});
+							} else {
+								setLoading(false);
 							}
 						})
 						.catch((error) => {
@@ -98,6 +103,7 @@ export const ActivationCode = ({ navigation }: any) => {
 			dbCode,
 			authenticate
 		);
+		console.log("Authenticate Fetch", res);
 		if (res) {
 			dispatch(
 				setUserData({
@@ -163,6 +169,7 @@ export const ActivationCode = ({ navigation }: any) => {
 														showAlert: true,
 														title: "Error",
 														message: error,
+														type: ALERT_TYPES.ERROR,
 													})
 												);
 											});
@@ -172,6 +179,7 @@ export const ActivationCode = ({ navigation }: any) => {
 												showAlert: true,
 												title: "Error",
 												message: resp.message,
+												type: ALERT_TYPES.ERROR,
 											})
 										);
 									}
@@ -242,8 +250,22 @@ export const ActivationCode = ({ navigation }: any) => {
 				</View>
 			)}
 			{loading && (
-				<View style={container}>
-					<Text>Cargando...</Text>
+				<View style={container_animation}>
+					<Text>
+						{getLabelApp(
+							preferences.language,
+							"app_activation_code_initialize"
+						)}
+					</Text>
+					<LottieView
+						source={require("../../../assets/initialize.json")}
+						style={{
+							width: 200,
+							height: 200,
+						}}
+						autoPlay
+						loop
+					/>
 				</View>
 			)}
 		</ScrollView>

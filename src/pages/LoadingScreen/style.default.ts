@@ -3,12 +3,12 @@ import { ViewStyle } from "react-native";
 
 export const LoadingScreenStyles: ViewStyle = {
 	flex: 0.3,
-	width: "40%",
+	width: "50%",
 	maxHeight: 100,
 	margin: "auto",
 	justifyContent: "center",
 	alignItems: "center",
 	backgroundColor: app_colors.white,
 	borderRadius: 10,
-	elevation: 20,
+	elevation: 10,
 };

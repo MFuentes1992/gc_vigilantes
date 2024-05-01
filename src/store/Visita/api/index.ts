@@ -2,6 +2,8 @@ import { ENDPOINTS } from "@gcVigilantes/utils";
 import { setVisita, setVehicles } from "@gcVigilantes/store/Visita";
 import { IVisita, VehiclesResType } from "../types";
 import data_mock from "./data.json";
+import { setShowAlert } from "@gcVigilantes/store/Alerts";
+import { ALERT_TYPES } from "@gcVigilantes/Components/Alerts/constants";
 import { setLoading } from "@gcVigilantes/store/UI";
 
 export const getVisitaByUniqueID = (uniqueID: string) => (dispatch: any) => {
@@ -49,12 +51,31 @@ export const updateVisita =
 		})
 			.then((response) => response.json())
 			.then((data) => {
-				console.log("Success:", data);
-				setTimeout(() => {
+				new Promise((resolve) => {
 					dispatch(setLoading(false));
-				}, 2000);
+					resolve("success");
+				}).then(() => {
+					setTimeout(() => {
+						dispatch(
+							setShowAlert({
+								showAlert: true,
+								title: "Exito!",
+								message: data.message,
+								type: ALERT_TYPES.SUCCESS,
+							})
+						);
+					}, 500);
+				});
 			})
 			.catch((error) => {
-				console.error("Error:", error);
+				dispatch(setLoading(false));
+				dispatch(
+					setShowAlert({
+						showAlert: false,
+						title: "Error",
+						message: "Algo salió mal, intente de nuevo",
+						type: ALERT_TYPES.ERROR,
+					})
+				);
 			});
 	};
