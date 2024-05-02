@@ -1,11 +1,8 @@
 import React, { useEffect } from "react";
-import { Modal, TextInput } from "react-native";
-import { View } from "react-native-animatable";
-import { ModalStyles, defaultContainer, inputStyles } from "./constants";
-import { FormSaveButtons } from "../FormSaveButtons/FormSaveButtons";
+import { TextInput, View } from "react-native";
+import { inputStyles } from "./constants";
 import { CardTitle } from "../CardTitle/CardTitle";
 import { card_styles_extended } from "@gcVigilantes/pages/VisitaInfo/constants";
-import { ScrollView } from "react-native-gesture-handler";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { HeaderActionButton } from "../HeaderActionButton/HeaderActionButton";
 

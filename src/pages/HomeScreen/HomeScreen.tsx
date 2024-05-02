@@ -20,7 +20,6 @@ export const HomeScreen = ({ navigation }: any) => {
 				.then((response) => {
 					const { values } = response;
 					const tmpArray = values.toString().split("/");
-					console.log("Detected QR code values", values);
 					if (values.toString().includes("http")) {
 						navigation.navigate("VisitaInfo", {
 							uniqueID: tmpArray[tmpArray.length - 1],

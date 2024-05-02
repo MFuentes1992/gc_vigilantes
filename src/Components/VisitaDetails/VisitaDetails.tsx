@@ -47,7 +47,7 @@ export const VisitaDetails = ({
 				/>
 				<View style={details_info}>
 					<Text style={app_text_body}>{autor}</Text>
-					<Text style={[app_text_menu, { color: app_colors.text_dark }]}>
+					<Text style={[app_text_body, { color: app_colors.text_dark }]}>
 						{emailAutor}
 					</Text>
 					<View style={defaultRow}>
