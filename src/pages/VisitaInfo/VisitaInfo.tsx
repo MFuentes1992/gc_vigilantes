@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { getCatalogTipoVisitas } from "@gcVigilantes/store/TipoVisitas/api";
 import { RootState } from "@gcVigilantes/store";
@@ -19,6 +20,7 @@ import {
 } from "@gcVigilantes/store/Visita/api";
 import { VehiclesResType } from "@gcVigilantes/store/Visita/types";
 import { setLoading } from "@gcVigilantes/store/UI";
+import { ENDPOINTS } from "@gcVigilantes/utils";
 
 export const VisitaInfo = ({ navigation, route }: any) => {
 	const { uniqueID, uri } = route.params;
@@ -107,9 +109,9 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 
 	return (
 		<SafeAreaView>
-			<ScrollView>
+			<KeyboardAwareScrollView>
 				<VisitaDetails
-					uri={uri}
+					uri={!uri.includes("preview") ? uri : `${ENDPOINTS.QR}${uniqueID}`}
 					autor={formValues?.nameAutor || ""}
 					emailAutor={formValues?.emailAutor || ""}
 					direccion={`${formValues?.residencial}, ${formValues?.calle}, ${formValues?.num_ext}`}
@@ -191,7 +193,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 						dispatch(updateVisita(payload) as any);
 					}}
 				/>
-			</ScrollView>
+			</KeyboardAwareScrollView>
 		</SafeAreaView>
 	);
 };
