@@ -135,6 +135,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
             tipoIngreso={formValues?.tipo_ingreso || ""}
             nombreVisita={formValues?.nombre_visita || ""}
             visitVehicles={formValues?.vehicles || []}
+            estatus={Number.parseInt(formValues?.estado) || 0}
             handleOnChange={handleOnChange}
           />
         )}
@@ -144,10 +145,13 @@ export const VisitaInfo = ({ navigation, route }: any) => {
             toDate={formValues?.toDate}
             fromHour={formValues?.fromHour}
             toHour={formValues?.toHour}
+            estatus={Number.parseInt(formValues?.estado) || 0}
             handleOnChange={handleOnChange}
           />
         )}
-        {tab === TABS.GUEST && <GuestInfo />}
+        {tab === TABS.GUEST && (
+          <GuestInfo estatus={Number.parseInt(formValues?.estado) || 0} />
+        )}
         {tab === TABS.SETTINGS && (
           <SettingsInfo
             autor={formValues?.emailAutor || ""}
@@ -168,32 +172,34 @@ export const VisitaInfo = ({ navigation, route }: any) => {
             handleOnchange={handleOnChange}
           />
         )}
-        <FormSaveButtons
-          onCancel={() => {}}
-          onSave={() => {
-            const payload = {
-              idVisita: formValues?.idVisita,
-              tipoVisita: formValues?.tipo_visita,
-              tipoIngreso: formValues?.tipo_ingreso,
-              fechaIngreso: `${formValues?.fromDate}T${formValues?.fromHour}:00:00`,
-              fechaSalida: `${formValues?.toDate}T${formValues?.toHour}:00:00`,
-              multiEntrada: formValues?.multiple_entrada,
-              notificaciones: formValues?.notificaciones,
-              nombreVisita: formValues?.nombre_visita,
-              vehicles: JSON.stringify(
-                [...formValues?.vehicles].map((vehicle) => ({
-                  vehicle_id: vehicle.vehicle_id,
-                  brand: vehicle.marca,
-                  model: vehicle.modelo,
-                  plates: vehicle.placas,
-                  year: vehicle.anio,
-                  color: vehicle.color,
-                })),
-              ),
-            };
-            dispatch(updateVisita(payload) as any);
-          }}
-        />
+        {Number.parseInt(formValues?.estado) !== 0 && (
+          <FormSaveButtons
+            onCancel={() => {}}
+            onSave={() => {
+              const payload = {
+                idVisita: formValues?.idVisita,
+                tipoVisita: formValues?.tipo_visita,
+                tipoIngreso: formValues?.tipo_ingreso,
+                fechaIngreso: `${formValues?.fromDate}T${formValues?.fromHour}:00:00`,
+                fechaSalida: `${formValues?.toDate}T${formValues?.toHour}:00:00`,
+                multiEntrada: formValues?.multiple_entrada,
+                notificaciones: formValues?.notificaciones,
+                nombreVisita: formValues?.nombre_visita,
+                vehicles: JSON.stringify(
+                  [...formValues?.vehicles].map((vehicle) => ({
+                    vehicle_id: vehicle.vehicle_id,
+                    brand: vehicle.marca,
+                    model: vehicle.modelo,
+                    plates: vehicle.placas,
+                    year: vehicle.anio,
+                    color: vehicle.color,
+                  })),
+                ),
+              };
+              dispatch(updateVisita(payload) as any);
+            }}
+          />
+        )}
       </KeyboardAwareScrollView>
     </SafeAreaView>
   );
