@@ -1,4 +1,4 @@
-import { ENDPOINTS } from "@gcVigilantes/utils";
+import { ENDPOINTS, stringTemplateAddQuery } from "@gcVigilantes/utils";
 import { setVisita, setVehicles } from "@gcVigilantes/store/Visita";
 import { IVisita, VehiclesResType } from "../types";
 import data_mock from "./data.json";
@@ -6,27 +6,28 @@ import { setShowAlert } from "@gcVigilantes/store/Alerts";
 import { ALERT_TYPES } from "@gcVigilantes/Components/Alerts/constants";
 import { setLoading } from "@gcVigilantes/store/UI";
 
-export const getVisitaByUniqueID = (uniqueID: string) => (dispatch: any) => {
-  const url = `${ENDPOINTS.BASE_URL}${ENDPOINTS.VISITAS.BY_UNIQUEID.replace(
-    "{qr}",
-    uniqueID,
-  )}`;
-  fetch(url)
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("visita uniqueID data ----->", data);
-      dispatch(setVisita(data as IVisita));
-    })
-
-    .catch((error) => {
-      console.error("Error:", error);
-    });
-};
+export const getVisitaByUniqueID =
+  (uniqueID: string, id_caseta: string) => (dispatch: any) => {
+    const url = stringTemplateAddQuery(
+      `${ENDPOINTS.BASE_URL}${ENDPOINTS.VISITAS.BY_UNIQUEID}`,
+      { qr: uniqueID, id_caseta }
+    );
+    console.log("qr url ----->", url);
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("visita uniqueID data ----->", data);
+        dispatch(setVisita(data as IVisita));
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
 
 export const getVehicles = (uniqueID: string) => (dispatch: any) => {
   const url = `${ENDPOINTS.BASE_URL}${ENDPOINTS.VISITAS.VEHICLES.replace(
     "{qr}",
-    uniqueID,
+    uniqueID
   )}`;
   fetch(url)
     .then((response) => response.json())
@@ -63,7 +64,7 @@ export const updateVisita =
                 title: "Exito!",
                 message: data.message,
                 type: ALERT_TYPES.SUCCESS,
-              }),
+              })
             );
           }, 500);
         });
@@ -76,7 +77,7 @@ export const updateVisita =
             title: "Error",
             message: "Algo salió mal, intente de nuevo",
             type: ALERT_TYPES.ERROR,
-          }),
+          })
         );
       });
   };

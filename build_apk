@@ -15,9 +15,9 @@ done
 
 echo "Compiled app: $FILE_NAME"
 mkdir $CURR_DIR/release$CURRENTEPOCTIME
-bundletool build-apks --bundle=$FILE_NAME --output=$UNIVERSAL_BUNDLE --mode=universal --ks="$HOME/development/FrontEnd/Cirkuits/cirkuits-app/cirkuits-pipeline/cirkuits_certificate.keystore" --ks-pass=file:"$HOME/development/FrontEnd/Cirkuits/cirkuits-app/cirkuits-pipeline/ks_pwd.pwd" --ks-key-alias=cirkuits_cert --key-pass=file:"$HOME/development/FrontEnd/Cirkuits/cirkuits-app/cirkuits-pipeline/ks_pwd.pwd"
+bundletool build-apks --bundle=$FILE_NAME --output=$UNIVERSAL_BUNDLE --mode=universal --ks="$HOME/Development/FrontEnd/cirkuits-app/cirkuits-pipeline/cirkuits_certificate.keystore" --ks-pass=file:"$HOME/Development/FrontEnd/cirkuits-app/cirkuits-pipeline/ks_pwd.pwd" --ks-key-alias=cirkuits_cert --key-pass=file:"$HOME/Development/FrontEnd/cirkuits-app/cirkuits-pipeline/ks_pwd.pwd"
 mv $UNIVERSAL_BUNDLE $CURR_DIR/release$CURRENTEPOCTIME
-rm $FILE_NAME   
+# rm $FILE_NAME   
 cd $CURR_DIR/release$CURRENTEPOCTIME
 
 unzip -p $UNIVERSAL_BUNDLE universal.apk > $RELEASE_DEV

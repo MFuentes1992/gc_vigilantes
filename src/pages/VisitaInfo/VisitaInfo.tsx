@@ -21,6 +21,7 @@ import {
 import { VehiclesResType } from "@gcVigilantes/store/Visita/types";
 import { setLoading } from "@gcVigilantes/store/UI";
 import { ENDPOINTS } from "@gcVigilantes/utils";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const VisitaInfo = ({ navigation, route }: any) => {
   const { uniqueID, uri } = route.params;
@@ -54,10 +55,10 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 
   const dispatch = useDispatch();
   const { catalogVisitas } = useSelector(
-    (state: RootState) => state.tipoVisitas,
+    (state: RootState) => state.tipoVisitas
   );
   const { catalogIngreso } = useSelector(
-    (state: RootState) => state.tipoIngreso,
+    (state: RootState) => state.tipoIngreso
   );
   const visitaRedux = useSelector((state: RootState) => state.visita);
   const Tab = createBottomTabNavigator();
@@ -66,7 +67,12 @@ export const VisitaInfo = ({ navigation, route }: any) => {
     dispatch(setLoading(true));
     dispatch(getCatalogTipoVisitas() as any);
     dispatch(getCatalogTipoIngreso() as any);
-    dispatch(getVisitaByUniqueID(uniqueID) as any);
+    AsyncStorage.getItem("id_caseta")
+      .then((data) => dispatch(getVisitaByUniqueID(uniqueID, `${data}`) as any))
+      .catch((error) =>
+        console.error("Error al obtener información de la caseta", error)
+      );
+
     dispatch(getVehicles(uniqueID) as any);
   }, []);
 
@@ -94,10 +100,10 @@ export const VisitaInfo = ({ navigation, route }: any) => {
         seccion: visitaRedux.seccion,
         fromDate: visitaRedux.desde.split("T")[0],
         toDate: visitaRedux.hasta.split("T")[0],
-        dateType: visitaRedux.tipo_fecha,
+        // dateType: visitaRedux.tipo_fecha,
         fromHour: visitaRedux.desde.split("T")[1]?.split(":")[0],
         toHour: visitaRedux.hasta.split("T")[1]?.split(":")[0],
-        hourType: visitaRedux.tipo_hora,
+        // hourType: visitaRedux.tipo_hora,
         tipo_ingreso: visitaRedux.tipo_ingreso,
         tipo_visita: visitaRedux.tipo_visita,
         multiple_entrada: visitaRedux.multiple_entrada,
@@ -193,7 +199,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                     plates: vehicle.placas,
                     year: vehicle.anio,
                     color: vehicle.color,
-                  })),
+                  }))
                 ),
               };
               dispatch(updateVisita(payload) as any);
