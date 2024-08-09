@@ -29,7 +29,7 @@ const TIME_ZONES = {
   },
 };
 
-export const LOCAL_STORAGE_KEYS = {
+export const LOCAL_STORAGE_KEYS: { [key: string]: string } = {
   INSTALATION_TOKEN: "Instalation_Token",
   ACCESS_CODE: "Access_Code",
   DB_CODE: "DB_Code",
@@ -104,6 +104,15 @@ export const loadAsyncStorageData = async (
   const values = await Promise.all(promises);
   keys.forEach((key, index) => {
     results.push({ [key]: values[index] });
+  });
+  return results;
+};
+
+export const promiseQueuer = async (promises: any[], params: any[]) => {
+  let results: any[] = [];
+  promises.forEach(async (promise, index) => {
+    const res = await promise(params[index]);
+    results.push(res);
   });
   return results;
 };

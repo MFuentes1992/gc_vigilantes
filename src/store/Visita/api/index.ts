@@ -1,4 +1,9 @@
-import { ENDPOINTS, stringTemplateAddQuery } from "@gcVigilantes/utils";
+import {
+  ENDPOINTS,
+  getLabelApp,
+  ROUTES,
+  stringTemplateAddQuery,
+} from "@gcVigilantes/utils";
 import { setVisita, setVehicles } from "@gcVigilantes/store/Visita";
 import { IVisita, VehiclesResType } from "../types";
 import data_mock from "./data.json";
@@ -7,16 +12,20 @@ import { ALERT_TYPES } from "@gcVigilantes/Components/Alerts/constants";
 import { setLoading } from "@gcVigilantes/store/UI";
 
 export const getVisitaByUniqueID =
-  (uniqueID: string, id_caseta: string) => (dispatch: any) => {
+  (uniqueID: string, id_caseta: string, navigation: any) => (dispatch: any) => {
     const url = stringTemplateAddQuery(
       `${ENDPOINTS.BASE_URL}${ENDPOINTS.VISITAS.BY_UNIQUEID}`,
       { qr: uniqueID, id_caseta }
     );
-    console.log("qr url ----->", url);
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        console.log("visita uniqueID data ----->", data);
+        if (data.hasOwnProperty("estatus") && data.estatus === "400") {
+          navigation.navigate(ROUTES.HOME, {
+            error: getLabelApp("es", "app_error_message"),
+          });
+          return;
+        }
         dispatch(setVisita(data as IVisita));
       })
       .catch((error) => {

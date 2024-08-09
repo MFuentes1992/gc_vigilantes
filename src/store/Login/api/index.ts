@@ -4,6 +4,7 @@ import {
   ENDPOINTS,
   getLabelApp,
   LOCAL_STORAGE_KEYS,
+  promiseQueuer,
   ROUTES,
 } from "@gcVigilantes/utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -35,7 +36,6 @@ export const login = async (accessCode: string) => {
   };
 
   const response = await fetch(`${ENDPOINTS.BASE_URL}/?login`, requestOptions);
-
   return response.json();
 };
 
@@ -46,6 +46,7 @@ export const getActivationCode = async (accessCode: string) => {
     method: "POST",
     body: formdata,
   };
+
   const res = await fetch(
     `${ENDPOINTS.BASE_URL}${ENDPOINTS.VIGILANTE.CODE}`,
     requestOptions
@@ -60,57 +61,55 @@ export const getActivationCode = async (accessCode: string) => {
  * @returns 3-way authentication results, index 2 is instalation code.
  */
 export const threeWayAuthentication =
-  (dbCode: string, accessCode: string, navigation: any) => (dispatch: any) => {
-    Promise.all([
-      InitializeConnection(dbCode),
-      login(accessCode),
-      getActivationCode(accessCode),
-    ])
-      .then((res) => {
-        const [initRes, loginRes, activationRes] = res;
-        if (activationRes) {
-          AsyncStorage.setItem(
-            LOCAL_STORAGE_KEYS.INSTALATION_TOKEN,
-            activationRes.token_instalacion
-          );
-          AsyncStorage.setItem(
-            LOCAL_STORAGE_KEYS.ID_CASETA,
-            activationRes.id_caseta
-          );
-          AsyncStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_CODE, accessCode);
-          AsyncStorage.setItem(LOCAL_STORAGE_KEYS.DB_CODE, dbCode);
-          navigation.navigate(ROUTES.HOME);
-        }
-      })
-      .catch((error) => {
-        dispatch(
-          setShowAlert({
-            showAlert: true,
-            title: getLabelApp("es", "app_error_message_title"),
-            message: getLabelApp("es", "app_error_message"),
-            type: ALERT_TYPES.SUCCESS,
-          })
+  (dbCode: string, accessCode: string, navigation: any) =>
+  async (dispatch: any) => {
+    try {
+      const initRes = await InitializeConnection(dbCode);
+      const loginRes = await login(accessCode);
+      const activationRes = await getActivationCode(accessCode);
+
+      if (activationRes) {
+        AsyncStorage.setItem(
+          LOCAL_STORAGE_KEYS.INSTALATION_TOKEN,
+          activationRes.token_instalacion
         );
-      });
+        AsyncStorage.setItem(
+          LOCAL_STORAGE_KEYS.ID_CASETA,
+          activationRes.id_caseta
+        );
+        AsyncStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_CODE, accessCode);
+        AsyncStorage.setItem(LOCAL_STORAGE_KEYS.DB_CODE, dbCode);
+        navigation.navigate(ROUTES.HOME);
+      }
+    } catch (error) {
+      dispatch(
+        setShowAlert({
+          showAlert: true,
+          title: getLabelApp("es", "app_error_message_title"),
+          message: getLabelApp("es", "app_error_message"),
+          type: ALERT_TYPES.ERROR,
+        })
+      );
+    }
   };
 
 export const twoWayAuthentication =
-  (dbCode: string, accessCode: string, navigation: any) => (dispatch: any) => {
-    Promise.all([InitializeConnection(dbCode), login(accessCode)])
-      .then((res) => {
-        const [initRes, loginRes] = res;
-        if (["200", 200].includes(loginRes.status)) {
-          navigation.navigate(ROUTES.HOME);
-        }
-      })
-      .catch((error) => {
-        dispatch(
-          setShowAlert({
-            showAlert: true,
-            title: getLabelApp("es", "app_error_message_title"),
-            message: getLabelApp("es", "app_error_message"),
-            type: ALERT_TYPES.SUCCESS,
-          })
-        );
-      });
+  (dbCode: string, accessCode: string, navigation: any) =>
+  async (dispatch: any) => {
+    try {
+      const initRes = await InitializeConnection(dbCode);
+      const loginRes = await login(accessCode);
+      if (["200", 200].includes(loginRes.code)) {
+        navigation.navigate(ROUTES.HOME);
+      }
+    } catch (error) {
+      dispatch(
+        setShowAlert({
+          showAlert: true,
+          title: getLabelApp("es", "app_error_message_title"),
+          message: getLabelApp("es", "app_error_message"),
+          type: ALERT_TYPES.ERROR,
+        })
+      );
+    }
   };

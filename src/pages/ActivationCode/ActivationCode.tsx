@@ -38,16 +38,16 @@ export const ActivationCode = ({ navigation }: any) => {
 
   useEffect(() => {
     loadAsyncStorageData(
-      [...Object.keys(LOCAL_STORAGE_KEYS)],
+      Object.keys(LOCAL_STORAGE_KEYS).map((key) => LOCAL_STORAGE_KEYS[key]),
       AsyncStorage
     ).then((lsResult) => {
       const [instalationToken, accessCode, dbCode, idCaseta] = lsResult;
       dispatch(
         setUserData({
-          access_token: instalationToken.toString(),
-          database_code: dbCode.toString(),
-          access_code: accessCode.toString(),
-          id_caseta: Number.parseInt(idCaseta.toString()),
+          access_token: instalationToken.Instalation_Token.toString() || "",
+          database_code: dbCode.DB_Code.toString() || "",
+          access_code: accessCode.Access_Code.toString() || "",
+          id_caseta: Number.parseInt(idCaseta?.id_caseta?.toString() || "0"),
           name: "",
           residence: "",
           id: "",
@@ -55,8 +55,8 @@ export const ActivationCode = ({ navigation }: any) => {
       );
       dispatch(
         twoWayAuthentication(
-          dbCode.toString(),
-          accessCode.toString(),
+          dbCode?.DB_Code.toString() || "",
+          accessCode?.Access_Code.toString() || "",
           navigation
         ) as any
       );
