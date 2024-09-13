@@ -68,6 +68,10 @@ export const threeWayAuthentication =
       const loginRes = await login(accessCode);
       const activationRes = await getActivationCode(accessCode);
 
+      if (["203", 203].includes(activationRes.code)) {
+        throw new Error("Invalid activation code");
+      }
+
       if (activationRes) {
         AsyncStorage.setItem(
           LOCAL_STORAGE_KEYS.INSTALATION_TOKEN,
