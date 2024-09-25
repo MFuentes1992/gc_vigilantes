@@ -9,6 +9,7 @@ import UserPreferences from "./UserPreferences";
 import Alerts from "./Alerts";
 import UI from "./UI";
 import Auth from "./Login";
+import Vigilancia from "./Vigilancia";
 
 const persistConfig = {
   storage: AsyncStorage,
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   alerts: Alerts,
   ui: UI,
   auth: Auth,
+  vigilancia: Vigilancia,
 });
 
 export const persistedReducer = persistReducer(persistConfig, rootReducer);

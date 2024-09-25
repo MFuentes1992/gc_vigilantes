@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@gcVigilantes/store";
 import { View, Text, Image } from "react-native";
 import { HomeScreenStyles, INITIAL_STATE, THome } from "./constants";
-import { datePoller, hourFormat, getLabelApp } from "@gcVigilantes/utils";
+import {
+  datePoller,
+  hourFormat,
+  getLabelApp,
+  ENDPOINTS,
+} from "@gcVigilantes/utils";
 import {
   app_text_h2,
   app_text_h3,
@@ -11,25 +16,52 @@ import {
   app_text_title,
 } from "@gcVigilantes/utils/default.styles";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
+import { getCasetaInfo } from "@gcVigilantes/store/Vigilancia/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { clearCasetaInfo } from "@gcVigilantes/store/Vigilancia";
 
 export const Home = () => {
+  const dispatch = useDispatch();
   const [homeData, setHomeData] = useState<THome>(INITIAL_STATE);
   const intervalRef = React.useRef<any>();
   const preferences = useSelector((state: RootState) => state.preferences);
+  const casetaInfo = useSelector((state: RootState) => state.vigilancia);
 
   useEffect(() => {
-    const interval = datePoller(() => {
-      const time = hourFormat(new Date().getTime());
+    console.log("casetaInfo ====>", casetaInfo);
+    if ([""].includes(casetaInfo.residenceName)) {
+      AsyncStorage.getItem("Access_Code")
+        .then((code) => {
+          dispatch(getCasetaInfo(code || "") as any);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
       setHomeData((prev) => ({
-        ...homeData,
-        date: prev.date.replace(/\d{1,2}:\d{1,2}\s?(AM|PM)?/, time),
+        residenceAddress: casetaInfo.residenceAddress,
+        residenceExt: casetaInfo.residenceExt,
+        residenceMobile: casetaInfo.residenceMobile,
+        residenceName: casetaInfo.residenceName,
+        residencePhone: casetaInfo.residencePhone,
+        logoUrl: `${ENDPOINTS.WEB_SERVER}/${casetaInfo.logoUrl}`,
+        date: prev.date,
       }));
-    });
-    intervalRef.current = interval; // Save the interval reference
+      const interval = datePoller(() => {
+        const time = hourFormat(new Date().getTime());
+        setHomeData((prev) => ({
+          ...prev,
+          date: prev.date.replace(/\d{1,2}:\d{1,2}\s?(AM|PM)?/, time),
+        }));
+      });
+      // Save the interval reference
+      intervalRef.current = interval;
+    }
     return () => {
       clearInterval(intervalRef.current);
+      dispatch(clearCasetaInfo());
     };
-  }, []);
+  }, [casetaInfo.logoUrl]);
 
   return (
     <View style={HomeScreenStyles.container}>
@@ -38,7 +70,7 @@ export const Home = () => {
       </View>
       <View style={[HomeScreenStyles.imageContainer]}>
         <Image
-          src={homeData.logoUrl}
+          source={{ uri: homeData.logoUrl }}
           style={{
             width: 150,
             height: 150,
