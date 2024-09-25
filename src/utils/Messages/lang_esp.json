@@ -9,5 +9,8 @@
   "app_submit_continue": "Continuar",
   "app_default_required_field": "Este campo es requerido.",
   "app_error_message": "Ha ocurrido un error, por favor intente de nuevo.",
-  "app_error_message_title": "Error"
+  "app_error_message_title": "Error",
+  "app_mobile_number_mobile": "Celular",
+  "app_mobile_number_phone": "Teléfono",
+  "app_mobile_number_ext": "Extensión"
 }

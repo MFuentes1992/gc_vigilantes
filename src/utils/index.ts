@@ -95,6 +95,19 @@ export const stringTemplateAddQuery = (cadena: string, object: any) => {
   return cadena;
 };
 
+/*
+  Function to format the hour
+  @param time: number in miliseconds
+  @returns string 12 hrs am/pm
+*/
+export const hourFormat = (time: number) => {
+  const date = new Date(time);
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const { hour, ampm } = militarToTwelveHours(hours);
+  return `${hour}:${timeFormat(minutes)} ${ampm}`;
+};
+
 export const loadAsyncStorageData = async (
   keys: string[],
   AsyncStorage: any
@@ -115,4 +128,10 @@ export const promiseQueuer = async (promises: any[], params: any[]) => {
     results.push(res);
   });
   return results;
+};
+
+export const datePoller = (callback: () => void) => {
+  setInterval(() => {
+    callback();
+  }, 1000);
 };

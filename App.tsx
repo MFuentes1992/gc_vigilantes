@@ -12,61 +12,63 @@ import { ActivationCode } from "@gcVigilantes/pages/ActivationCode/ActivationCod
 import { Alerts } from "@gcVigilantes/Components/Alerts/Alerts";
 import { CameraScreen } from "@gcVigilantes/pages/CameraScreen/CameraScreen";
 import LoadingScreen from "@gcVigilantes/pages/LoadingScreen";
+import { Home } from "@gcVigilantes/pages/Home/Home";
 
 export default function App() {
-	const Stack = createStackNavigator();
+  const Stack = createStackNavigator();
 
-	return (
-		<Provider store={store}>
-			<PersistGate loading={null} persistor={persistor}>
-				<Header
-					containerStyle={{
-						backgroundColor: app_colors.header,
-						minHeight: 50,
-					}}
-				/>
-				<LoadingScreen>
-					<Alerts>
-						<NavigationContainer>
-							<Stack.Navigator initialRouteName='activation-code'>
-								<Stack.Group
-									screenOptions={{
-										headerStyle: {
-											backgroundColor: app_colors.primary,
-											height: 50,
-										},
-										headerTintColor: app_colors.white,
-										headerTitleStyle: {
-											fontWeight: "normal",
-											fontSize: 16,
-										},
-									}}>
-									<Stack.Screen
-										name='activation-code'
-										options={{ title: "" }}
-										component={ActivationCode}
-									/>
-									<Stack.Screen
-										name='Vigilante-qr'
-										options={{ title: "Home" }}
-										component={HomeScreen}
-									/>
-									<Stack.Screen
-										name='VisitaInfo'
-										options={{ title: "Detalles de Visita" }}
-										component={VisitaInfo}
-									/>
-									<Stack.Screen
-										name={ROUTES.CAMERA}
-										options={{ title: "Escanear código" }}
-										component={() => <CameraScreen type='back' />}
-									/>
-								</Stack.Group>
-							</Stack.Navigator>
-						</NavigationContainer>
-					</Alerts>
-				</LoadingScreen>
-			</PersistGate>
-		</Provider>
-	);
+  return (
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <Header
+          containerStyle={{
+            backgroundColor: app_colors.header,
+            minHeight: 50,
+          }}
+        />
+        <LoadingScreen>
+          <Alerts>
+            <NavigationContainer>
+              <Stack.Navigator initialRouteName="activation-code">
+                <Stack.Group
+                  screenOptions={{
+                    headerStyle: {
+                      backgroundColor: app_colors.primary,
+                      height: 50,
+                    },
+                    headerTintColor: app_colors.white,
+                    headerTitleStyle: {
+                      fontWeight: "normal",
+                      fontSize: 16,
+                    },
+                  }}
+                >
+                  <Stack.Screen
+                    name="activation-code"
+                    options={{ title: "" }}
+                    component={ActivationCode}
+                  />
+                  <Stack.Screen
+                    name="Vigilante-qr"
+                    options={{ title: "Caseta principal" }}
+                    component={Home}
+                  />
+                  <Stack.Screen
+                    name="VisitaInfo"
+                    options={{ title: "Detalles de Visita" }}
+                    component={VisitaInfo}
+                  />
+                  <Stack.Screen
+                    name={ROUTES.CAMERA}
+                    options={{ title: "Escanear código" }}
+                    component={() => <CameraScreen type="back" />}
+                  />
+                </Stack.Group>
+              </Stack.Navigator>
+            </NavigationContainer>
+          </Alerts>
+        </LoadingScreen>
+      </PersistGate>
+    </Provider>
+  );
 }
