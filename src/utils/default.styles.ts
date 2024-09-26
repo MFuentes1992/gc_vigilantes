@@ -14,12 +14,20 @@ export const app_text_h3: TextStyle = {
   fontWeight: "bold",
   color: app_colors.text_dark,
   marginBottom: 3,
-  textAlign: "justify",
+  textAlign: "center",
 };
 
 export const app_text_title: TextStyle = {
   fontSize: 16,
   fontWeight: "bold",
+  color: app_colors.text_dark,
+  marginBottom: 3,
+  textAlign: "justify",
+};
+
+export const app_text_title_normal: TextStyle = {
+  fontSize: 16,
+  fontWeight: "normal",
   color: app_colors.text_dark,
   marginBottom: 3,
   textAlign: "justify",
