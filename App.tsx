@@ -3,7 +3,7 @@ import { Header } from "react-native-elements";
 import { store, persistor, RootState } from "@gcVigilantes/store";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import HomeScreen from "@gcVigilantes/pages/HomeScreen";
+import ReadQR from "@gcVigilantes/pages/ReadQR";
 import { PersistGate } from "redux-persist/integration/react";
 import VisitaInfo from "@gcVigilantes/pages/VisitaInfo";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
@@ -13,6 +13,8 @@ import { Alerts } from "@gcVigilantes/Components/Alerts/Alerts";
 import { CameraScreen } from "@gcVigilantes/pages/CameraScreen/CameraScreen";
 import LoadingScreen from "@gcVigilantes/pages/LoadingScreen";
 import { Home } from "@gcVigilantes/pages/Home/Home";
+import { View } from "react-native";
+import { Footer } from "@gcVigilantes/Components/Footer/Footer";
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -29,7 +31,7 @@ export default function App() {
         <LoadingScreen>
           <Alerts>
             <NavigationContainer>
-              <Stack.Navigator initialRouteName="activation-code">
+              <Stack.Navigator initialRouteName={ROUTES.ACTIVATION_CODE}>
                 <Stack.Group
                   screenOptions={{
                     headerStyle: {
@@ -44,27 +46,37 @@ export default function App() {
                   }}
                 >
                   <Stack.Screen
-                    name="activation-code"
+                    name={ROUTES.ACTIVATION_CODE}
                     options={{ title: "" }}
                     component={ActivationCode}
                   />
                   <Stack.Screen
-                    name="Vigilante-qr"
-                    options={{ title: "Caseta principal" }}
+                    name={ROUTES.HOME}
+                    options={{
+                      title: getLabelApp("es", "app_screen_home_screen"),
+                    }}
                     component={Home}
                   />
                   <Stack.Screen
-                    name="VisitaInfo"
-                    options={{ title: "Detalles de Visita" }}
+                    name={ROUTES.QR}
+                    options={{ title: getLabelApp("es", "app_screen_read_qr") }}
+                    component={ReadQR}
+                  />
+                  <Stack.Screen
+                    name={ROUTES.VISIT_INFO}
+                    options={{
+                      title: getLabelApp("es", "app_screen_visit_info"),
+                    }}
                     component={VisitaInfo}
                   />
                   <Stack.Screen
                     name={ROUTES.CAMERA}
-                    options={{ title: "Escanear código" }}
-                    component={() => <CameraScreen type="back" />}
+                    options={{ title: getLabelApp("es", "app_screen_read_qr") }}
+                    component={CameraScreen}
                   />
                 </Stack.Group>
               </Stack.Navigator>
+              <Footer />
             </NavigationContainer>
           </Alerts>
         </LoadingScreen>

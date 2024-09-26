@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@gcVigilantes/store";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, BackHandler } from "react-native";
 import { HomeScreenStyles, INITIAL_STATE, THome } from "./constants";
 import {
   datePoller,
   hourFormat,
   getLabelApp,
   ENDPOINTS,
+  ROUTES,
 } from "@gcVigilantes/utils";
 import {
   app_text_h2,
@@ -19,8 +20,9 @@ import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { getCasetaInfo } from "@gcVigilantes/store/Vigilancia/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { clearCasetaInfo } from "@gcVigilantes/store/Vigilancia";
+import { setScreen } from "@gcVigilantes/store/Pagination";
 
-export const Home = () => {
+export const Home = ({ navigation }: any) => {
   const dispatch = useDispatch();
   const [homeData, setHomeData] = useState<THome>(INITIAL_STATE);
   const intervalRef = React.useRef<any>();
@@ -28,7 +30,20 @@ export const Home = () => {
   const casetaInfo = useSelector((state: RootState) => state.vigilancia);
 
   useEffect(() => {
-    console.log("casetaInfo ====>", casetaInfo);
+    navigation.addListener("beforeRemove", (e: any) => {
+      if (e.data.action.type != "GO_BACK") {
+        e.preventDefault();
+      }
+    });
+    navigation.addListener("focus", (e: any) => {
+      dispatch(setScreen(ROUTES.HOME));
+      /* BackHandler.addEventListener("hardwareBackPress", () => {
+        return true;
+      }); */
+    });
+  }, []);
+
+  useEffect(() => {
     if ([""].includes(casetaInfo.residenceName)) {
       AsyncStorage.getItem("Access_Code")
         .then((code) => {

@@ -1,17 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { Image, View, Text, TouchableOpacity, Alert } from "react-native";
+import {
+  Image,
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  BackHandler,
+} from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
 import RNQRGenerator from "rn-qr-generator";
 import { useDispatch } from "react-redux";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { useCameraPermission } from "react-native-vision-camera";
 import { ROUTES } from "@gcVigilantes/utils";
+import { setScreen } from "@gcVigilantes/store/Pagination";
 
-export const HomeScreen = ({ route, navigation }: any) => {
+export const ReadQR = ({ route, navigation }: any) => {
   const { error } = route?.params || {};
   const dispatch = useDispatch();
   const { hasPermission, requestPermission } = useCameraPermission();
   const [selectedImage, setSelectedImage] = useState<string>("");
+
+  useEffect(() => {
+    navigation.addListener("focus", () => {
+      dispatch(setScreen(ROUTES.QR));
+    });
+  }, []);
 
   useEffect(() => {
     if (selectedImage !== "") {
@@ -34,14 +48,6 @@ export const HomeScreen = ({ route, navigation }: any) => {
         .catch((error) => console.log("Cannot detect QR code in image", error));
     }
   }, [selectedImage]);
-
-  useEffect(() => {
-    navigation.addListener("beforeRemove", (e: any) => {
-      if (e.data.action.type != "GO_BACK") {
-        e.preventDefault();
-      }
-    });
-  }, []);
 
   useEffect(() => {
     if (error) {

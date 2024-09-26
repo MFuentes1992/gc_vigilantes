@@ -19,7 +19,8 @@ export const ENDPOINTS = {
 
 export const ROUTES = {
   ACTIVATION_CODE: "activation-code",
-  HOME: "Vigilante-qr",
+  HOME: "home-screen",
+  QR: "Vigilante-qr",
   VISIT_INFO: "VisitaInfo",
   CAMERA: "Camera",
 };
