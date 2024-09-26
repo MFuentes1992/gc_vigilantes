@@ -13,57 +13,65 @@ import { RootState } from "@gcVigilantes/store";
 export const Footer = () => {
   const navigate = useNavigation();
   const [selectedTab, setSelectedTab] = React.useState<number>(-1);
+  const [showFooter, setShowFooter] = React.useState<boolean>(true);
   const currScreen = useSelector((state: RootState) => state.pagination.screen);
 
   React.useEffect(() => {
-    if (currScreen === ROUTES.ACTIVATION_CODE) {
-      setSelectedTab(0);
-    } else if (currScreen === ROUTES.QR) {
-      setSelectedTab(1);
-    } /* else if (currScreen === ROUTES.LOGS) {
-        setSelectedTab(2);
-        } */ else {
-      setSelectedTab(-1);
+    switch (currScreen) {
+      case ROUTES.ACTIVATION_CODE:
+        setShowFooter(false);
+        break;
+      case ROUTES.QR:
+        setSelectedTab(1);
+        break;
+      default:
+        setSelectedTab(-1);
+        setShowFooter(true);
+        break;
     }
   }, [currScreen]);
 
   return (
-    <View style={FooterStyles.container}>
-      <TouchableOpacity
-        onPress={() => {
-          setSelectedTab(0);
-        }}
-      >
-        <FontAwesome
-          name="id-card-o"
-          size={24}
-          color={selectedTab === 0 ? app_colors.black : app_colors.primary}
-        />
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          setSelectedTab(1);
-          navigate.navigate(ROUTES.QR as never);
-        }}
-      >
-        <MaterialCommunityIcons
-          name="qrcode-scan"
-          size={24}
-          color={selectedTab === 1 ? app_colors.black : app_colors.primary}
-        />
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          setSelectedTab(2);
-          /*Should navigate to logs*/
-        }}
-      >
-        <Octicons
-          name="checklist"
-          size={24}
-          color={selectedTab === 2 ? app_colors.black : app_colors.primary}
-        />
-      </TouchableOpacity>
-    </View>
+    <>
+      {showFooter && (
+        <View style={FooterStyles.container}>
+          <TouchableOpacity
+            onPress={() => {
+              setSelectedTab(0);
+            }}
+          >
+            <FontAwesome
+              name="id-card-o"
+              size={24}
+              color={selectedTab === 0 ? app_colors.black : app_colors.primary}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setSelectedTab(1);
+              navigate.navigate(ROUTES.QR as never);
+            }}
+          >
+            <MaterialCommunityIcons
+              name="qrcode-scan"
+              size={24}
+              color={selectedTab === 1 ? app_colors.black : app_colors.primary}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setSelectedTab(2);
+              /*Should navigate to logs*/
+            }}
+          >
+            <Octicons
+              name="checklist"
+              size={24}
+              color={selectedTab === 2 ? app_colors.black : app_colors.primary}
+            />
+          </TouchableOpacity>
+        </View>
+      )}
+    </>
   );
 };

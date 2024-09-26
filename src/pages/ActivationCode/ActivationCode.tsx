@@ -12,6 +12,7 @@ import {
 import { RootState } from "@gcVigilantes/store";
 import {
   LOCAL_STORAGE_KEYS,
+  ROUTES,
   getLabelApp,
   loadAsyncStorageData,
 } from "@gcVigilantes/utils";
@@ -27,6 +28,7 @@ import {
   threeWayAuthentication,
   twoWayAuthentication,
 } from "@gcVigilantes/store/Login/api";
+import { setScreen } from "@gcVigilantes/store/Pagination";
 
 export const ActivationCode = ({ navigation }: any) => {
   const dispatch = useDispatch();
@@ -37,29 +39,38 @@ export const ActivationCode = ({ navigation }: any) => {
   const preferences = useSelector((state: RootState) => state.preferences);
 
   useEffect(() => {
+    setLoading(true);
     loadAsyncStorageData(
       Object.keys(LOCAL_STORAGE_KEYS).map((key) => LOCAL_STORAGE_KEYS[key]),
       AsyncStorage
-    ).then((lsResult) => {
-      const [instalationToken, accessCode, dbCode, idCaseta] = lsResult;
-      dispatch(
-        setUserData({
-          access_token: instalationToken.Instalation_Token.toString() || "",
-          database_code: dbCode.DB_Code.toString() || "",
-          access_code: accessCode.Access_Code.toString() || "",
-          id_caseta: Number.parseInt(idCaseta?.id_caseta?.toString() || "0"),
-          name: "",
-          residence: "",
-          id: "",
-        }) as any
-      );
-      dispatch(
-        twoWayAuthentication(
-          dbCode?.DB_Code.toString() || "",
-          accessCode?.Access_Code.toString() || "",
-          navigation
-        ) as any
-      );
+    )
+      .then((lsResult) => {
+        const [instalationToken, accessCode, dbCode, idCaseta] = lsResult;
+        dispatch(
+          setUserData({
+            access_token: instalationToken.Instalation_Token.toString() || "",
+            database_code: dbCode.DB_Code.toString() || "",
+            access_code: accessCode.Access_Code.toString() || "",
+            id_caseta: Number.parseInt(idCaseta?.id_caseta?.toString() || "0"),
+            name: "",
+            residence: "",
+            id: "",
+          }) as any
+        );
+        dispatch(
+          twoWayAuthentication(
+            dbCode?.DB_Code.toString() || "",
+            accessCode?.Access_Code.toString() || "",
+            navigation,
+            () => setLoading(false)
+          ) as any
+        );
+      })
+      .catch((error) => {
+        setLoading(false);
+      });
+    navigation.addListener("focus", () => {
+      dispatch(setScreen(ROUTES.ACTIVATION_CODE));
     });
   }, []);
 
@@ -77,6 +88,7 @@ export const ActivationCode = ({ navigation }: any) => {
 
   const handleSubmit = () => {
     if (formErrors.length) return;
+    setLoading(true);
     dispatch(
       threeWayAuthentication(
         formData.dataBaseCode,

@@ -37,9 +37,6 @@ export const Home = ({ navigation }: any) => {
     });
     navigation.addListener("focus", (e: any) => {
       dispatch(setScreen(ROUTES.HOME));
-      /* BackHandler.addEventListener("hardwareBackPress", () => {
-        return true;
-      }); */
     });
   }, []);
 
