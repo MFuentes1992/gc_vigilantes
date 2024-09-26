@@ -83,7 +83,7 @@ export const threeWayAuthentication =
         );
         AsyncStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_CODE, accessCode);
         AsyncStorage.setItem(LOCAL_STORAGE_KEYS.DB_CODE, dbCode);
-        navigation.navigate(ROUTES.HOME);
+        navigation.replace(ROUTES.HOME);
       }
     } catch (error) {
       dispatch(
@@ -98,13 +98,15 @@ export const threeWayAuthentication =
   };
 
 export const twoWayAuthentication =
-  (dbCode: string, accessCode: string, navigation: any) =>
+  (dbCode: string, accessCode: string, navigation: any, callback: () => void) =>
   async (dispatch: any) => {
     try {
       const initRes = await InitializeConnection(dbCode);
       const loginRes = await login(accessCode);
       if (["200", 200].includes(loginRes.code)) {
-        navigation.navigate(ROUTES.HOME);
+        navigation.replace(ROUTES.HOME);
+      } else {
+        callback();
       }
     } catch (error) {
       dispatch(

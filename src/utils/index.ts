@@ -2,6 +2,7 @@ import lang_es from "@gcVigilantes/utils/Messages/lang_esp.json";
 
 export const ENDPOINTS = {
   BASE_URL: "https://apimovilgc.dasgalu.net",
+  WEB_SERVER: "https://gcdemo.dasgalu.net",
   QR: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=",
   CATALOG_TIPO_VISITAS: "/visita/catalogs/GetTipoVisita/index.php",
   CATALOG_TIPO_INGRESO: "/visita/catalogs/GetTipoIngreso/index.php",
@@ -12,12 +13,14 @@ export const ENDPOINTS = {
   },
   VIGILANTE: {
     CODE: "/vigilante/activationCode/index.php",
+    INFO: "/vigilante/caseta-info/index.php",
   },
 };
 
 export const ROUTES = {
   ACTIVATION_CODE: "activation-code",
-  HOME: "Vigilante-qr",
+  HOME: "home-screen",
+  QR: "Vigilante-qr",
   VISIT_INFO: "VisitaInfo",
   CAMERA: "Camera",
 };
@@ -95,6 +98,19 @@ export const stringTemplateAddQuery = (cadena: string, object: any) => {
   return cadena;
 };
 
+/*
+  Function to format the hour
+  @param time: number in miliseconds
+  @returns string 12 hrs am/pm
+*/
+export const hourFormat = (time: number) => {
+  const date = new Date(time);
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const { hour, ampm } = militarToTwelveHours(hours);
+  return `${hour}:${timeFormat(minutes)} ${ampm}`;
+};
+
 export const loadAsyncStorageData = async (
   keys: string[],
   AsyncStorage: any
@@ -115,4 +131,10 @@ export const promiseQueuer = async (promises: any[], params: any[]) => {
     results.push(res);
   });
   return results;
+};
+
+export const datePoller = (callback: () => void) => {
+  setInterval(() => {
+    callback();
+  }, 1000);
 };
