@@ -6,13 +6,13 @@ const initialState: IVisita = {
   nombre: "",
   desde: "",
   hasta: "",
-  tipo_ingreso: "",
+  id_tipo_ingreso: "",
   tipoIngresoText: "",
   multiple_entrada: "",
   notificaciones: "",
   nameAutor: "",
   emailAutor: "",
-  tipo_visita: "",
+  id_tipo_visita: "",
   tipoVisitaText: "",
   uniqueID: "",
   seccion: "",
@@ -24,6 +24,7 @@ const initialState: IVisita = {
   ciudad: "",
   estado: "",
   cp: "",
+  estatus_registro: "",
   vehicles: [],
 };
 
@@ -49,11 +50,13 @@ const visitaSlice = createSlice({
       state.num_int = action.payload.num_int;
       state.residencial = action.payload.residencial;
       state.seccion = action.payload.seccion;
-      state.tipo_visita = action.payload.tipo_visita;
+      state.tipo_visita = action.payload.id_tipo_visita;
       state.tipo_ingreso = action.payload.tipo_ingreso;
       state.tipoIngresoText = action.payload.tipoIngresoText;
       state.tipoVisitaText = action.payload.tipoVisitaText;
       state.uniqueID = action.payload.uniqueID;
+      state.vehicles = action.payload.vehicles;
+      state.estatus_registro = action.payload.estatus_registro;
     },
     setVehicles(state, action: PayloadAction<VehiclesResType[]>) {
       state.vehicles = action.payload;

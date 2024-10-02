@@ -26,7 +26,8 @@ export const getVisitaByUniqueID =
           });
           return;
         }
-        dispatch(setVisita(data as IVisita));
+        const [visita] = data;
+        dispatch(setVisita(visita as IVisita));
       })
       .catch((error) => {
         console.error("Error:", error);

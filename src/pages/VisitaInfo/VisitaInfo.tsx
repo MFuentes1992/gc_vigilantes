@@ -92,7 +92,6 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 
   useEffect(() => {
     if (visitaRedux) {
-      console.log("Visita redux payload", visitaRedux);
       setFormValues(() => ({
         idVisita: visitaRedux?.visita_id,
         nameAutor: visitaRedux?.nameAutor,
@@ -114,6 +113,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
         tipo_visita: visitaRedux?.tipo_visita,
         multiple_entrada: visitaRedux?.multiple_entrada,
         notificaciones: visitaRedux?.notificaciones,
+        status_registro: visitaRedux?.status_registro,
         vehicles: visitaRedux?.vehicles,
       }));
       dispatch(setLoading(false));
@@ -186,7 +186,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               handleOnchange={handleOnChange}
             />
           )}
-          {Number.parseInt(formValues?.estado) !== 0 && (
+          {["1"].includes(formValues?.estatus_registro) && (
             <FormSaveButtons
               onCancel={() => {}}
               onSave={() => {

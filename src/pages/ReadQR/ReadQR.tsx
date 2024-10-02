@@ -14,12 +14,18 @@ import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { useCameraPermission } from "react-native-vision-camera";
 import { ROUTES } from "@gcVigilantes/utils";
 import { setScreen } from "@gcVigilantes/store/Pagination";
+import { qrStyles } from "./constants";
+import {
+  app_text_menu,
+  app_text_subtitle,
+} from "@gcVigilantes/utils/default.styles";
 
 export const ReadQR = ({ route, navigation }: any) => {
   const { error } = route?.params || {};
   const dispatch = useDispatch();
   const { hasPermission, requestPermission } = useCameraPermission();
   const [selectedImage, setSelectedImage] = useState<string>("");
+  const [selectedTab, setSelectedTab] = useState<number>(0);
 
   useEffect(() => {
     navigation.addListener("focus", () => {
@@ -78,88 +84,94 @@ export const ReadQR = ({ route, navigation }: any) => {
     }
   };
 
+  const handleSelectTab = (index: number) => {
+    setSelectedTab(index);
+  };
+
   return (
-    <View style={{ flex: 1, top: "5%" }}>
-      <View
-        style={{
-          flex: 0.4,
-          justifyContent: "center",
-          alignItems: "center",
-          marginBottom: "2%",
-        }}
-      >
-        <View
-          style={{
-            flex: 1,
-            width: "60%",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "row",
-            padding: 5,
-            backgroundColor: app_colors.ligth_bg,
-            borderRadius: 10,
-          }}
+    <View style={[qrStyles.container]}>
+      <View style={[qrStyles.tab_container]}>
+        <TouchableOpacity
+          style={[
+            qrStyles.button_tab,
+            {
+              backgroundColor: [0].includes(selectedTab)
+                ? app_colors.active_blue
+                : app_colors.light_blue_pale,
+            },
+          ]}
+          onPress={() => handleSelectTab(0)}
         >
-          <Image
-            width={200}
-            height={200}
-            source={{
-              uri:
-                selectedImage ||
-                "https://apimovilgc.dasgalu.net/assets/preview.jpeg",
-            }}
-          />
-        </View>
+          <Text style={[app_text_subtitle]}>Entrada</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            qrStyles.button_tab,
+            {
+              backgroundColor: [1].includes(selectedTab)
+                ? app_colors.active_blue
+                : app_colors.light_blue_pale,
+            },
+          ]}
+          onPress={() => handleSelectTab(1)}
+        >
+          <Text style={[app_text_subtitle]}>Salida</Text>
+        </TouchableOpacity>
       </View>
-      <View style={{ flexDirection: "row", justifyContent: "center" }}>
-        <TouchableOpacity
-          style={{
-            width: "40%",
-            backgroundColor: "#5DADE2",
-            borderRadius: 5,
-            borderTopRightRadius: 0,
-            borderBottomRightRadius: 0,
-            height: 30,
-            justifyContent: "center",
-            alignItems: "center",
-            borderColor: "#3498DB",
-            borderStyle: "solid",
-            borderWidth: 1,
-          }}
-          onPress={handleOpenLibrary}
-        >
-          <Text
-            style={{
-              color: "#FFF",
-            }}
+      <View style={[qrStyles.qr_container]}>
+        <View style={[qrStyles.qr_body]}>
+          <View style={[qrStyles.image_container]}>
+            <Image
+              width={200}
+              height={200}
+              source={{
+                uri:
+                  selectedImage ||
+                  "https://apimovilgc.dasgalu.net/assets/preview.jpeg",
+              }}
+            />
+          </View>
+        </View>
+        <View style={{ flexDirection: "row", justifyContent: "center" }}>
+          <TouchableOpacity
+            style={[
+              qrStyles.button_badge,
+              {
+                backgroundColor: "#5DADE2",
+                borderTopRightRadius: 0,
+                borderBottomRightRadius: 0,
+              },
+            ]}
+            onPress={handleOpenLibrary}
           >
-            Abrir desde galeria
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            width: "40%",
-            backgroundColor: "#FFF",
-            borderRadius: 5,
-            borderTopLeftRadius: 0,
-            borderBottomLeftRadius: 0,
-            height: 30,
-            justifyContent: "center",
-            alignItems: "center",
-            borderColor: "#3498DB",
-            borderStyle: "solid",
-            borderWidth: 1,
-          }}
-          onPress={handleOpenCamera}
-        >
-          <Text
-            style={{
-              color: "#3498DB",
-            }}
+            <Text
+              style={{
+                color: "#FFF",
+              }}
+            >
+              Abrir desde galeria
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              qrStyles.button_badge,
+              {
+                backgroundColor: "#FFF",
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+              },
+            ]}
+            onPress={handleOpenCamera}
           >
-            Escanear QR
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={{
+                color: "#3498DB",
+              }}
+            >
+              Escanear QR
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
