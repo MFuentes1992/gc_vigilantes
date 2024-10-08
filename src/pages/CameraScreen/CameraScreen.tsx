@@ -13,8 +13,8 @@ type CameraScreenProps = {
   type: "front" | "back";
 };
 
-export const CameraScreen = () => {
-  const navigation = useNavigation<any>();
+export const CameraScreen = ({ navigation, route }: any) => {
+  const { tabAction } = route.params;
   const device = useCameraDevice("back");
   const codeScanner = useCodeScanner({
     codeTypes: ["qr", "ean-13"],
@@ -25,10 +25,10 @@ export const CameraScreen = () => {
           code?.value?.includes("read-qr")
         ) {
           const tmpArray = code.value.toString().split("/");
-          navigation.navigate(ROUTES.VISIT_INFO);
-          navigation.navigate("VisitaInfo", {
+          navigation.navigate(ROUTES.VISIT_INFO, {
             uniqueID: tmpArray[tmpArray.length - 1],
             uri: "https://apimovilgc.dasgalu.net/assets/preview.jpeg",
+            tabAction,
           });
         }
       });

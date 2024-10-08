@@ -81,7 +81,9 @@ export const ReadQR = ({ route, navigation }: any) => {
     if (!hasPermission) {
       requestPermission();
     } else {
-      navigation.navigate(ROUTES.CAMERA);
+      navigation.navigate(ROUTES.CAMERA, {
+        tabAction: selectedTab,
+      });
     }
   };
 
