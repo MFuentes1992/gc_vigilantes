@@ -15,5 +15,5 @@
   "app_mobile_number_ext": "Extensión",
   "app_screen_read_qr": "Escanear QR",
   "app_screen_home_screen": "Caseta Principal",
-  "app_screen_visit_info": "Detalles de Visita"
+  "app_screen_visit_info_error_ingress": "Error al registrar entrada, por favor intente de nuevo."
 }

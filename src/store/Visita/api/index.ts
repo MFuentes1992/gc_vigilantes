@@ -91,3 +91,19 @@ export const updateVisita =
         );
       });
   };
+
+export const logVisitaIngressEgress = async (
+  qr: string,
+  id_caseta: number,
+  type: string
+) => {
+  const url = ENDPOINTS.VISITAS.LOG_INGRESS;
+  const formData = new FormData();
+  formData.append("qr", qr);
+  formData.append("casetaId", id_caseta.toString());
+  formData.append("type", type);
+  return fetch(url, {
+    method: "POST",
+    body: formData,
+  });
+};

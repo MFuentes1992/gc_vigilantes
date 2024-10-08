@@ -42,9 +42,10 @@ export const ReadQR = ({ route, navigation }: any) => {
           const { values } = response;
           const tmpArray = values.toString().split("/");
           if (values.toString().includes("http")) {
-            navigation.navigate("VisitaInfo", {
+            navigation.navigate(ROUTES.VISIT_INFO, {
               uniqueID: tmpArray[tmpArray.length - 1],
               uri: selectedImage,
+              tabAction: selectedTab,
             });
           } else {
             setSelectedImage("");

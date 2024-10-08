@@ -16,16 +16,20 @@ import { SettingsInfo } from "./SettingsInfo";
 import {
   getVehicles,
   getVisitaByUniqueID,
+  logVisitaIngressEgress,
   updateVisita,
 } from "@gcVigilantes/store/Visita/api";
 import { VehiclesResType } from "@gcVigilantes/store/Visita/types";
 import { setLoading } from "@gcVigilantes/store/UI";
-import { ENDPOINTS } from "@gcVigilantes/utils";
+import { ENDPOINTS, getLabelApp, ROUTES } from "@gcVigilantes/utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { clearVisita } from "@gcVigilantes/store/Visita";
+import { setShowAlert } from "@gcVigilantes/store/Alerts";
+import { ALERT_TYPES } from "@gcVigilantes/Components/Alerts/constants";
 
 export const VisitaInfo = ({ navigation, route }: any) => {
-  const { uniqueID, uri } = route.params;
+  const { uniqueID, uri, tabAction } = route.params;
+  const preferences = useSelector((state: RootState) => state.preferences);
   const [tab, setTab] = useState<string>(TABS.MAIN);
   const [formValues, setFormValues] = useState<{
     [key: string]:
@@ -69,9 +73,33 @@ export const VisitaInfo = ({ navigation, route }: any) => {
     dispatch(getCatalogTipoVisitas() as any);
     dispatch(getCatalogTipoIngreso() as any);
     AsyncStorage.getItem("id_caseta")
-      .then((data) =>
-        dispatch(getVisitaByUniqueID(uniqueID, `${data}`, navigation) as any)
-      )
+      .then((data) => {
+        logVisitaIngressEgress(
+          uniqueID,
+          Number.parseInt(data || "0", 10),
+          [0].includes(tabAction) ? "entry" : "exit"
+        )
+          .then(() => {
+            dispatch(
+              getVisitaByUniqueID(uniqueID, `${data}`, navigation) as any
+            );
+          })
+          .catch((error) => {
+            console.error("Error al registrar el ingreso", error);
+            dispatch(
+              setShowAlert({
+                showAlert: true,
+                title: "Error",
+                type: ALERT_TYPES.ERROR,
+                message: `Error: ${getLabelApp(
+                  preferences.language,
+                  "app_screen_visit_info_error_ingress"
+                )}`,
+              })
+            );
+            navigation.navigate(ROUTES.QR);
+          });
+      })
       .catch((error) =>
         console.error("Error al obtener información de la caseta", error)
       );
