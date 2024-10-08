@@ -79,10 +79,26 @@ export const VisitaInfo = ({ navigation, route }: any) => {
           Number.parseInt(data || "0", 10),
           [0].includes(tabAction) ? "entry" : "exit"
         )
-          .then(() => {
-            dispatch(
-              getVisitaByUniqueID(uniqueID, `${data}`, navigation) as any
-            );
+          .then((res) => res.json())
+          .then((data) => {
+            if (["400", 400].includes(data.estatus)) {
+              throw new Error(data.message);
+            }
+            if ([0].includes(tabAction)) {
+              dispatch(
+                getVisitaByUniqueID(uniqueID, `${data}`, navigation) as any
+              );
+            } else {
+              dispatch(
+                setShowAlert({
+                  showAlert: true,
+                  title: "Éxito!",
+                  type: ALERT_TYPES.SUCCESS,
+                  message: data.message,
+                })
+              );
+              navigation.navigate(ROUTES.QR);
+            }
           })
           .catch((error) => {
             console.error("Error al registrar el ingreso", error);
@@ -91,10 +107,14 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                 showAlert: true,
                 title: "Error",
                 type: ALERT_TYPES.ERROR,
-                message: `Error: ${getLabelApp(
-                  preferences.language,
-                  "app_screen_visit_info_error_ingress"
-                )}`,
+                message: `Error: ${
+                  error
+                    ? error
+                    : getLabelApp(
+                        preferences.language,
+                        "app_screen_visit_info_error_ingress"
+                      )
+                }`,
               })
             );
             navigation.navigate(ROUTES.QR);
@@ -147,6 +167,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
       dispatch(setLoading(false));
     }
   }, [visitaRedux]);
+
   return (
     <SafeAreaView>
       {visitaRedux?.visita_id !== "" && (
@@ -156,7 +177,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
             autor={formValues?.nameAutor || ""}
             emailAutor={formValues?.emailAutor || ""}
             direccion={`${formValues?.residencial}, ${formValues?.calle}, ${formValues?.num_ext}`}
-            estatus={Number.parseInt(formValues?.estado) || 0}
+            estatus={Number.parseInt(formValues?.status_registro) || 0}
             notificaciones={formValues?.notificaciones === SWITCHER_VALUES.TRUE}
             handleNotificaciones={(value) => {
               setFormValues((prev) => ({ ...prev, notificaciones: value }));

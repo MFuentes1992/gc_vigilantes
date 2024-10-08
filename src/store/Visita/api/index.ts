@@ -97,7 +97,7 @@ export const logVisitaIngressEgress = async (
   id_caseta: number,
   type: string
 ) => {
-  const url = ENDPOINTS.VISITAS.LOG_INGRESS;
+  const url = `${ENDPOINTS.BASE_URL}${ENDPOINTS.VISITAS.LOG_INGRESS}`;
   const formData = new FormData();
   formData.append("qr", qr);
   formData.append("casetaId", id_caseta.toString());
