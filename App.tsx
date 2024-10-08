@@ -15,6 +15,7 @@ import LoadingScreen from "@gcVigilantes/pages/LoadingScreen";
 import { Home } from "@gcVigilantes/pages/Home/Home";
 import { View } from "react-native";
 import { Footer } from "@gcVigilantes/Components/Footer/Footer";
+import { LogoContainer } from "@gcVigilantes/Components/LogoContainer/LogoContainer";
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -59,19 +60,26 @@ export default function App() {
                   />
                   <Stack.Screen
                     name={ROUTES.QR}
-                    options={{ title: getLabelApp("es", "app_screen_read_qr") }}
+                    options={{
+                      title: getLabelApp("es", "app_screen_read_qr"),
+                      headerRight: () => <LogoContainer />,
+                    }}
                     component={ReadQR}
                   />
                   <Stack.Screen
                     name={ROUTES.VISIT_INFO}
                     options={{
                       title: getLabelApp("es", "app_screen_visit_info"),
+                      headerRight: () => <LogoContainer />,
                     }}
                     component={VisitaInfo}
                   />
                   <Stack.Screen
                     name={ROUTES.CAMERA}
-                    options={{ title: getLabelApp("es", "app_screen_read_qr") }}
+                    options={{
+                      title: getLabelApp("es", "app_screen_read_qr"),
+                      headerRight: () => <LogoContainer />,
+                    }}
                     component={CameraScreen}
                   />
                 </Stack.Group>

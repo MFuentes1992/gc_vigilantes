@@ -26,7 +26,8 @@ export const getVisitaByUniqueID =
           });
           return;
         }
-        dispatch(setVisita(data as IVisita));
+        const [visita] = data;
+        dispatch(setVisita(visita as IVisita));
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -90,3 +91,19 @@ export const updateVisita =
         );
       });
   };
+
+export const logVisitaIngressEgress = async (
+  qr: string,
+  id_caseta: number,
+  type: string
+) => {
+  const url = `${ENDPOINTS.BASE_URL}${ENDPOINTS.VISITAS.LOG_INGRESS}`;
+  const formData = new FormData();
+  formData.append("qr", qr);
+  formData.append("casetaId", id_caseta.toString());
+  formData.append("type", type);
+  return fetch(url, {
+    method: "POST",
+    body: formData,
+  });
+};
