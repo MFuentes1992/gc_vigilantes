@@ -161,7 +161,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
         tipo_visita: visitaRedux?.tipo_visita,
         multiple_entrada: visitaRedux?.multiple_entrada,
         notificaciones: visitaRedux?.notificaciones,
-        status_registro: visitaRedux?.status_registro,
+        status_registro: visitaRedux?.estatus_registro,
         vehicles: visitaRedux?.vehicles,
       }));
       dispatch(setLoading(false));
@@ -196,7 +196,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               tipoIngreso={formValues?.tipo_ingreso || ""}
               nombreVisita={formValues?.nombre_visita || ""}
               visitVehicles={formValues?.vehicles || []}
-              estatus={Number.parseInt(formValues?.estado) || 0}
+              estatus={Number.parseInt(formValues?.status_registro) || 0}
               handleOnChange={handleOnChange}
             />
           )}
@@ -206,12 +206,14 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               toDate={formValues?.toDate}
               fromHour={formValues?.fromHour}
               toHour={formValues?.toHour}
-              estatus={Number.parseInt(formValues?.estado) || 0}
+              estatus={Number.parseInt(formValues?.status_registro) || 0}
               handleOnChange={handleOnChange}
             />
           )}
           {tab === TABS.GUEST && (
-            <GuestInfo estatus={Number.parseInt(formValues?.estado) || 0} />
+            <GuestInfo
+              estatus={Number.parseInt(formValues?.status_registro) || 0}
+            />
           )}
           {tab === TABS.SETTINGS && (
             <SettingsInfo
@@ -235,7 +237,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               handleOnchange={handleOnChange}
             />
           )}
-          {["1"].includes(formValues?.estatus_registro) && (
+          {["1"].includes(formValues?.status_registro) && (
             <FormSaveButtons
               onCancel={() => {}}
               onSave={() => {
