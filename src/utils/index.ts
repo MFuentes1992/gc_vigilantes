@@ -24,6 +24,7 @@ export const ROUTES = {
   QR: "Vigilante-qr",
   VISIT_INFO: "VisitaInfo",
   CAMERA: "Camera",
+  LOGS: "logs",
 };
 
 const TIME_ZONES = {
