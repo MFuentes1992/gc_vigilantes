@@ -1,5 +1,5 @@
 import { app_colors } from "@gcVigilantes/utils/default.colors";
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 
 export const ic_fs = 24;
 export const ic_fc = "black";
@@ -41,7 +41,25 @@ export const styles: { [key: string]: any } = StyleSheet.create({
     height: "100%",
     minHeight: 1000,
     top: 35,
-    right: 0,
+    right: 0 - Dimensions.get("window").width / 2,
     backgroundColor: app_colors.secondary,
   },
 });
+
+export const slideInRight = {
+  from: {
+    right: 0 - Dimensions.get("window").width / 2,
+  },
+  to: {
+    right: 0,
+  },
+};
+
+export const slideOutRight = {
+  from: {
+    right: 0,
+  },
+  to: {
+    right: 0 - Dimensions.get("window").width / 2,
+  },
+};

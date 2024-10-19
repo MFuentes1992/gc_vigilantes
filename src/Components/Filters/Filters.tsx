@@ -1,7 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { TouchableOpacity, View } from "react-native";
-import { ic_fc, ic_fs, styles } from "./styles.default";
+import {
+  ic_fc,
+  ic_fs,
+  slideInRight,
+  slideOutRight,
+  styles,
+} from "./styles.default";
+import * as Animatable from "react-native-animatable";
 
 type TFilterProps = {
   position?: "left" | "right" | "center";
@@ -11,9 +18,11 @@ type TFilterProps = {
 };
 
 export const Filters = (props: TFilterProps) => {
+  const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
   const handlePress = () => {
     console.info("Filters::COMP::Filter pressed");
     props.onPressCallback && props.onPressCallback();
+    setDrawerVisible(!drawerVisible);
   };
 
   return (
@@ -27,9 +36,15 @@ export const Filters = (props: TFilterProps) => {
           </View>
         </TouchableOpacity>
       </View>
-      <View style={styles.drawer}>
-        <props.drawerComponent />
-      </View>
+      {true && (
+        <Animatable.View
+          animation={drawerVisible ? slideInRight : slideOutRight}
+          duration={500}
+          style={styles.drawer}
+        >
+          <props.drawerComponent />
+        </Animatable.View>
+      )}
     </>
   );
 };
