@@ -25,11 +25,9 @@ import { VehiclesResType } from "@gcVigilantes/store/Visita/types";
 import { EditVehicles } from "@gcVigilantes/Components/EditVehicles/EditVehicles";
 
 export const TipoVisitasIcon: { [key: string]: React.ReactNode } = {
-  Visita: <FontAwesome name="user" size={18} color="darkgray" />,
-  Provedor: <FontAwesome name="truck" size={18} color="darkgray" />,
-  ["Servicio domestico"]: (
-    <FontAwesome name="wrench" size={18} color="darkgray" />
-  ),
+  ["1"]: <FontAwesome name="user" size={18} color="darkgray" />,
+  ["3"]: <FontAwesome name="truck" size={18} color="darkgray" />,
+  ["2"]: <FontAwesome name="wrench" size={18} color="darkgray" />,
   ["Vehículo"]: <FontAwesome name="car" size={24} color="darkgray" />,
   Peatonal: <FontAwesome5 name="walking" size={24} color="darkgray" />,
   single: <FontAwesome name="user" size={24} color="darkgray" />,
