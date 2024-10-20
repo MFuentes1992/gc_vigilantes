@@ -37,18 +37,21 @@ export const styles: { [key: string]: any } = StyleSheet.create({
   },
   drawer: {
     position: "absolute",
-    width: "50%",
-    height: "100%",
-    minHeight: 1000,
+    width: "80%",
+    height: "auto",
+    maxHeight: "68%",
+    zIndex: 10,
     top: 35,
-    right: 0 - Dimensions.get("window").width / 2,
-    backgroundColor: app_colors.secondary,
+    right: 0 - Dimensions.get("window").width / 1,
+    backgroundColor: app_colors.white,
+    elevation: 10,
+    shadowRadius: 10,
   },
 });
 
 export const slideInRight = {
   from: {
-    right: 0 - Dimensions.get("window").width / 2,
+    right: 0 - Dimensions.get("window").width / 1,
   },
   to: {
     right: 0,
@@ -60,6 +63,6 @@ export const slideOutRight = {
     right: 0,
   },
   to: {
-    right: 0 - Dimensions.get("window").width / 2,
+    right: 0 - Dimensions.get("window").width / 1,
   },
 };

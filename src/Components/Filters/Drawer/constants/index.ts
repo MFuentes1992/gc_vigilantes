@@ -8,7 +8,9 @@ export const drawer_card_styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: app_colors.white,
     padding: "2%",
-    borderColor: app_colors.ligth_bg,
-    borderWidth: 0.5,
+    // borderColor: app_colors.ligth_bg,
+    borderBottomWidth: 0.5,
+    borderBottomColor: app_colors.ligth_bg,
+    marginBottom: 10,
   },
 });

@@ -31,16 +31,16 @@ export const DateInfo = ({
   const [startDate, setStartDate] = React.useState<string>(fromDate || "");
   const [endDate, setEndDate] = React.useState<string>(toDate || "");
   const [startHour, setStartHour] = React.useState<number>(
-    militarToTwelveHours(Number.parseInt(`${fromHour}`, 10) || 0).hour,
+    militarToTwelveHours(Number.parseInt(`${fromHour}`, 10) || 0).hour
   );
   const [endHour, setEndHour] = React.useState<number>(
-    militarToTwelveHours(Number.parseInt(`${toHour}`, 10) || 0).hour,
+    militarToTwelveHours(Number.parseInt(`${toHour}`, 10) || 0).hour
   );
   const [startHourAmPm, setStartHourAmPm] = React.useState<string>(
-    militarToTwelveHours(Number.parseInt(`${fromHour}`, 10) || 0).ampm,
+    militarToTwelveHours(Number.parseInt(`${fromHour}`, 10) || 0).ampm
   );
   const [endHourAmPm, setEndHourAmPm] = React.useState<string>(
-    militarToTwelveHours(Number.parseInt(`${toHour}`, 10) || 0).ampm,
+    militarToTwelveHours(Number.parseInt(`${toHour}`, 10) || 0).ampm
   );
   const [dateType, setDateType] = React.useState<number>(DATE_TYPES.START);
   const [dateRange, setDateRange] = React.useState<{ [key: string]: any }>({});
@@ -56,7 +56,7 @@ export const DateInfo = ({
   useEffect(() => {
     if (startDate !== "" && endDate !== "") {
       const diffDays = Math.abs(
-        new Date(endDate || "").getDate() - new Date(startDate || "").getDate(),
+        new Date(endDate || "").getDate() - new Date(startDate || "").getDate()
       );
       let tmp = {} as any;
       new Array(diffDays).fill(0).forEach((_, index) => {
@@ -92,10 +92,10 @@ export const DateInfo = ({
         toMilitarHours(Number.parseInt(`${startHour}`, 10), startHourAmPm) < 10
           ? `0${toMilitarHours(
               Number.parseInt(`${startHour}`, 10),
-              startHourAmPm,
+              startHourAmPm
             )}`
           : toMilitarHours(Number.parseInt(`${startHour}`, 10), startHourAmPm)
-      }`,
+      }`
     );
     handleOnChange(
       "toHour",
@@ -103,7 +103,7 @@ export const DateInfo = ({
         toMilitarHours(Number.parseInt(`${endHour}`, 10), endHourAmPm) < 10
           ? `0${toMilitarHours(Number.parseInt(`${endHour}`, 10), endHourAmPm)}`
           : toMilitarHours(Number.parseInt(`${endHour}`, 10), endHourAmPm)
-      }`,
+      }`
     );
   }, [startHour, endHour, startHourAmPm, endHourAmPm]);
 
@@ -147,7 +147,7 @@ export const DateInfo = ({
           markedDates={{
             ...dateRange,
           }}
-          onDayPress={(day) => {
+          onDayPress={(day: any) => {
             if (dateType === DATE_TYPES.START && dateEdit) {
               setStartDate(`${day.dateString}`);
               const year = new Date(day.dateString).getFullYear();
@@ -159,7 +159,7 @@ export const DateInfo = ({
               if (new Date(day.dateString) < new Date(startDate)) {
                 Alert.alert(
                   "Error",
-                  "La fecha de fin no puede ser menor a la de inicio",
+                  "La fecha de fin no puede ser menor a la de inicio"
                 );
                 return;
               }
