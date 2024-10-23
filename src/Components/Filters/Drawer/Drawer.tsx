@@ -120,13 +120,15 @@ export const Drawer = () => {
             markingType="period"
             markedDates={{
               [filterValues.fechaInicio]: {
-                startingDay: true,
-                color: app_colors.secondary,
+                selected: true,
+                //startingDay: true,
+                color: app_colors.text_dark,
                 textColor: "white",
               },
               [filterValues.fechaFin]: {
-                endingDay: true,
-                color: app_colors.secondary,
+                selected: true,
+                // endingDay: true,
+                color: app_colors.text_dark,
                 textColor: "white",
               },
             }}
