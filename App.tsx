@@ -87,6 +87,7 @@ export default function App() {
                     name={ROUTES.LOGS}
                     options={{
                       title: getLabelApp("es", "app_screen_visit_logs"),
+                      headerRight: () => <LogoContainer />,
                     }}
                     component={Logs}
                   />

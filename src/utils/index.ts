@@ -15,7 +15,7 @@ export const ENDPOINTS = {
   VIGILANTE: {
     CODE: "/vigilante/activationCode/index.php",
     INFO: "/vigilante/caseta-info/index.php",
-    LOGS: "vigilante/logs/by-caseta/index.php",
+    LOGS: "/vigilante/logs/by-caseta/index.php",
   },
 };
 

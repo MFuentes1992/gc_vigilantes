@@ -8,6 +8,7 @@ export const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     marginBottom: 15,
+    backgroundColor: app_colors.white,
     borderTopWidth: 0.5,
     borderTopColor: app_colors.ligth_bg,
     borderRightWidth: 0.5,

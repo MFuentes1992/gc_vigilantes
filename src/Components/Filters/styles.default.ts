@@ -2,7 +2,7 @@ import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { Dimensions, StyleSheet } from "react-native";
 
 export const ic_fs = 24;
-export const ic_fc = "black";
+export const ic_fc = app_colors.text_gray;
 
 export const styles: { [key: string]: any } = StyleSheet.create({
   filterContainer: {
@@ -11,7 +11,6 @@ export const styles: { [key: string]: any } = StyleSheet.create({
     flexDirection: "row",
     height: 35,
     paddingRight: 5,
-    backgroundColor: app_colors.red,
   },
   left: {
     justifyContent: "flex-start",
@@ -27,42 +26,49 @@ export const styles: { [key: string]: any } = StyleSheet.create({
   },
   filterIcon: {
     position: "relative",
-    width: 35,
+    top: 5,
+    width: 100,
     height: 35,
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 50,
-    backgroundColor: app_colors.primary,
+    backgroundColor: app_colors.white,
+    elevation: 10,
+    color: app_colors.primary,
   },
   drawer: {
     position: "absolute",
-    width: "80%",
+    width: "100%",
     height: "auto",
     maxHeight: "68%",
-    zIndex: 10,
-    top: 35,
-    right: 0 - Dimensions.get("window").width / 1,
+    margin: "auto",
+    bottom: 0 - Dimensions.get("window").height / 1,
+    zIndex: 100,
     backgroundColor: app_colors.white,
+    padding: 10,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    borderTopColor: app_colors.text_dark,
+    borderWidth: 1,
     elevation: 10,
-    shadowRadius: 10,
   },
 });
 
 export const slideInRight = {
   from: {
-    right: 0 - Dimensions.get("window").width / 1,
+    bottom: 0 - Dimensions.get("window").height / 1,
   },
   to: {
-    right: 0,
+    bottom: 0,
   },
 };
 
 export const slideOutRight = {
   from: {
-    right: 0,
+    bottom: 0,
   },
   to: {
-    right: 0 - Dimensions.get("window").width / 1,
+    bottom: 0 - Dimensions.get("window").height / 1,
   },
 };

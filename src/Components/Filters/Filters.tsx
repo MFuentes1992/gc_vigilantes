@@ -16,6 +16,7 @@ type TFilterProps = {
   icon?: React.ElementType<any>;
   onPressCallback?: () => void;
   drawerCallback: (_v: TFilter) => void;
+  drawerClearCallback?: () => void;
 };
 
 export const Filters = (props: TFilterProps) => {
@@ -30,6 +31,12 @@ export const Filters = (props: TFilterProps) => {
     console.info("Filters::COMP::handleApply::", values);
     setDrawerVisible(false);
     props.drawerCallback(values);
+  };
+
+  const handleClear = () => {
+    console.info("Filters::COMP::handleClear");
+    setDrawerVisible(false);
+    props.drawerClearCallback && props.drawerClearCallback();
   };
 
   return (
@@ -48,7 +55,7 @@ export const Filters = (props: TFilterProps) => {
         duration={500}
         style={styles.drawer}
       >
-        <Drawer onApply={handleApply} />
+        <Drawer onApply={handleApply} onClear={handleClear} />
       </Animatable.View>
     </>
   );

@@ -24,9 +24,10 @@ export type TFilter = {
 
 type TDrawerProps = {
   onApply: (filterValues: TFilter) => void;
+  onClear?: () => void;
 };
 
-export const Drawer = ({ onApply }: TDrawerProps) => {
+export const Drawer = ({ onApply, onClear }: TDrawerProps) => {
   const dispatch = useDispatch();
   const { catalogVisitas } = useSelector(
     (state: RootState) => state.tipoVisitas
@@ -86,7 +87,7 @@ export const Drawer = ({ onApply }: TDrawerProps) => {
           <RadioGroup
             selectedValue={filterValues.tipo_visita}
             disabled={false}
-            orientation="vertical"
+            // orientation="vertical"
             options={catalogVisitas.map((catalog) => ({
               id: catalog.id,
               label: catalog.tipo_visita,
@@ -111,7 +112,7 @@ export const Drawer = ({ onApply }: TDrawerProps) => {
             }))}
             selectedValue={filterValues.tipo_ingreso}
             disabled={false}
-            orientation="vertical"
+            // orientation="vertical"
             handleChange={(value: string) => {
               handleOnChange("tipo_ingreso", value);
             }}
@@ -157,6 +158,7 @@ export const Drawer = ({ onApply }: TDrawerProps) => {
             onPress={() => {
               console.info("Drawer::COMP::Clear button pressed");
               setFilterValues({} as TFilter);
+              onClear && onClear();
             }}
           />
           <Button
@@ -170,4 +172,8 @@ export const Drawer = ({ onApply }: TDrawerProps) => {
       </ScrollView>
     </>
   );
+};
+
+Drawer.defaultProps = {
+  onClear: undefined,
 };

@@ -28,7 +28,7 @@ export const LogCard = (props: TLogCardProps) => {
         </View>
         <View style={styles.row}>
           <View style={{ flexDirection: "row" }}>
-            <Text style={app_text_body}>{props.time} hrs&nbsp;</Text>
+            <Text style={app_text_body}>{props.time}&nbsp;</Text>
             <Text style={app_text_property}>({props.type})</Text>
           </View>
         </View>
