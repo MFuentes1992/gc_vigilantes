@@ -19,6 +19,7 @@ export const getLogs = (payload: LogsPayload) => async (dispatch: any) => {
   };
   const rawUrl = `${ENDPOINTS.BASE_URL}/${ENDPOINTS.VIGILANTE.LOGS}`;
   const url = stringTemplateAddQuery(rawUrl, tmp);
+  console.info("Logs::API::getLogs::URL::", url);
   try {
     const response = await fetch(url, {
       method: "GET",

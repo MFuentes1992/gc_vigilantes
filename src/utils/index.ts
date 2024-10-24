@@ -95,7 +95,7 @@ export const toMilitarHours = (hour: number, ampm: string) => {
 export const stringTemplateAddQuery = (cadena: string, object: any) => {
   cadena += "?";
   Object.keys(object).forEach((key) => {
-    if (object[key] === "") return;
+    if (object[key] === "" || object[key] === undefined) return;
     cadena += `${key}=${object[key]}&`;
   });
   cadena = cadena.slice(0, -1);

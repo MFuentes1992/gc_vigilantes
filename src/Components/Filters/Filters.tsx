@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { TouchableOpacity, View } from "react-native";
 import {
@@ -9,12 +9,13 @@ import {
   styles,
 } from "./styles.default";
 import * as Animatable from "react-native-animatable";
+import { Drawer, TFilter } from "./Drawer/Drawer";
 
 type TFilterProps = {
   position?: "left" | "right" | "center";
   icon?: React.ElementType<any>;
   onPressCallback?: () => void;
-  drawerComponent: React.ElementType<any>;
+  drawerCallback: (_v: TFilter) => void;
 };
 
 export const Filters = (props: TFilterProps) => {
@@ -23,6 +24,12 @@ export const Filters = (props: TFilterProps) => {
     console.info("Filters::COMP::Filter pressed");
     props.onPressCallback && props.onPressCallback();
     setDrawerVisible(!drawerVisible);
+  };
+
+  const handleApply = (values: TFilter) => {
+    console.info("Filters::COMP::handleApply::", values);
+    setDrawerVisible(false);
+    props.drawerCallback(values);
   };
 
   return (
@@ -36,15 +43,13 @@ export const Filters = (props: TFilterProps) => {
           </View>
         </TouchableOpacity>
       </View>
-      {true && (
-        <Animatable.View
-          animation={drawerVisible ? slideInRight : slideOutRight}
-          duration={500}
-          style={styles.drawer}
-        >
-          <props.drawerComponent />
-        </Animatable.View>
-      )}
+      <Animatable.View
+        animation={drawerVisible ? slideInRight : slideOutRight}
+        duration={500}
+        style={styles.drawer}
+      >
+        <Drawer onApply={handleApply} />
+      </Animatable.View>
     </>
   );
 };
