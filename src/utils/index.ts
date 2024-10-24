@@ -15,6 +15,7 @@ export const ENDPOINTS = {
   VIGILANTE: {
     CODE: "/vigilante/activationCode/index.php",
     INFO: "/vigilante/caseta-info/index.php",
+    LOGS: "vigilante/logs/by-caseta/index.php",
   },
 };
 
@@ -94,6 +95,7 @@ export const toMilitarHours = (hour: number, ampm: string) => {
 export const stringTemplateAddQuery = (cadena: string, object: any) => {
   cadena += "?";
   Object.keys(object).forEach((key) => {
+    if (object[key] === "") return;
     cadena += `${key}=${object[key]}&`;
   });
   cadena = cadena.slice(0, -1);

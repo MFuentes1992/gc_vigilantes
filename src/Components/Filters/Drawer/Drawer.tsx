@@ -15,14 +15,18 @@ import { drawer_card_styles } from "./constants";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { getLabelApp } from "@gcVigilantes/utils";
 
-type TFilter = {
+export type TFilter = {
   tipo_visita: string;
   tipo_ingreso: string;
   fechaInicio: string;
   fechaFin: string;
 };
 
-export const Drawer = () => {
+type TDrawerProps = {
+  onApply: (filterValues: TFilter) => void;
+};
+
+export const Drawer = ({ onApply }: TDrawerProps) => {
   const dispatch = useDispatch();
   const { catalogVisitas } = useSelector(
     (state: RootState) => state.tipoVisitas
@@ -159,6 +163,7 @@ export const Drawer = () => {
             title={getLabelApp(language, "app_comp_filters_drawer_apply")}
             onPress={() => {
               console.info("Drawer::COMP::Apply button pressed");
+              onApply(filterValues);
             }}
           />
         </View>
