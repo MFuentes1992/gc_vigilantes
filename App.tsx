@@ -16,6 +16,7 @@ import { Home } from "@gcVigilantes/pages/Home/Home";
 import { View } from "react-native";
 import { Footer } from "@gcVigilantes/Components/Footer/Footer";
 import { LogoContainer } from "@gcVigilantes/Components/LogoContainer/LogoContainer";
+import { Logs } from "@gcVigilantes/pages/Logs/Logs";
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -81,6 +82,14 @@ export default function App() {
                       headerRight: () => <LogoContainer />,
                     }}
                     component={CameraScreen}
+                  />
+                  <Stack.Screen
+                    name={ROUTES.LOGS}
+                    options={{
+                      title: getLabelApp("es", "app_screen_visit_logs"),
+                      headerRight: () => <LogoContainer />,
+                    }}
+                    component={Logs}
                   />
                 </Stack.Group>
               </Stack.Navigator>

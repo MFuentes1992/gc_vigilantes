@@ -62,6 +62,7 @@ export const Footer = () => {
             onPress={() => {
               setSelectedTab(2);
               /*Should navigate to logs*/
+              navigate.navigate(ROUTES.LOGS as never);
             }}
           >
             <Octicons

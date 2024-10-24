@@ -15,7 +15,13 @@ export const userDataSlice = createSlice({
   initialState,
   reducers: {
     setUserData: (state, action: PayloadAction<typeof initialState>) => {
-      state = action.payload;
+      state.access_code = action.payload.access_code;
+      state.access_token = action.payload.access_token;
+      state.database_code = action.payload.database_code;
+      state.id_caseta = action.payload.id_caseta;
+      state.name = action.payload.name;
+      state.residence = action.payload.residence;
+      state.id = action.payload.id;
     },
     logout: (state) => {
       state = initialState;

@@ -15,6 +15,7 @@ export const ENDPOINTS = {
   VIGILANTE: {
     CODE: "/vigilante/activationCode/index.php",
     INFO: "/vigilante/caseta-info/index.php",
+    LOGS: "/vigilante/logs/by-caseta/index.php",
   },
 };
 
@@ -24,6 +25,7 @@ export const ROUTES = {
   QR: "Vigilante-qr",
   VISIT_INFO: "VisitaInfo",
   CAMERA: "Camera",
+  LOGS: "logs",
 };
 
 const TIME_ZONES = {
@@ -93,6 +95,7 @@ export const toMilitarHours = (hour: number, ampm: string) => {
 export const stringTemplateAddQuery = (cadena: string, object: any) => {
   cadena += "?";
   Object.keys(object).forEach((key) => {
+    if (object[key] === "" || object[key] === undefined) return;
     cadena += `${key}=${object[key]}&`;
   });
   cadena = cadena.slice(0, -1);

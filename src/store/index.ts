@@ -11,6 +11,7 @@ import UI from "./UI";
 import Auth from "./Login";
 import Vigilancia from "./Vigilancia";
 import Pagination from "./Pagination";
+import Logs from "./Logs";
 
 const persistConfig = {
   storage: AsyncStorage,
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   auth: Auth,
   vigilancia: Vigilancia,
   pagination: Pagination,
+  logs: Logs,
 });
 
 export const persistedReducer = persistReducer(persistConfig, rootReducer);
