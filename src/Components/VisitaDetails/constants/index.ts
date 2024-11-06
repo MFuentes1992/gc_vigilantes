@@ -11,6 +11,7 @@ export type VisitaDetailsProps = {
   direccion: string;
   notificaciones: boolean;
   selectedTab: string;
+  newVisita?: boolean;
   handleNotificaciones: (value: boolean) => void;
   handleChangeTab: (tab: string) => void;
 };

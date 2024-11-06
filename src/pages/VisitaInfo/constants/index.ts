@@ -51,6 +51,7 @@ export type MainInfoProps = {
   nombreVisita: string;
   visitVehicles: VehiclesResType[];
   estatus: number;
+  newVisita: boolean;
   handleOnChange: (key: string, value: string) => void;
 };
 

@@ -48,14 +48,20 @@ export const MainInfo = ({
   catalogIngreso,
   visitVehicles,
   estatus,
+  newVisita,
   handleOnChange,
 }: MainInfoProps) => {
   const [nombreVisitaState, setNombreVisita] = useState<string>(nombreVisita);
   // -- Disabling and enabling Cards
-  const [tipoVisitaDisabled, setTipoVisitaDisabled] = useState<boolean>(true);
-  const [tipoIngresoDisabled, setTipoIngresoDisabled] = useState<boolean>(true);
-  const [nombreVisitaDisabled, setNombreVisitaDisabled] =
-    useState<boolean>(true);
+  const [tipoVisitaDisabled, setTipoVisitaDisabled] = useState<boolean>(
+    !newVisita
+  );
+  const [tipoIngresoDisabled, setTipoIngresoDisabled] = useState<boolean>(
+    !newVisita
+  );
+  const [nombreVisitaDisabled, setNombreVisitaDisabled] = useState<boolean>(
+    !newVisita
+  );
   // -- Vehicle info
 
   const [vehicles, setVehicles] = useState<VehiclesResType[]>([]);
@@ -86,9 +92,7 @@ export const MainInfo = ({
           options={catalogVisitas.map((catalog) => ({
             id: catalog.id,
             label: catalog.tipo_visita,
-            icon: TipoVisitasIcon[
-              catalog.tipo_visita
-            ] as unknown as React.ReactNode,
+            icon: TipoVisitasIcon[catalog.id] as unknown as React.ReactNode,
           }))}
           handleChange={(value: string) => {
             handleOnChange("tipo_visita", value);
@@ -204,4 +208,16 @@ export const MainInfo = ({
       )}
     </View>
   );
+};
+
+MainInfo.defaultProps = {
+  catalogVisitas: [],
+  catalogIngreso: [],
+  tipoVisita: "",
+  tipoIngreso: "",
+  nombreVisita: "",
+  visitVehicles: [],
+  estatus: 0,
+  newVisita: false,
+  handleOnChange: () => {},
 };

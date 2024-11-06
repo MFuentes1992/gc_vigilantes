@@ -30,47 +30,50 @@ export const VisitaDetails = ({
   seccion,
   direccion,
   selectedTab,
+  newVisita,
   handleChangeTab,
 }: VisitaDetailsProps) => {
   return (
     <>
-      <View style={details_container}>
-        <Image
-          width={100}
-          height={100}
-          source={{
-            uri: uri,
-          }}
-        />
-        <View style={details_info}>
-          <Text style={app_text_body}>{autor}</Text>
-          <Text style={[app_text_body, { color: app_colors.text_dark }]}>
-            {emailAutor}
-          </Text>
-          <View style={defaultRow}>
-            <Text style={app_text_property}>Num Int:</Text>
-            <Text style={app_text_body}>{num_int}</Text>
-            <Text style={app_text_property}>Seccion:</Text>
-            <Text style={app_text_body}>{seccion}</Text>
-          </View>
-          <Text style={app_text_body}>{direccion}</Text>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              width: "100%",
+      {!newVisita && (
+        <View style={details_container}>
+          <Image
+            width={100}
+            height={100}
+            source={{
+              uri: uri,
             }}
-          >
+          />
+          <View style={details_info}>
+            <Text style={app_text_body}>{autor}</Text>
+            <Text style={[app_text_body, { color: app_colors.text_dark }]}>
+              {emailAutor}
+            </Text>
+            <View style={defaultRow}>
+              <Text style={app_text_property}>Num Int:</Text>
+              <Text style={app_text_body}>{num_int}</Text>
+              <Text style={app_text_property}>Seccion:</Text>
+              <Text style={app_text_body}>{seccion}</Text>
+            </View>
+            <Text style={app_text_body}>{direccion}</Text>
             <View
-              style={estatus ? details_badge_active : details_badge_inactive}
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
             >
-              <Text style={details_badge_text}>
-                {estatus ? "Activa" : "Inactiva"}
-              </Text>
+              <View
+                style={estatus ? details_badge_active : details_badge_inactive}
+              >
+                <Text style={details_badge_text}>
+                  {estatus ? "Activa" : "Inactiva"}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
-      </View>
+      )}
       <View style={details_menu}>
         <TouchableOpacity
           style={{
@@ -195,4 +198,9 @@ export const VisitaDetails = ({
       </View>
     </>
   );
+};
+VisitaDetails.defaultProps = {
+  newVisita: false,
+  handleChangeTab: () => {},
+  handleNotificaciones: () => {},
 };

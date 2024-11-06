@@ -28,7 +28,7 @@ import { setShowAlert } from "@gcVigilantes/store/Alerts";
 import { ALERT_TYPES } from "@gcVigilantes/Components/Alerts/constants";
 
 export const VisitaInfo = ({ navigation, route }: any) => {
-  const { uniqueID, uri, tabAction } = route.params;
+  const { uniqueID, uri, tabAction } = route?.params;
   const preferences = useSelector((state: RootState) => state.preferences);
   const [tab, setTab] = useState<string>(TABS.MAIN);
   const [formValues, setFormValues] = useState<{
@@ -40,22 +40,24 @@ export const VisitaInfo = ({ navigation, route }: any) => {
       | string[]
       | number;
   }>({
-    visita_id: "",
-    nombre_visita: "",
-    fromDate: new Date().toISOString(),
-    toDate: new Date().toISOString(),
-    dateType: "",
-    fromHour: "",
-    toHour: "",
-    hourType: "",
-    tipo_ingreso: "",
-    tipo_visita: "",
-    vehicle_model: "",
-    vehicle_color: "",
-    vehicle_plate: "",
-    multiple_entrada: false,
-    notificaciones: false,
-    vehicles: [],
+    idUsuario: 0,
+    idTipoVisita: 1,
+    idTipoIngreso: 1,
+    idInstalacion: 0,
+    fechaIngreso: "",
+    fechaSalida: "",
+    multiple: 0,
+    notificaciones: 1,
+    appGenerado: 0,
+    nombreVisita: "",
+    estatusRegistro: 0,
+    autor: "",
+    emailAutor: "",
+    uniqueID: uniqueID,
+    residencialSeccion: "",
+
+    vehiculos: [],
+    peatones: [],
   });
 
   const dispatch = useDispatch();
@@ -72,59 +74,62 @@ export const VisitaInfo = ({ navigation, route }: any) => {
     dispatch(setLoading(true));
     dispatch(getCatalogTipoVisitas() as any);
     dispatch(getCatalogTipoIngreso() as any);
-    AsyncStorage.getItem("id_caseta")
-      .then((data) => {
-        logVisitaIngressEgress(
-          uniqueID,
-          Number.parseInt(data || "0", 10),
-          [0].includes(tabAction) ? "entry" : "exit"
-        )
-          .then((res) => res.json())
-          .then((data) => {
-            if (["400", 400].includes(data.estatus)) {
-              throw new Error(data.message);
-            }
-            if ([0].includes(tabAction)) {
-              dispatch(
-                getVisitaByUniqueID(uniqueID, `${data}`, navigation) as any
-              );
-            } else {
+    if (uniqueID) {
+      AsyncStorage.getItem("id_caseta")
+        .then((data) => {
+          logVisitaIngressEgress(
+            uniqueID,
+            Number.parseInt(data || "0", 10),
+            [0].includes(tabAction) ? "entry" : "exit"
+          )
+            .then((res) => res.json())
+            .then((data) => {
+              if (["400", 400].includes(data.estatus)) {
+                throw new Error(data.message);
+              }
+              if ([0].includes(tabAction)) {
+                dispatch(
+                  getVisitaByUniqueID(uniqueID, `${data}`, navigation) as any
+                );
+              } else {
+                dispatch(
+                  setShowAlert({
+                    showAlert: true,
+                    title: "Éxito!",
+                    type: ALERT_TYPES.SUCCESS,
+                    message: data.message,
+                  })
+                );
+                navigation.navigate(ROUTES.QR);
+              }
+            })
+            .catch((error) => {
+              console.error("Error al registrar el ingreso", error);
               dispatch(
                 setShowAlert({
                   showAlert: true,
-                  title: "Éxito!",
-                  type: ALERT_TYPES.SUCCESS,
-                  message: data.message,
+                  title: "Error",
+                  type: ALERT_TYPES.ERROR,
+                  message: `Error: ${
+                    error
+                      ? error
+                      : getLabelApp(
+                          preferences.language,
+                          "app_screen_visit_info_error_ingress"
+                        )
+                  }`,
                 })
               );
               navigation.navigate(ROUTES.QR);
-            }
-          })
-          .catch((error) => {
-            console.error("Error al registrar el ingreso", error);
-            dispatch(
-              setShowAlert({
-                showAlert: true,
-                title: "Error",
-                type: ALERT_TYPES.ERROR,
-                message: `Error: ${
-                  error
-                    ? error
-                    : getLabelApp(
-                        preferences.language,
-                        "app_screen_visit_info_error_ingress"
-                      )
-                }`,
-              })
-            );
-            navigation.navigate(ROUTES.QR);
-          });
-      })
-      .catch((error) =>
-        console.error("Error al obtener información de la caseta", error)
-      );
+            });
+        })
+        .catch((error) =>
+          console.error("Error al obtener información de la caseta", error)
+        );
 
-    dispatch(getVehicles(uniqueID) as any);
+      dispatch(getVehicles(uniqueID) as any);
+    }
+
     return () => {
       dispatch(clearVisita());
     };
@@ -170,7 +175,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 
   return (
     <SafeAreaView>
-      {visitaRedux?.visita_id !== "" && (
+      {(visitaRedux?.visita_id !== "" || [""].includes(uniqueID)) && (
         <KeyboardAwareScrollView>
           <VisitaDetails
             uri={!uri.includes("preview") ? uri : `${ENDPOINTS.QR}${uniqueID}`}
@@ -185,6 +190,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
             handleChangeTab={(tab) => setTab(tab)}
             num_int={formValues?.num_int || ""}
             seccion={formValues?.seccion || ""}
+            newVisita={[""].includes(uniqueID)}
             selectedTab={tab}
           />
           {/** Main tab: Nombre visita, tipo visita, tipo Ingreso  */}
@@ -192,10 +198,11 @@ export const VisitaInfo = ({ navigation, route }: any) => {
             <MainInfo
               catalogVisitas={catalogVisitas}
               catalogIngreso={catalogIngreso}
-              tipoVisita={formValues?.tipo_visita || ""}
-              tipoIngreso={formValues?.tipo_ingreso || ""}
-              nombreVisita={formValues?.nombre_visita || ""}
+              tipoVisita={formValues?.idTipoVisita || ""}
+              tipoIngreso={formValues?.idTipoIngreso || ""}
+              nombreVisita={formValues?.nombreVisita || ""}
               visitVehicles={formValues?.vehicles || []}
+              newVisita={[""].includes(uniqueID)}
               estatus={Number.parseInt(formValues?.status_registro) || 0}
               handleOnChange={handleOnChange}
             />
@@ -261,7 +268,8 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                     }))
                   ),
                 };
-                dispatch(updateVisita(payload) as any);
+                console.log("payload ======>", payload);
+                //  dispatch(updateVisita(payload) as any);
               }}
             />
           )}
