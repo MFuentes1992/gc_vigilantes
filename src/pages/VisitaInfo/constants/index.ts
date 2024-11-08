@@ -21,6 +21,15 @@ export const SWITCHER_VALUES = {
   FALSE: "0",
 };
 
+export const NEW_VEHICLE = {
+  conductor: "",
+  marca: "",
+  modelo: "",
+  anio: "",
+  color: "",
+  placas: "",
+};
+
 export type VisitaInfoProps = {
   nombre: string;
   desde: string;
@@ -102,16 +111,11 @@ export const card_styles_extended: ViewStyle = {
   flex: 0.5,
   justifyContent: "center",
   backgroundColor: app_colors.white,
-  paddingLeft: "5%",
-  paddingRight: "5%",
-  borderColor: app_colors.ligth_bg,
-  borderWidth: 0.5,
   paddingBottom: "5%",
 };
 
 export const mainInfoVehicleScrollStyles: ViewStyle = {
   width: "100%",
-  height: 200,
   zIndex: 1,
   marginBottom: 0,
 };

@@ -11,6 +11,7 @@ import RadioGroup from "@gcVigilantes/Components/RadioGroup";
 import { TextInput, View, Image, Text, Modal } from "react-native";
 import {
   MainInfoProps,
+  NEW_VEHICLE,
   TIPO_INGRESO,
   card_styles,
   getVehicleInfoStyles,
@@ -23,6 +24,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "@gcVigilantes/store";
 import { VehiclesResType } from "@gcVigilantes/store/Visita/types";
 import { EditVehicles } from "@gcVigilantes/Components/EditVehicles/EditVehicles";
+import { AddVehicle } from "@gcVigilantes/Components/AddVehicle/AddVehicle";
+import { getLabelApp } from "@gcVigilantes/utils";
 
 export const TipoVisitasIcon: { [key: string]: React.ReactNode } = {
   ["1"]: <FontAwesome name="user" size={18} color="darkgray" />,
@@ -51,6 +54,7 @@ export const MainInfo = ({
   newVisita,
   handleOnChange,
 }: MainInfoProps) => {
+  const preferences = useSelector((state: RootState) => state.preferences);
   const [nombreVisitaState, setNombreVisita] = useState<string>(nombreVisita);
   // -- Disabling and enabling Cards
   const [tipoVisitaDisabled, setTipoVisitaDisabled] = useState<boolean>(
@@ -65,17 +69,19 @@ export const MainInfo = ({
   // -- Vehicle info
 
   const [vehicles, setVehicles] = useState<VehiclesResType[]>([]);
-  const [editVehicle, setEditVehicle] = useState<{
-    id: number | undefined;
-    visible: boolean;
-  }>({
-    id: undefined,
-    visible: false,
-  });
+  const [editVehicle, setEditVehicle] = useState<VehiclesResType>(NEW_VEHICLE);
 
   useEffect(() => {
     setVehicles(visitVehicles);
   }, [visitVehicles]);
+
+  const handleAddVehicle = () => {
+    const tmpVehicle: VehiclesResType = {
+      ...NEW_VEHICLE,
+      id: Math.random().toString(36).substr(2, 9),
+    };
+    setVehicles([...vehicles, tmpVehicle]);
+  };
 
   return (
     <View>
@@ -95,7 +101,7 @@ export const MainInfo = ({
             icon: TipoVisitasIcon[catalog.id] as unknown as React.ReactNode,
           }))}
           handleChange={(value: string) => {
-            handleOnChange("tipo_visita", value);
+            handleOnChange("idTipoVisita", value);
           }}
         />
       </View>
@@ -125,7 +131,7 @@ export const MainInfo = ({
             placeholder="Ingrese aqui el nombre de la visita"
             onChangeText={(value: string) => {
               setNombreVisita(value);
-              handleOnChange("nombre_visita", value);
+              handleOnChange("nombre", value);
             }}
             autoCapitalize="words"
             maxLength={50}
@@ -158,51 +164,105 @@ export const MainInfo = ({
           selectedValue={tipoIngreso}
           disabled={tipoIngresoDisabled}
           handleChange={(value: string) => {
-            handleOnChange("tipo_ingreso", value);
+            handleOnChange("idTipoIngreso", value);
           }}
         />
       </View>
       {tipoIngreso == TIPO_INGRESO.VEHICULO.id && (
         <>
           <ScrollView
-            style={mainInfoVehicleScrollStyles}
+            style={[
+              mainInfoVehicleScrollStyles,
+              { height: vehicles.length === 0 || newVisita ? 0 : 200 },
+            ]}
             contentContainerStyle={getVehicleInfoStyles(vehicles)}
             horizontal
           >
-            {vehicles?.map((vehicle: VehiclesResType, index: number) => (
-              <VehicleCard
-                key={vehicle.placas}
-                id={index}
-                vehicle={vehicle}
-                openModal={(id) => setEditVehicle({ id, visible: true })}
+            {!newVisita &&
+              vehicles?.map((vehicle: VehiclesResType, index: number) => (
+                <VehicleCard
+                  key={vehicle.placas}
+                  id={index}
+                  vehicle={{ ...vehicle, id: vehicle.id || "" }}
+                  openModal={() => setEditVehicle({ ...vehicle })}
+                />
+              ))}
+          </ScrollView>
+          <View style={card_styles}>
+            <CardTitle
+              title={
+                vehicles.length === 0
+                  ? getLabelApp(
+                      preferences.language,
+                      "app_screen_visit_info_register_vehicle"
+                    )
+                  : getLabelApp(
+                      preferences.language,
+                      "app_screen_visit_info_edit_vehicle"
+                    )
+              }
+              uppercase
+              editIcon={false}
+            />
+            <AddVehicle onPress={handleAddVehicle} />
+            {vehicles.map((vehicle) => (
+              <EditVehicles
+                id={vehicle.id || ""}
+                driver={vehicle.conductor}
+                brand={vehicle.marca}
+                model={vehicle.modelo}
+                year={vehicle.anio}
+                color={vehicle.color}
+                plate={vehicle.placas}
+                handleOnChange={(id: string, key: string, value: string) => {
+                  const currVehicle = vehicles.find(
+                    (vehicle) => vehicle.id === id
+                  );
+                  if (currVehicle) {
+                    const tmp = { ...currVehicle, [key]: value };
+                    const newVehicles = vehicles.map((vehicle) =>
+                      vehicle.id === id ? tmp : vehicle
+                    );
+                    setVehicles(newVehicles);
+                    handleOnChange("vehicles", newVehicles as any);
+                  }
+                }}
+                handleClose={() => {
+                  const vehicles = visitVehicles.filter(
+                    (v) => v.id !== vehicle.id
+                  );
+                  setVehicles(vehicles);
+                }}
               />
             ))}
-          </ScrollView>
+          </View>
         </>
       )}
-      {editVehicle.visible && (
+      {editVehicle?.id && (
         <EditVehicles
-          id={editVehicle.id || 0}
-          visible={editVehicle.visible}
-          brand={vehicles[editVehicle?.id || 0]?.marca}
-          model={vehicles[editVehicle?.id || 0]?.modelo}
-          year={vehicles[editVehicle?.id || 0]?.anio}
-          color={vehicles[editVehicle?.id || 0]?.color}
-          plate={vehicles[editVehicle?.id || 0]?.placas}
-          handleOnChange={(index: number, key: string, value: string) => {
-            const newVehicles = vehicles?.map((vehicle, i) => {
-              if (i === index) {
-                return {
-                  ...vehicle,
-                  [key]: value,
-                };
-              }
-              return vehicle;
-            });
-            handleOnChange("vehicles", newVehicles as any);
+          id={editVehicle.id || ""}
+          driver={editVehicle.conductor}
+          brand={editVehicle.marca}
+          model={editVehicle.modelo}
+          year={editVehicle.anio}
+          color={editVehicle.color}
+          plate={editVehicle.placas}
+          handleOnChange={(id: string, key: string, value: string) => {
+            const currVehicle = vehicles.find((vehicle) => vehicle.id === id);
+            if (currVehicle) {
+              const tmp = { ...currVehicle, [key]: value };
+              const newVehicles = vehicles.map((vehicle) =>
+                vehicle.id === id ? tmp : vehicle
+              );
+              setVehicles(newVehicles);
+              handleOnChange("vehicles", newVehicles as any);
+            }
           }}
           handleClose={() => {
-            setEditVehicle({ id: undefined, visible: false });
+            const vehicles = visitVehicles.filter(
+              (v) => v.id !== editVehicle.id
+            );
+            setVehicles(vehicles);
           }}
         />
       )}

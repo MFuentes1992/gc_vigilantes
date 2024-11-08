@@ -1,5 +1,6 @@
 export type VehiclesResType = {
-  vehicle_id: string;
+  id?: string;
+  conductor: string;
   marca: string;
   modelo: string;
   anio: string;

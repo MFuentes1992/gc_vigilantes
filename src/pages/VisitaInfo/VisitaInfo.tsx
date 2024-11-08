@@ -40,23 +40,30 @@ export const VisitaInfo = ({ navigation, route }: any) => {
       | string[]
       | number;
   }>({
-    idUsuario: 0,
-    idTipoVisita: 1,
-    idTipoIngreso: 1,
-    idInstalacion: 0,
-    fechaIngreso: "",
-    fechaSalida: "",
-    multiple: 0,
+    visitaId: 169,
+    idTipoVisita: "1",
+    idTipoIngreso: "1",
+    idUsuario: 2,
+    fechaIngreso: new Date().toISOString(),
+    fechaSalida: new Date().toISOString(),
+    multiple: 1,
     notificaciones: 1,
-    appGenerado: 0,
-    nombreVisita: "",
-    estatusRegistro: 0,
+    appGenerado: 1,
+    vigenciaQR: 1,
+    uniqueId: "",
     autor: "",
     emailAutor: "",
-    uniqueID: uniqueID,
     residencialSeccion: "",
-
-    vehiculos: [],
+    residencialNumInterior: 0,
+    residencialNumExterior: 0,
+    residencialCalle: "",
+    residencialColonia: "",
+    residencialCiudad: null,
+    residencialEstado: "",
+    residencialCP: 0,
+    residencialNombre: "",
+    nombre: "",
+    vehicles: [],
     peatones: [],
   });
 
@@ -200,17 +207,17 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               catalogIngreso={catalogIngreso}
               tipoVisita={formValues?.idTipoVisita || ""}
               tipoIngreso={formValues?.idTipoIngreso || ""}
-              nombreVisita={formValues?.nombreVisita || ""}
+              nombreVisita={formValues?.nombre || ""}
               visitVehicles={formValues?.vehicles || []}
               newVisita={[""].includes(uniqueID)}
-              estatus={Number.parseInt(formValues?.status_registro) || 0}
+              estatus={Number.parseInt(formValues?.status_registro) || 1}
               handleOnChange={handleOnChange}
             />
           )}
           {tab === TABS.DATE && (
             <DateInfo
-              fromDate={formValues?.fromDate}
-              toDate={formValues?.toDate}
+              fromDate={formValues?.fechaIngreso}
+              toDate={formValues?.fechaSalida}
               fromHour={formValues?.fromHour}
               toHour={formValues?.toHour}
               estatus={Number.parseInt(formValues?.status_registro) || 0}
@@ -238,9 +245,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               notificaciones={
                 formValues?.notificaciones === SWITCHER_VALUES.TRUE
               }
-              multiple_entrada={
-                formValues?.multiple_entrada === SWITCHER_VALUES.TRUE
-              }
+              multiple_entrada={formValues?.multiple === SWITCHER_VALUES.TRUE}
               handleOnchange={handleOnChange}
             />
           )}
@@ -250,13 +255,13 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               onSave={() => {
                 const payload = {
                   idVisita: formValues?.idVisita,
-                  tipoVisita: formValues?.tipo_visita,
-                  tipoIngreso: formValues?.tipo_ingreso,
-                  fechaIngreso: `${formValues?.fromDate}T${formValues?.fromHour}:00:00`,
-                  fechaSalida: `${formValues?.toDate}T${formValues?.toHour}:00:00`,
-                  multiEntrada: formValues?.multiple_entrada,
+                  tipoVisita: formValues?.idTipoVisita,
+                  tipoIngreso: formValues?.idTipoIngreso,
+                  fechaIngreso: `${formValues?.fechaIngreso}:00:00`,
+                  fechaSalida: `${formValues?.fechaSalida}:00:00`,
+                  multiEntrada: formValues?.multiple,
                   notificaciones: formValues?.notificaciones,
-                  nombreVisita: formValues?.nombre_visita,
+                  nombreVisita: formValues?.nombre,
                   vehicles: JSON.stringify(
                     [...formValues?.vehicles].map((vehicle) => ({
                       vehicle_id: vehicle.vehicle_id,

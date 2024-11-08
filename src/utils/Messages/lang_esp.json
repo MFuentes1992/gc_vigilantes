@@ -18,5 +18,7 @@
   "app_screen_visit_logs": "Bitácora de acceso a visitas",
   "app_screen_visit_info_error_ingress": "Error al registrar entrada, por favor intente de nuevo.",
   "app_comp_filters_drawer_apply": "Aplicar",
-  "app_comp_filters_drawer_clear": "Limpiar"
+  "app_comp_filters_drawer_clear": "Limpiar",
+  "app_screen_visit_info_register_vehicle": "Registar vehículo.",
+  "app_screen_visit_info_edit_vehicle": "Editar vehículo."
 }
