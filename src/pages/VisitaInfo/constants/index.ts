@@ -6,6 +6,7 @@ import { ViewStyle } from "react-native";
 
 export const TABS = {
   MAIN: "main",
+  VEHICLES: "vehicles",
   DATE: "date",
   GUEST: "guest",
   SETTINGS: "settings",

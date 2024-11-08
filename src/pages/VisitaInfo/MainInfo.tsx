@@ -66,22 +66,6 @@ export const MainInfo = ({
   const [nombreVisitaDisabled, setNombreVisitaDisabled] = useState<boolean>(
     !newVisita
   );
-  // -- Vehicle info
-
-  const [vehicles, setVehicles] = useState<VehiclesResType[]>([]);
-  const [editVehicle, setEditVehicle] = useState<VehiclesResType>(NEW_VEHICLE);
-
-  useEffect(() => {
-    setVehicles(visitVehicles);
-  }, [visitVehicles]);
-
-  const handleAddVehicle = () => {
-    const tmpVehicle: VehiclesResType = {
-      ...NEW_VEHICLE,
-      id: Math.random().toString(36).substr(2, 9),
-    };
-    setVehicles([...vehicles, tmpVehicle]);
-  };
 
   return (
     <View>
@@ -168,104 +152,6 @@ export const MainInfo = ({
           }}
         />
       </View>
-      {tipoIngreso == TIPO_INGRESO.VEHICULO.id && (
-        <>
-          <ScrollView
-            style={[
-              mainInfoVehicleScrollStyles,
-              { height: vehicles.length === 0 || newVisita ? 0 : 200 },
-            ]}
-            contentContainerStyle={getVehicleInfoStyles(vehicles)}
-            horizontal
-          >
-            {!newVisita &&
-              vehicles?.map((vehicle: VehiclesResType, index: number) => (
-                <VehicleCard
-                  key={vehicle.placas}
-                  id={index}
-                  vehicle={{ ...vehicle, id: vehicle.id || "" }}
-                  openModal={() => setEditVehicle({ ...vehicle })}
-                />
-              ))}
-          </ScrollView>
-          <View style={card_styles}>
-            <CardTitle
-              title={
-                vehicles.length === 0
-                  ? getLabelApp(
-                      preferences.language,
-                      "app_screen_visit_info_register_vehicle"
-                    )
-                  : getLabelApp(
-                      preferences.language,
-                      "app_screen_visit_info_edit_vehicle"
-                    )
-              }
-              uppercase
-              editIcon={false}
-            />
-            <AddVehicle onPress={handleAddVehicle} />
-            {vehicles.map((vehicle) => (
-              <EditVehicles
-                id={vehicle.id || ""}
-                driver={vehicle.conductor}
-                brand={vehicle.marca}
-                model={vehicle.modelo}
-                year={vehicle.anio}
-                color={vehicle.color}
-                plate={vehicle.placas}
-                handleOnChange={(id: string, key: string, value: string) => {
-                  const currVehicle = vehicles.find(
-                    (vehicle) => vehicle.id === id
-                  );
-                  if (currVehicle) {
-                    const tmp = { ...currVehicle, [key]: value };
-                    const newVehicles = vehicles.map((vehicle) =>
-                      vehicle.id === id ? tmp : vehicle
-                    );
-                    setVehicles(newVehicles);
-                    handleOnChange("vehicles", newVehicles as any);
-                  }
-                }}
-                handleClose={() => {
-                  const vehicles = visitVehicles.filter(
-                    (v) => v.id !== vehicle.id
-                  );
-                  setVehicles(vehicles);
-                }}
-              />
-            ))}
-          </View>
-        </>
-      )}
-      {editVehicle?.id && (
-        <EditVehicles
-          id={editVehicle.id || ""}
-          driver={editVehicle.conductor}
-          brand={editVehicle.marca}
-          model={editVehicle.modelo}
-          year={editVehicle.anio}
-          color={editVehicle.color}
-          plate={editVehicle.placas}
-          handleOnChange={(id: string, key: string, value: string) => {
-            const currVehicle = vehicles.find((vehicle) => vehicle.id === id);
-            if (currVehicle) {
-              const tmp = { ...currVehicle, [key]: value };
-              const newVehicles = vehicles.map((vehicle) =>
-                vehicle.id === id ? tmp : vehicle
-              );
-              setVehicles(newVehicles);
-              handleOnChange("vehicles", newVehicles as any);
-            }
-          }}
-          handleClose={() => {
-            const vehicles = visitVehicles.filter(
-              (v) => v.id !== editVehicle.id
-            );
-            setVehicles(vehicles);
-          }}
-        />
-      )}
     </View>
   );
 };

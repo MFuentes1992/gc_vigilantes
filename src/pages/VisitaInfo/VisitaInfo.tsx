@@ -26,6 +26,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { clearVisita } from "@gcVigilantes/store/Visita";
 import { setShowAlert } from "@gcVigilantes/store/Alerts";
 import { ALERT_TYPES } from "@gcVigilantes/Components/Alerts/constants";
+import { AddVehicle } from "@gcVigilantes/Components/AddVehicle/AddVehicle";
 
 export const VisitaInfo = ({ navigation, route }: any) => {
   const { uniqueID, uri, tabAction } = route?.params;
@@ -212,6 +213,19 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               newVisita={[""].includes(uniqueID)}
               estatus={Number.parseInt(formValues?.status_registro) || 1}
               handleOnChange={handleOnChange}
+            />
+          )}
+          {tab === TABS.VEHICLES && (
+            <AddVehicle
+              visitVehicles={formValues.vehicles}
+              register={[""].includes(uniqueID)}
+              handleOnChange={(key: string, value: any) => {
+                setFormValues((prev) => {
+                  const tmp = { ...prev };
+                  tmp[key] = value;
+                  return tmp;
+                });
+              }}
             />
           )}
           {tab === TABS.DATE && (
