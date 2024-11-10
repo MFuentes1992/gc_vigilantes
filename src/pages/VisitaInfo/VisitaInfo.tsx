@@ -31,6 +31,7 @@ import { AddVehicle } from "@gcVigilantes/Components/AddVehicle/AddVehicle";
 export const VisitaInfo = ({ navigation, route }: any) => {
   const { uniqueID, uri, tabAction } = route?.params;
   const preferences = useSelector((state: RootState) => state.preferences);
+  const { instalaciones } = useSelector((state: RootState) => state.vigilancia);
   const [tab, setTab] = useState<string>(TABS.MAIN);
   const [formValues, setFormValues] = useState<{
     [key: string]:
