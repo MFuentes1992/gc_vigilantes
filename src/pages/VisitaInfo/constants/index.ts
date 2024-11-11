@@ -108,11 +108,8 @@ export const card_styles: ViewStyle = {
 };
 
 export const card_styles_extended: ViewStyle = {
-  margin: "5%",
-  flex: 0.5,
-  justifyContent: "center",
-  backgroundColor: app_colors.white,
-  paddingBottom: "5%",
+  position: "relative",
+  width: "100%",
 };
 
 export const mainInfoVehicleScrollStyles: ViewStyle = {

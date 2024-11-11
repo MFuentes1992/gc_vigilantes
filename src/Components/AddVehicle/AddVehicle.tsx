@@ -44,47 +44,55 @@ export const AddVehicle = (props: AddVehicleProps) => {
   return (
     <>
       <View style={card_styles}>
-        <HeaderActionButton
-          icon="plus"
-          color={app_colors.secondary_badge_vivid}
-          onPress={handleAddVehicle}
-        />
-        <CardTitle
-          title={
-            props.register
-              ? getLabelApp(
-                  preferences.language,
-                  "app_screen_visit_info_add_vehicle"
-                )
-              : getLabelApp(
-                  preferences.language,
-                  "app_screen_visit_info_edit_vehicles"
-                )
-          }
-          uppercase
-          editIcon={false}
-        />
-      </View>
-      <>
-        <ScrollView
-          style={[
-            mainInfoVehicleScrollStyles,
-            { height: vehicles.length === 0 || props.register ? 0 : 200 },
-          ]}
-          contentContainerStyle={getVehicleInfoStyles(vehicles)}
-          horizontal
+        <View
+          style={{
+            position: "relative",
+            width: "100%",
+            height: 40,
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
         >
-          {!props.register &&
-            vehicles?.map((vehicle: VehiclesResType, index: number) => (
-              <VehicleCard
-                key={vehicle.placas}
-                id={index}
-                vehicle={{ ...vehicle, id: vehicle.id || "" }}
-                openModal={() => setEditVehicle({ ...vehicle })}
-              />
-            ))}
-        </ScrollView>
-        <View style={card_styles}>
+          <View
+            style={{
+              position: "relative",
+              width: "50%",
+              flexDirection: "row",
+            }}
+          >
+            <CardTitle
+              title={
+                props.register
+                  ? getLabelApp(
+                      preferences.language,
+                      "app_screen_visit_info_register_vehicle"
+                    )
+                  : getLabelApp(
+                      preferences.language,
+                      "app_screen_visit_info_edit_vehicle"
+                    )
+              }
+              uppercase
+              editIcon={false}
+            />
+          </View>
+          <View
+            style={{
+              position: "relative",
+              width: "50%",
+              flexDirection: "row",
+              justifyContent: "flex-end",
+            }}
+          >
+            <HeaderActionButton
+              icon="plus"
+              color={app_colors.secondary_badge_vivid}
+              onPress={handleAddVehicle}
+            />
+          </View>
+        </View>
+
+        <View style={{ position: "relative", width: "100%" }}>
           {vehicles.map((vehicle) => (
             <EditVehicles
               id={vehicle.id || ""}
@@ -117,6 +125,26 @@ export const AddVehicle = (props: AddVehicleProps) => {
             />
           ))}
         </View>
+      </View>
+      <>
+        <ScrollView
+          style={[
+            mainInfoVehicleScrollStyles,
+            { height: vehicles.length === 0 || props.register ? 0 : 200 },
+          ]}
+          contentContainerStyle={getVehicleInfoStyles(vehicles)}
+          horizontal
+        >
+          {!props.register &&
+            vehicles?.map((vehicle: VehiclesResType, index: number) => (
+              <VehicleCard
+                key={vehicle.placas}
+                id={index}
+                vehicle={{ ...vehicle, id: vehicle.id || "" }}
+                openModal={() => setEditVehicle({ ...vehicle })}
+              />
+            ))}
+        </ScrollView>
       </>
       {editVehicle?.id && (
         <EditVehicles

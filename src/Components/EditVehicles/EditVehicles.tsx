@@ -35,17 +35,16 @@ export const EditVehicles = ({
         style={{
           flexDirection: "row",
           justifyContent: "flex-end",
-          marginTop: "2%",
-          marginBottom: "1%",
+          marginTop: "5%",
+          marginBottom: "2%",
         }}
       >
         <HeaderActionButton
           icon="times-circle"
-          color={app_colors.red}
+          color={app_colors.ligth_bg}
           onPress={handleClose}
         />
       </View>
-      <CardTitle title={plate} uppercase />
       <TextInput
         style={inputStyles}
         onChangeText={(driver: string) =>
