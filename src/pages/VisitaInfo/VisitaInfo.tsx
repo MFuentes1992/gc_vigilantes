@@ -7,7 +7,7 @@ import { getCatalogTipoVisitas } from "@gcVigilantes/store/TipoVisitas/api";
 import { RootState } from "@gcVigilantes/store";
 import { getCatalogTipoIngreso } from "@gcVigilantes/store/TipoIngreso/api";
 import { VisitaDetails } from "@gcVigilantes/Components/VisitaDetails/VisitaDetails";
-import { DATE_TYPES, SWITCHER_VALUES, TABS } from "./constants";
+import { DATE_TYPES, SWITCHER_VALUES, TABS, VisitaPeaton } from "./constants";
 import { MainInfo } from "./MainInfo";
 import { FormSaveButtons } from "@gcVigilantes/Components/FormSaveButtons/FormSaveButtons";
 import { DateInfo } from "./DateInfo";
@@ -45,6 +45,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
       | boolean
       | any
       | VehiclesResType[]
+      | VisitaPeaton[]
       | string[]
       | number;
   }>({
@@ -254,7 +255,15 @@ export const VisitaInfo = ({ navigation, route }: any) => {
           )}
           {tab === TABS.GUEST && (
             <GuestInfo
-              estatus={Number.parseInt(formValues?.status_registro) || 0}
+              estatus={[1].includes(formValues?.estatusVisita)}
+              peatones={formValues?.peatones || []}
+              handleOnChange={(key: string, value: any) => {
+                setFormValues((prev) => {
+                  const tmp = { ...prev };
+                  tmp[key] = value;
+                  return tmp;
+                });
+              }}
             />
           )}
           {tab === TABS.SETTINGS && (

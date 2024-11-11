@@ -31,6 +31,11 @@ export const NEW_VEHICLE = {
   placas: "",
 };
 
+export const NEW_PEDESTRIAN = {
+  nombre: "",
+  estatusRegistro: 1,
+};
+
 export type VisitaInfoProps = {
   nombre: string;
   desde: string;
@@ -76,8 +81,16 @@ export type DateInfoProps = {
   handleOnChange: (key: string, value: string | number) => void;
 };
 
+export type VisitaPeaton = {
+  id: string;
+  nombre: string;
+  estatusRegistro: number;
+};
+
 export type GuestInfoProps = {
-  estatus: number;
+  estatus: boolean;
+  peatones: VisitaPeaton[];
+  handleOnChange: (key: string, value: VisitaPeaton[]) => void;
 };
 
 export type settingsInfoProps = {
