@@ -87,7 +87,10 @@ export type DateInfoProps = {
 
 export type VisitaPeaton = {
   id: string;
+  idVisita: string;
   nombre: string;
+  fechaRegistro: string;
+  fechaActualizacion: string;
   estatusRegistro: number;
 };
 

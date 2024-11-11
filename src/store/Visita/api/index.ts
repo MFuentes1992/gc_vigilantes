@@ -6,16 +6,15 @@ import {
 } from "@gcVigilantes/utils";
 import { setVisita, setVehicles } from "@gcVigilantes/store/Visita";
 import { IVisita, VehiclesResType } from "../types";
-import data_mock from "./data.json";
 import { setShowAlert } from "@gcVigilantes/store/Alerts";
 import { ALERT_TYPES } from "@gcVigilantes/Components/Alerts/constants";
 import { setLoading } from "@gcVigilantes/store/UI";
 
 export const getVisitaByUniqueID =
-  (uniqueID: string, id_caseta: string, navigation: any) => (dispatch: any) => {
+  (uniqueID: string, navigation: any) => (dispatch: any) => {
     const url = stringTemplateAddQuery(
       `${ENDPOINTS.BASE_URL}${ENDPOINTS.VISITAS.BY_UNIQUEID}`,
-      { qr: uniqueID, id_caseta }
+      { uniqueId: uniqueID }
     );
     fetch(url)
       .then((response) => response.json())
@@ -26,8 +25,8 @@ export const getVisitaByUniqueID =
           });
           return;
         }
-        const [visita] = data;
-        dispatch(setVisita(visita as IVisita));
+        // const [visita] = data;
+        dispatch(setVisita(data as IVisita));
       })
       .catch((error) => {
         console.error("Error:", error);

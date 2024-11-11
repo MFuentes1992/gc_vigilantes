@@ -25,6 +25,7 @@ import { setLoading } from "@gcVigilantes/store/UI";
 import {
   ENDPOINTS,
   getLabelApp,
+  militarToTwelveHours,
   ROUTES,
   toMilitarHours,
   visitaNavigatorBack,
@@ -104,7 +105,8 @@ export const VisitaInfo = ({ navigation, route }: any) => {
     dispatch(getCatalogTipoVisitas() as any);
     dispatch(getCatalogTipoIngreso() as any);
     if (uniqueID) {
-      AsyncStorage.getItem("id_caseta")
+      dispatch(getVisitaByUniqueID(uniqueID, navigation) as any);
+      /* AsyncStorage.getItem("id_caseta")
         .then((data) => {
           logVisitaIngressEgress(
             uniqueID,
@@ -117,9 +119,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                 throw new Error(data.message);
               }
               if ([0].includes(tabAction)) {
-                dispatch(
-                  getVisitaByUniqueID(uniqueID, `${data}`, navigation) as any
-                );
+
               } else {
                 dispatch(
                   setShowAlert({
@@ -156,7 +156,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
           console.error("Error al obtener información de la caseta", error)
         );
 
-      dispatch(getVehicles(uniqueID) as any);
+      dispatch(getVehicles(uniqueID) as any); */
     }
 
     return () => {
@@ -173,53 +173,47 @@ export const VisitaInfo = ({ navigation, route }: any) => {
   };
 
   useEffect(() => {
-    /* if (visitaRedux) {
+    console.log("visitaRedux::", visitaRedux);
+
+    if (visitaRedux) {
       setFormValues(() => ({
-        idVisita: visitaRedux?.visita_id,
-        nameAutor: visitaRedux?.nameAutor,
-        emailAutor: visitaRedux?.emailAutor,
-        residencial: visitaRedux?.residencial,
-        calle: visitaRedux?.calle,
-        num_ext: visitaRedux?.num_ext,
-        nombre_visita: visitaRedux?.nombre,
-        estado: visitaRedux?.estado,
-        num_int: visitaRedux?.num_int,
-        seccion: visitaRedux?.seccion,
-        fromDate: visitaRedux?.desde?.split("T")[0],
-        toDate: visitaRedux?.hasta?.split("T")[0],
-        // dateType: visitaRedux.tipo_fecha,
-        fromHour: visitaRedux?.desde?.split("T")[1]?.split(":")[0],
-        toHour: visitaRedux?.hasta?.split("T")[1]?.split(":")[0],
-        // hourType: visitaRedux.tipo_hora,
-        tipo_ingreso: visitaRedux?.tipo_ingreso,
-        tipo_visita: visitaRedux?.tipo_visita,
-        multiple_entrada: visitaRedux?.multiple_entrada,
-        notificaciones: visitaRedux?.notificaciones,
-        status_registro: visitaRedux?.estatus_registro,
-        vehicles: visitaRedux?.vehicles,
+        ...visitaRedux,
+        fechaIngreso: visitaRedux.fechaIngreso.split("T")[0],
+        fechaIngresoHora: militarToTwelveHours(
+          visitaRedux.fechaIngreso.split("T")[1]
+        ),
+        fechaSalida: visitaRedux.fechaSalida.split("T")[0],
+        fechaSalidaHora: militarToTwelveHours(
+          visitaRedux.fechaSalida.split("T")[1]
+        ),
+        dateTypeInput: DATE_TYPES.END,
+        vehicles: visitaRedux.vehicles,
+        peatones: visitaRedux.pedestrians,
       }));
       dispatch(setLoading(false));
-    } */
+    }
     dispatch(setLoading(false));
   }, [visitaRedux]);
 
   return (
     <SafeAreaView>
-      {(visitaRedux?.visita_id !== "" || [""].includes(uniqueID)) && (
+      {(visitaRedux?.visitaId !== "" || [""].includes(uniqueID)) && (
         <KeyboardAwareScrollView>
           <VisitaDetails
             uri={!uri.includes("preview") ? uri : `${ENDPOINTS.QR}${uniqueID}`}
-            autor={formValues?.nameAutor || ""}
+            autor={formValues?.autor || ""}
             emailAutor={formValues?.emailAutor || ""}
-            direccion={`${formValues?.residencial}, ${formValues?.calle}, ${formValues?.num_ext}`}
-            estatus={Number.parseInt(formValues?.status_registro) || 0}
-            notificaciones={formValues?.notificaciones === SWITCHER_VALUES.TRUE}
+            direccion={`${formValues?.residencialNombre}, ${formValues?.residencialCalle}, ${formValues?.residencialNumExterior}`}
+            estatus={Number.parseInt(formValues?.estatusVisita) || 0}
+            notificaciones={[...SWITCHER_VALUES.TRUE].includes(
+              formValues?.notificaciones
+            )}
             handleNotificaciones={(value) => {
               setFormValues((prev) => ({ ...prev, notificaciones: value }));
             }}
             handleChangeTab={(tab) => setTab(tab)}
-            num_int={formValues?.num_int || ""}
-            seccion={formValues?.seccion || ""}
+            num_int={formValues?.residencialNumInterior || ""}
+            seccion={formValues?.residencialSeccion || ""}
             newVisita={[""].includes(uniqueID)}
             selectedTab={tab}
           />
@@ -305,7 +299,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               handleOnchange={handleOnChange}
             />
           )}
-          {[1].includes(formValues?.estatusVisita) && (
+          {[1, "1"].includes(formValues?.estatusVisita) && (
             <FormSaveButtons
               onCancel={() => {
                 if ([TABS.MAIN].includes(tab)) {

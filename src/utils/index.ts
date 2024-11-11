@@ -9,7 +9,7 @@ export const ENDPOINTS = {
   CATALOG_TIPO_INGRESO: "/visita/catalogs/GetTipoIngreso/index.php",
   VISITAS: {
     CREATE: "/visita/crear/index.php",
-    BY_UNIQUEID: "/visita/read-qr/index.php",
+    BY_UNIQUEID: "/visita/consulta/uniqueId/index.php",
     VEHICLES: "/visita/getVisitVehicles/index.php?qr={qr}",
     UPDATE: "/visita/update/index.php",
     LOG_INGRESS: "/visita/read-qr/index.php",
@@ -72,20 +72,13 @@ export const getLabelApp = (lang: string, key: string) => {
   return labels[key];
 };
 
-export const militarToTwelveHours = (
-  hour: number
-): { hour: number; ampm: string } => {
-  const ampm = hour >= 12 ? "PM" : "AM";
-  if (hour > 12) {
-    return {
-      hour: hour - 12,
-      ampm,
-    };
+export const militarToTwelveHours = (hour: string) => {
+  const hourInt = parseInt(hour.split(":")[0]);
+  const ampm = hourInt >= 12 ? "PM" : "AM";
+  if (hourInt > 12) {
+    return `${hourInt - 12}:${hour.split(":")[1]} ${ampm}`;
   }
-  return {
-    hour,
-    ampm,
-  };
+  return `${hourInt}:${hour.split(":")[1]} ${ampm}`;
 };
 
 export const toMilitarHours = (hour: string) => {
@@ -118,8 +111,9 @@ export const hourFormat = (time: number) => {
   const date = new Date(time);
   const hours = date.getHours();
   const minutes = date.getMinutes();
-  const { hour, ampm } = militarToTwelveHours(hours);
-  return `${hour}:${timeFormat(minutes)} ${ampm}`;
+  // onst { hour, ampm } = militarToTwelveHours(hours);
+  // return `${hour}:${timeFormat(minutes)} ${ampm}`;
+  return "";
 };
 
 export const loadAsyncStorageData = async (

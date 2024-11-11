@@ -68,11 +68,13 @@ export const MainInfo = ({
 
   return (
     <View>
-      <InstalationPicker
-        instalaciones={instalaciones}
-        selectedInstalacion={selectedInstalacion}
-        handleOnChange={handleOnChangeInstalacion}
-      />
+      {newVisita && (
+        <InstalationPicker
+          instalaciones={instalaciones}
+          selectedInstalacion={selectedInstalacion}
+          handleOnChange={handleOnChangeInstalacion}
+        />
+      )}
       <View style={card_styles}>
         <CardTitle
           title="tipo de visita"
