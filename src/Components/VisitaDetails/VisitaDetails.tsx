@@ -110,6 +110,37 @@ export const VisitaDetails = ({
             justifyContent: "center",
             alignItems: "center",
           }}
+          onPress={() => handleChangeTab(TABS.VEHICLES)}
+        >
+          <MaterialCommunityIcons
+            name="car-arrow-right"
+            size={18}
+            color={
+              selectedTab === TABS.VEHICLES
+                ? app_colors.third
+                : app_colors.ligth_bg
+            }
+          />
+          <Text
+            style={[
+              app_text_menu,
+              {
+                color:
+                  selectedTab === TABS.VEHICLES
+                    ? app_colors.third
+                    : app_colors.text_gray,
+              },
+            ]}
+          >
+            VEHICULOS
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            paddingTop: 5,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
           onPress={() => handleChangeTab(TABS.DATE)}
         >
           <FontAwesome

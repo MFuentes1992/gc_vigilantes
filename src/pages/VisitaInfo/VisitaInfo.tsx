@@ -7,7 +7,7 @@ import { getCatalogTipoVisitas } from "@gcVigilantes/store/TipoVisitas/api";
 import { RootState } from "@gcVigilantes/store";
 import { getCatalogTipoIngreso } from "@gcVigilantes/store/TipoIngreso/api";
 import { VisitaDetails } from "@gcVigilantes/Components/VisitaDetails/VisitaDetails";
-import { SWITCHER_VALUES, TABS } from "./constants";
+import { DATE_TYPES, SWITCHER_VALUES, TABS } from "./constants";
 import { MainInfo } from "./MainInfo";
 import { FormSaveButtons } from "@gcVigilantes/Components/FormSaveButtons/FormSaveButtons";
 import { DateInfo } from "./DateInfo";
@@ -47,7 +47,10 @@ export const VisitaInfo = ({ navigation, route }: any) => {
     idTipoIngreso: "1",
     idUsuario: 2,
     fechaIngreso: new Date().toISOString(),
+    fechaIngresoHora: new Date().toLocaleTimeString(preferences.locale),
     fechaSalida: new Date().toISOString(),
+    fechaSalidaHora: new Date().toLocaleTimeString(preferences.locale),
+    dateTypeInput: DATE_TYPES.END,
     multiple: 1,
     notificaciones: 1,
     appGenerado: 1,
@@ -65,6 +68,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
     residencialCP: 0,
     residencialNombre: "",
     nombre: "",
+    estatusVisita: 1,
     vehicles: [],
     peatones: [],
   });
@@ -144,7 +148,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
     };
   }, []);
 
-  const handleOnChange = (key: string, value: string) => {
+  const handleOnChange = (key: string, value: string | number) => {
     setFormValues((prev) => {
       const tmp = { ...prev };
       tmp[key] = value;
@@ -153,7 +157,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
   };
 
   useEffect(() => {
-    if (visitaRedux) {
+    /* if (visitaRedux) {
       setFormValues(() => ({
         idVisita: visitaRedux?.visita_id,
         nameAutor: visitaRedux?.nameAutor,
@@ -179,7 +183,8 @@ export const VisitaInfo = ({ navigation, route }: any) => {
         vehicles: visitaRedux?.vehicles,
       }));
       dispatch(setLoading(false));
-    }
+    } */
+    dispatch(setLoading(false));
   }, [visitaRedux]);
 
   return (
@@ -231,11 +236,13 @@ export const VisitaInfo = ({ navigation, route }: any) => {
           )}
           {tab === TABS.DATE && (
             <DateInfo
-              fromDate={formValues?.fechaIngreso}
-              toDate={formValues?.fechaSalida}
-              fromHour={formValues?.fromHour}
-              toHour={formValues?.toHour}
-              estatus={Number.parseInt(formValues?.status_registro) || 0}
+              fechaIngreso={formValues?.fechaIngreso}
+              fechaSalida={formValues?.fechaSalida}
+              horaIngreso={formValues?.fechaIngresoHora}
+              horaSalida={formValues?.fechaSalidaHora}
+              dateTypeInput={formValues?.dateTypeInput}
+              estatus={Number.parseInt(formValues?.estatusVisita) || 0}
+              edit={[""].includes(uniqueID)}
               handleOnChange={handleOnChange}
             />
           )}
@@ -264,7 +271,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               handleOnchange={handleOnChange}
             />
           )}
-          {["1"].includes(formValues?.status_registro) && (
+          {["1"].includes(formValues?.estatusVisita) && (
             <FormSaveButtons
               onCancel={() => {}}
               onSave={() => {

@@ -66,14 +66,14 @@ export type MainInfoProps = {
 };
 
 export type DateInfoProps = {
-  fromDate?: string;
-  toDate?: string;
-  dateType?: string;
-  fromHour?: number;
-  toHour?: number;
-  hourType?: string;
+  fechaIngreso: string;
+  fechaSalida: string;
+  horaIngreso: string;
+  horaSalida: string;
   estatus: number;
-  handleOnChange: (key: string, value: string) => void;
+  dateTypeInput: number;
+  edit: boolean;
+  handleOnChange: (key: string, value: string | number) => void;
 };
 
 export type GuestInfoProps = {

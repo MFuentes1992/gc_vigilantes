@@ -3,40 +3,43 @@ import React from "react";
 import { View } from "react-native";
 
 type HourPickerProps = {
-	totalHours: number;
-	step?: number;
-	currValue: number;
-	handleChange: (_v: number) => void;
+  totalHours: number;
+  currValue: string;
+  handleChange: (_v: string) => void;
 };
 
 export const HourPicker = ({
-	totalHours,
-	currValue,
-	step,
-	handleChange,
+  totalHours,
+  currValue,
+  handleChange,
 }: HourPickerProps) => {
-	const [current, setCurrValue] = React.useState<number>(currValue);
+  const [current, setCurrValue] = React.useState<string>(currValue);
 
-	const onChange = (value: number) => {
-		setCurrValue(value);
-		handleChange(value);
-	};
-
-	return (
-		<View>
-			<Picker selectedValue={current} onValueChange={onChange}>
-				{new Array(totalHours / (step ?? 1)).fill(0).map((_, index) => (
-					<Picker.Item
-						key={index}
-						label={`${index + 1 < 10 ? "0" : ""}${(index + 1) * (step ?? 1)}`}
-						value={(index + 1) * (step ?? 1)}
-					/>
-				))}
-			</Picker>
-		</View>
-	);
-};
-
-HourPicker.defaultProps = {
-	step: 1,
+  const onChange = (value: string) => {
+    setCurrValue(value);
+    handleChange(value);
+  };
+  let tracker = 0;
+  return (
+    <View>
+      <Picker selectedValue={current} onValueChange={onChange}>
+        {new Array(totalHours).fill(0).map((_, index) => {
+          if (index % 2 === 0) {
+            tracker++;
+          }
+          return (
+            <Picker.Item
+              key={index}
+              label={`${tracker < 10 ? "0" : ""}${tracker}:${
+                index % 2 === 0 ? "00" : "30"
+              }`}
+              value={`${tracker < 10 ? "0" : ""}${tracker}:${
+                index % 2 === 0 ? "00" : "30"
+              }`}
+            />
+          );
+        })}
+      </Picker>
+    </View>
+  );
 };
