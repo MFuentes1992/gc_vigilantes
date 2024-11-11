@@ -16,6 +16,7 @@ export const getVisitaByUniqueID =
       `${ENDPOINTS.BASE_URL}${ENDPOINTS.VISITAS.BY_UNIQUEID}`,
       { uniqueId: uniqueID }
     );
+    console.log("VISITA::URL::UNIQUE", url);
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
@@ -30,6 +31,9 @@ export const getVisitaByUniqueID =
       })
       .catch((error) => {
         console.error("Error:", error);
+        navigation.navigate(ROUTES.HOME, {
+          error: getLabelApp("es", "app_error_message"),
+        });
       });
   };
 
