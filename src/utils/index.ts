@@ -89,9 +89,12 @@ export const militarToTwelveHours = (
 };
 
 export const toMilitarHours = (hour: string) => {
-  const hourInt = parseInt(hour.substring(0, 2));
+  const hourInt = parseInt(hour.split(":")[0]);
   if (hour.includes("PM") && hourInt < 12) {
-    return `${hourInt + 12}:${hour.substring(3, 5)}:00`;
+    return `${hourInt + 12}:${hour
+      .split(":")[1]
+      .replace(/AM|PM/g, "")
+      .replace(" ", ":00")}`;
   }
   return `${hour.replace(/AM|PM/g, "").replace(" ", ":00")}`;
 };

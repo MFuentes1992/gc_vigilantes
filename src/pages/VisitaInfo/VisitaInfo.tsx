@@ -40,6 +40,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
   const { uniqueID, uri, tabAction } = route?.params;
   const preferences = useSelector((state: RootState) => state.preferences);
   const { instalaciones } = useSelector((state: RootState) => state.vigilancia);
+  const { id_caseta } = useSelector((state: RootState) => state.userData);
   const [tab, setTab] = useState<string>(TABS.MAIN);
   const [formValues, setFormValues] = useState<{
     [key: string]:
@@ -85,6 +86,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
     estatusVisita: 1,
     vehicles: [],
     peatones: [],
+    id_caseta,
   });
 
   const dispatch = useDispatch();
@@ -333,9 +335,8 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                       nombreVisita: formValues?.nombre,
                       vehiculos: JSON.stringify(formValues?.vehicles),
                       peatones: JSON.stringify(formValues?.peatones),
+                      id_caseta: formValues?.id_caseta,
                     };
-                    console.log("PAYLOAD::VISITA::CREATE", payload);
-
                     dispatch(createVisita(payload) as any);
                   }
                 } else {

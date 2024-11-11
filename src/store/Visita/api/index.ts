@@ -122,15 +122,18 @@ export const createVisita =
     })
       .then((response) => response.json())
       .then((data) => {
-        dispatch(setLoading(false));
-        dispatch(
-          setShowAlert({
-            showAlert: true,
-            title: "Visita creada.",
-            message: data.message,
-            type: ALERT_TYPES.SUCCESS,
-          })
-        );
+        const { uniqueID } = data;
+        logVisitaIngressEgress(uniqueID, visita.id_caseta, "entry").then(() => {
+          dispatch(setLoading(false));
+          dispatch(
+            setShowAlert({
+              showAlert: true,
+              title: "Visita creada.",
+              message: data.message,
+              type: ALERT_TYPES.SUCCESS,
+            })
+          );
+        });
       })
       .catch((error) => {
         dispatch(setLoading(false));
