@@ -87,9 +87,10 @@ export const militarToTwelveHours = (
   };
 };
 
-export const toMilitarHours = (hour: number, ampm: string) => {
+export const toMilitarHours = (hour: string, ampm: string) => {
+  const hourInt = parseInt(hour.substring(0, 2));
   if (ampm === "PM") {
-    return hour + 12;
+    return `${hourInt + 12}:${hour.substring(3, 5)}`;
   }
   return hour;
 };

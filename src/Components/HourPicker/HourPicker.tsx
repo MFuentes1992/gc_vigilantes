@@ -30,12 +30,8 @@ export const HourPicker = ({
           return (
             <Picker.Item
               key={index}
-              label={`${tracker < 10 ? "0" : ""}${tracker}:${
-                index % 2 === 0 ? "00" : "30"
-              }`}
-              value={`${tracker < 10 ? "0" : ""}${tracker}:${
-                index % 2 === 0 ? "00" : "30"
-              }`}
+              label={`${tracker}:${index % 2 === 0 ? "00" : "30"}`}
+              value={`${tracker}:${index % 2 === 0 ? "00" : "30"}`}
             />
           );
         })}

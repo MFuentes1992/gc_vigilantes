@@ -23,6 +23,15 @@ export const DateInfo = ({
   edit,
   handleOnChange,
 }: DateInfoProps) => {
+  console.log("DateInfo props =====>", {
+    fechaIngreso,
+    fechaSalida,
+    horaIngreso,
+    horaSalida,
+    estatus,
+    dateTypeInput,
+  });
+
   const timeZone = new Date().getTimezoneOffset();
   const [startHour, setStartHour] = React.useState<string>(
     horaIngreso.substring(0, 5)
@@ -73,7 +82,7 @@ export const DateInfo = ({
                   handleOnChange(
                     "fechaIngreso",
                     `${day.dateString}T${toMilitarHours(
-                      Number.parseInt(startHour),
+                      horaIngreso,
                       startHourAmPm
                     )}`
                   );
@@ -89,7 +98,7 @@ export const DateInfo = ({
                   handleOnChange(
                     "fechaSalida",
                     `${day.dateString}T${toMilitarHours(
-                      Number.parseInt(endHour),
+                      horaSalida,
                       endHourAmPm
                     )}`
                   );
@@ -122,7 +131,7 @@ export const DateInfo = ({
                 fontWeight: "bold",
               }}
             >
-              {`${startHour}`}
+              {`${horaIngreso.substring(0, 5)}`}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -150,7 +159,7 @@ export const DateInfo = ({
                 top: -5,
               }}
             >
-              {`${endHour}`}
+              {`${horaSalida.substring(0, 5)}`}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -169,14 +178,21 @@ export const DateInfo = ({
         <View>
           <HourPicker
             totalHours={24}
-            currValue={hourPicker.type === "start" ? startHour : endHour}
+            currValue={
+              hourPicker.type === "start"
+                ? horaIngreso.substring(0, 5)
+                : horaSalida.substring(0, 5)
+            }
             handleChange={(value: string) => {
               switch (hourPicker.type) {
                 case "start":
-                  setStartHour(value);
+                  handleOnChange(
+                    "fechaIngresoHora",
+                    `${value} ${startHourAmPm}`
+                  );
                   break;
                 case "end":
-                  setEndHour(value);
+                  handleOnChange("fechaSalidaHora", `${value} ${endHourAmPm}`);
                   break;
                 default:
                   break;
@@ -202,9 +218,17 @@ export const DateInfo = ({
             switch (formatPicker.type) {
               case "start":
                 setStartHourAmPm(value);
+                handleOnChange(
+                  "fechaIngresoHora",
+                  `${horaIngreso.replaceAll(/AM|PM/g, value)}`
+                );
                 break;
               case "end":
                 setEndHourAmPm(value);
+                handleOnChange(
+                  "fechaSalidaHora",
+                  `${horaSalida.replaceAll(/AM|PM/g, value)}`
+                );
                 break;
               default:
                 break;

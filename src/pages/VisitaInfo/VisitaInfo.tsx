@@ -49,14 +49,19 @@ export const VisitaInfo = ({ navigation, route }: any) => {
       | string[]
       | number;
   }>({
-    visitaId: 169,
     idTipoVisita: "1",
     idTipoIngreso: "1",
     idUsuario: 2,
     fechaIngreso: new Date().toISOString(),
-    fechaIngresoHora: new Date().toLocaleTimeString(preferences.locale),
+    fechaIngresoHora: new Date().toLocaleTimeString(preferences.locale, {
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
     fechaSalida: new Date().toISOString(),
-    fechaSalidaHora: new Date().toLocaleTimeString(preferences.locale),
+    fechaSalidaHora: new Date().toLocaleTimeString(preferences.locale, {
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
     dateTypeInput: DATE_TYPES.END,
     multiple: 1,
     notificaciones: 1,
