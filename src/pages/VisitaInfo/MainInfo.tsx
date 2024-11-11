@@ -1,31 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   FontAwesome,
   FontAwesome5,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import * as Animatable from "react-native-animatable";
 import { CardTitle } from "@gcVigilantes/Components/CardTitle/CardTitle";
 import RadioGroup from "@gcVigilantes/Components/RadioGroup";
 
-import { TextInput, View, Image, Text, Modal } from "react-native";
-import {
-  MainInfoProps,
-  NEW_VEHICLE,
-  TIPO_INGRESO,
-  card_styles,
-  getVehicleInfoStyles,
-  mainInfoVehicleScrollStyles,
-} from "./constants";
+import { TextInput, View, Text } from "react-native";
+import { MainInfoProps, card_styles } from "./constants";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
-import { ScrollView } from "react-native-gesture-handler";
-import { VehicleCard } from "@gcVigilantes/Components/VehicleCard/VehicleCard";
-import { useSelector } from "react-redux";
-import { RootState } from "@gcVigilantes/store";
-import { VehiclesResType } from "@gcVigilantes/store/Visita/types";
-import { EditVehicles } from "@gcVigilantes/Components/EditVehicles/EditVehicles";
-import { AddVehicle } from "@gcVigilantes/Components/AddVehicle/AddVehicle";
-import { getLabelApp } from "@gcVigilantes/utils";
+import { InstalationPicker } from "@gcVigilantes/Components/InstalationPicker/InstalationPicker";
+import { Instalacion } from "@gcVigilantes/store/Vigilancia/types";
 
 export const TipoVisitasIcon: { [key: string]: React.ReactNode } = {
   ["1"]: <FontAwesome name="user" size={18} color="darkgray" />,
@@ -49,13 +35,12 @@ export const MainInfo = ({
   nombreVisita,
   catalogVisitas,
   catalogIngreso,
-  visitVehicles,
   estatus,
   newVisita,
+  selectedInstalacion,
+  instalaciones,
   handleOnChange,
 }: MainInfoProps) => {
-  const preferences = useSelector((state: RootState) => state.preferences);
-  const [nombreVisitaState, setNombreVisita] = useState<string>(nombreVisita);
   // -- Disabling and enabling Cards
   const [tipoVisitaDisabled, setTipoVisitaDisabled] = useState<boolean>(
     !newVisita
@@ -67,8 +52,27 @@ export const MainInfo = ({
     !newVisita
   );
 
+  const handleOnChangeInstalacion = (_instalacion: string) => {
+    const instalacion = JSON.parse(_instalacion) as Instalacion;
+    const idInstalacion = instalacion.idInstalacion;
+    handleOnChange("idInstalacion", idInstalacion);
+    const idUsuario = instalacion.idUsuario;
+    handleOnChange("idUsuario", idUsuario);
+    const owner = instalacion.owner;
+    handleOnChange("autor", owner);
+    const seccion = instalacion.seccion;
+    handleOnChange("residencialSeccion", seccion);
+    const numInt = instalacion.numInt;
+    handleOnChange("residencialNumInterior", numInt);
+  };
+
   return (
     <View>
+      <InstalationPicker
+        instalaciones={instalaciones}
+        selectedInstalacion={selectedInstalacion}
+        handleOnChange={handleOnChangeInstalacion}
+      />
       <View style={card_styles}>
         <CardTitle
           title="tipo de visita"
@@ -114,7 +118,6 @@ export const MainInfo = ({
             value={nombreVisita}
             placeholder="Ingrese aqui el nombre de la visita"
             onChangeText={(value: string) => {
-              setNombreVisita(value);
               handleOnChange("nombre", value);
             }}
             autoCapitalize="words"

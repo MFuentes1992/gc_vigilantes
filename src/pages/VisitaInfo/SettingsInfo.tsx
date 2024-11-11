@@ -1,87 +1,52 @@
 import { CardTitle } from "@gcVigilantes/Components/CardTitle/CardTitle";
 import { Switcher } from "@gcVigilantes/Components/Switcher/Switcher";
+import { useSelector } from "react-redux";
+import { RootState } from "@gcVigilantes/store";
 import React from "react";
 import { View, Text } from "react-native";
-import { card_styles, settingsInfoProps } from "./constants";
-import { app_colors } from "@gcVigilantes/utils/default.colors";
+import { card_styles, row_styles, settingsInfoProps } from "./constants";
+import { getLabelApp } from "@gcVigilantes/utils";
+import {
+  app_text_property,
+  app_text_subtitle,
+} from "@gcVigilantes/utils/default.styles";
 
 export const SettingsInfo = (props: settingsInfoProps) => {
+  const preferences = useSelector((state: RootState) => state.preferences);
   return (
     <>
       <View style={card_styles}>
-        <CardTitle title="Informacion" uppercase />
-        <View
-          style={{
-            width: "100%",
-            justifyContent: "flex-start",
-          }}
-        >
-          <View
-            style={{
-              width: "100%",
-              flexDirection: "row",
-              justifyContent: "flex-start",
-            }}
-          >
-            <Text>{`Autor: `}</Text>
-            <Text
-              style={{
-                color: app_colors.text_gray,
-                fontSize: 12,
-                marginLeft: "5%",
-              }}
-            >
-              {props.autor}
+        <View style={row_styles.container}>
+          <View style={row_styles.column}>
+            <Text style={app_text_subtitle}>
+              {getLabelApp(
+                preferences.language,
+                "app_screen_visit_info_settings_autor"
+              )}
             </Text>
           </View>
-          <View
-            style={{
-              width: "100%",
-              flexDirection: "row",
-              justifyContent: "flex-start",
-            }}
-          >
-            <Text>{`UniqueID:`}</Text>
-            <Text
-              style={{
-                color: app_colors.text_gray,
-                fontSize: 12,
-                marginLeft: "2%",
-              }}
-            >
-              {props.uniqueID}
+          <View style={row_styles.column}>
+            <Text style={app_text_property}>{props.autor}</Text>
+          </View>
+        </View>
+
+        <View style={row_styles.container}>
+          <View style={row_styles.column}>
+            <Text style={app_text_subtitle}>
+              {getLabelApp(
+                preferences.language,
+                "app_screen_visit_info_settings_instalacion"
+              )}
             </Text>
           </View>
-          <View
-            style={{
-              width: "100%",
-              flexDirection: "row",
-              justifyContent: "flex-start",
-            }}
-          >
-            <Text>{`Seccion:`}</Text>
+          <View style={row_styles.column}>
             <Text
-              style={{
-                color: app_colors.text_gray,
-                fontSize: 12,
-                marginLeft: "2%",
-              }}
-            >
-              {props.seccion}
-            </Text>
-            <Text style={{ marginLeft: "2%" }}>{`Num_Int:`}</Text>
-            <Text
-              style={{
-                color: app_colors.text_gray,
-                fontSize: 12,
-                marginLeft: "2%",
-              }}
-            >
-              {props.num_int}
-            </Text>
+              style={app_text_property}
+            >{`${props.seccion}${props.num_int}`}</Text>
           </View>
         </View>
       </View>
+
       <View style={card_styles}>
         <CardTitle title="Ajustes generales" uppercase />
         <Switcher
@@ -96,7 +61,7 @@ export const SettingsInfo = (props: settingsInfoProps) => {
           title="Multiple entrada:"
           value={props.multiple_entrada}
           handleOnChange={(value: boolean) =>
-            props.handleOnchange("multiple_entrada", value ? "1" : "0")
+            props.handleOnchange("multiple", value ? "1" : "0")
           }
         />
       </View>

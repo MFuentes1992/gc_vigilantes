@@ -230,6 +230,14 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               visitVehicles={formValues?.vehicles || []}
               newVisita={[""].includes(uniqueID)}
               estatus={Number.parseInt(formValues?.status_registro) || 1}
+              instalaciones={instalaciones}
+              selectedInstalacion={{
+                idInstalacion: formValues?.idInstalacion || "",
+                idUsuario: formValues?.idUsuario || 0,
+                seccion: formValues?.residencialSeccion || "",
+                numInt: formValues?.residencialNumInterior || "",
+                owner: formValues?.autor || "",
+              }}
               handleOnChange={handleOnChange}
             />
           )}
@@ -273,21 +281,23 @@ export const VisitaInfo = ({ navigation, route }: any) => {
           )}
           {tab === TABS.SETTINGS && (
             <SettingsInfo
-              autor={formValues?.emailAutor || ""}
+              autor={formValues?.autor || ""}
               uniqueID={uniqueID}
-              seccion={formValues?.seccion || ""}
-              num_int={formValues?.num_int || ""}
+              seccion={formValues?.residencialSeccion || ""}
+              num_int={formValues?.residencialNumInterior || ""}
               residencial={formValues?.residencial || ""}
-              calle={formValues?.calle || ""}
-              num_ext={formValues?.num_ext || ""}
-              colonia={formValues?.colonia || ""}
-              ciudad={formValues?.ciudad || ""}
-              estado={formValues?.estado || ""}
-              cp={formValues?.cp || ""}
-              notificaciones={
-                formValues?.notificaciones === SWITCHER_VALUES.TRUE
-              }
-              multiple_entrada={formValues?.multiple === SWITCHER_VALUES.TRUE}
+              calle={formValues?.residencialCalle || ""}
+              num_ext={formValues?.residencialNumExterior || ""}
+              colonia={formValues?.residencialColonia || ""}
+              ciudad={formValues?.residencialCiudad || ""}
+              estado={formValues?.residencialEstado || ""}
+              cp={formValues?.residencialCP || ""}
+              notificaciones={[...SWITCHER_VALUES.TRUE].includes(
+                formValues?.notificaciones
+              )}
+              multiple_entrada={[...SWITCHER_VALUES.TRUE].includes(
+                formValues?.multiple
+              )}
               handleOnchange={handleOnChange}
             />
           )}

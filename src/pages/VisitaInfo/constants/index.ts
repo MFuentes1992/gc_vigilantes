@@ -1,8 +1,10 @@
 import { TTipoIngreso } from "@gcVigilantes/store/TipoIngreso/types";
 import { TipoVisita } from "@gcVigilantes/store/TipoVisitas/types";
+import { Instalacion } from "@gcVigilantes/store/Vigilancia/types";
 import { VehiclesResType } from "@gcVigilantes/store/Visita/types";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { ViewStyle } from "react-native";
+import { StyleSheet } from "react-native";
 
 export const TABS = {
   MAIN: "main",
@@ -18,8 +20,8 @@ export const TIPO_INGRESO = {
 };
 
 export const SWITCHER_VALUES = {
-  TRUE: "1",
-  FALSE: "0",
+  TRUE: [1, "1", "true"],
+  FALSE: [0, "0", "false"],
 };
 
 export const NEW_VEHICLE = {
@@ -67,6 +69,8 @@ export type MainInfoProps = {
   visitVehicles: VehiclesResType[];
   estatus: number;
   newVisita: boolean;
+  selectedInstalacion: Instalacion;
+  instalaciones: Instalacion[];
   handleOnChange: (key: string, value: string) => void;
 };
 
@@ -143,3 +147,18 @@ export const DATE_TYPES = {
   START: 1,
   END: 2,
 };
+
+export const row_styles = StyleSheet.create({
+  container: {
+    position: "relative",
+    width: "100%",
+    flexDirection: "row",
+  },
+  column: {
+    position: "relative",
+    width: "50%",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "flex-start",
+  },
+});
