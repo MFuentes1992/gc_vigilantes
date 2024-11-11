@@ -192,7 +192,7 @@ export const VisitaDetails = ({
               },
             ]}
           >
-            INVITADOS
+            PEATONES
           </Text>
         </TouchableOpacity>
         <TouchableOpacity

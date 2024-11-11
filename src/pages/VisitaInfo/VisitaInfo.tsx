@@ -21,7 +21,13 @@ import {
 } from "@gcVigilantes/store/Visita/api";
 import { VehiclesResType } from "@gcVigilantes/store/Visita/types";
 import { setLoading } from "@gcVigilantes/store/UI";
-import { ENDPOINTS, getLabelApp, ROUTES } from "@gcVigilantes/utils";
+import {
+  ENDPOINTS,
+  getLabelApp,
+  ROUTES,
+  visitaNavigatorBack,
+  visitaNavigatorForward,
+} from "@gcVigilantes/utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { clearVisita } from "@gcVigilantes/store/Visita";
 import { setShowAlert } from "@gcVigilantes/store/Alerts";
@@ -271,33 +277,39 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               handleOnchange={handleOnChange}
             />
           )}
-          {["1"].includes(formValues?.estatusVisita) && (
+          {[1].includes(formValues?.estatusVisita) && (
             <FormSaveButtons
-              onCancel={() => {}}
-              onSave={() => {
-                const payload = {
-                  idVisita: formValues?.idVisita,
-                  tipoVisita: formValues?.idTipoVisita,
-                  tipoIngreso: formValues?.idTipoIngreso,
-                  fechaIngreso: `${formValues?.fechaIngreso}:00:00`,
-                  fechaSalida: `${formValues?.fechaSalida}:00:00`,
-                  multiEntrada: formValues?.multiple,
-                  notificaciones: formValues?.notificaciones,
-                  nombreVisita: formValues?.nombre,
-                  vehicles: JSON.stringify(
-                    [...formValues?.vehicles].map((vehicle) => ({
-                      vehicle_id: vehicle.vehicle_id,
-                      brand: vehicle.marca,
-                      model: vehicle.modelo,
-                      plates: vehicle.placas,
-                      year: vehicle.anio,
-                      color: vehicle.color,
-                    }))
-                  ),
-                };
-                console.log("payload ======>", payload);
-                //  dispatch(updateVisita(payload) as any);
+              onCancel={() => {
+                if ([TABS.MAIN].includes(tab)) {
+                  navigation.navigate(ROUTES.HOME);
+                } else {
+                  setTab((prev) => visitaNavigatorBack(prev));
+                }
               }}
+              onSave={() => {
+                if ([TABS.SETTINGS].includes(tab)) {
+                  // TODO: Update visita or create visita.
+                } else {
+                  setTab((prev) => visitaNavigatorForward(prev));
+                }
+              }}
+              saveText={getLabelApp(
+                preferences.language,
+                [TABS.SETTINGS].includes(tab)
+                  ? "app_screen_visit_info_save_button_complete"
+                  : "app_screen_visit_info_save_button_next"
+              )}
+              cancelText={
+                [TABS.MAIN].includes(tab)
+                  ? getLabelApp(
+                      preferences.language,
+                      "app_screen_visit_info_cancel_button"
+                    )
+                  : getLabelApp(
+                      preferences.language,
+                      "app_screen_visit_info_cancel_button_back"
+                    )
+              }
             />
           )}
         </KeyboardAwareScrollView>

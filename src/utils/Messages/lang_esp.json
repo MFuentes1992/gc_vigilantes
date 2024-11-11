@@ -20,5 +20,9 @@
   "app_comp_filters_drawer_apply": "Aplicar",
   "app_comp_filters_drawer_clear": "Limpiar",
   "app_screen_visit_info_register_vehicle": "Registar vehículo.",
-  "app_screen_visit_info_edit_vehicle": "Editar vehículo."
+  "app_screen_visit_info_edit_vehicle": "Editar vehículo.",
+  "app_screen_visit_info_save_button_next": "Siguiente",
+  "app_screen_visit_info_save_button_complete": "Registrar",
+  "app_screen_visit_info_cancel_button": "Cancelar",
+  "app_screen_visit_info_cancel_button_back": "Regresar"
 }

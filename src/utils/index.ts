@@ -1,3 +1,4 @@
+import { TABS } from "@gcVigilantes/pages/VisitaInfo/constants";
 import lang_es from "@gcVigilantes/utils/Messages/lang_esp.json";
 
 export const ENDPOINTS = {
@@ -142,4 +143,32 @@ export const datePoller = (callback: () => void) => {
   setInterval(() => {
     callback();
   }, 1000);
+};
+
+export const visitaNavigatorForward = (tab: string) => {
+  switch (tab) {
+    case TABS.MAIN:
+      return TABS.VEHICLES;
+    case TABS.VEHICLES:
+      return TABS.DATE;
+    case TABS.DATE:
+      return TABS.GUEST;
+    case TABS.GUEST:
+      return TABS.SETTINGS;
+  }
+  return TABS.MAIN;
+};
+
+export const visitaNavigatorBack = (tab: string) => {
+  switch (tab) {
+    case TABS.SETTINGS:
+      return TABS.GUEST;
+    case TABS.GUEST:
+      return TABS.DATE;
+    case TABS.DATE:
+      return TABS.VEHICLES;
+    case TABS.VEHICLES:
+      return TABS.MAIN;
+  }
+  return TABS.MAIN;
 };
