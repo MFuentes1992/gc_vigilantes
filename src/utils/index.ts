@@ -8,6 +8,7 @@ export const ENDPOINTS = {
   CATALOG_TIPO_VISITAS: "/visita/catalogs/GetTipoVisita/index.php",
   CATALOG_TIPO_INGRESO: "/visita/catalogs/GetTipoIngreso/index.php",
   VISITAS: {
+    CREATE: "/visita/crear/index.php",
     BY_UNIQUEID: "/visita/read-qr/index.php",
     VEHICLES: "/visita/getVisitVehicles/index.php?qr={qr}",
     UPDATE: "/visita/update/index.php",
@@ -87,12 +88,12 @@ export const militarToTwelveHours = (
   };
 };
 
-export const toMilitarHours = (hour: string, ampm: string) => {
+export const toMilitarHours = (hour: string) => {
   const hourInt = parseInt(hour.substring(0, 2));
-  if (ampm === "PM") {
-    return `${hourInt + 12}:${hour.substring(3, 5)}`;
+  if (hour.includes("PM") && hourInt < 12) {
+    return `${hourInt + 12}:${hour.substring(3, 5)}:00`;
   }
-  return hour;
+  return `${hour.replace(/AM|PM/g, "").replace(" ", ":00")}`;
 };
 
 export const stringTemplateAddQuery = (cadena: string, object: any) => {

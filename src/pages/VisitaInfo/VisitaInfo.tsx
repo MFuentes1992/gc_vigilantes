@@ -14,6 +14,7 @@ import { DateInfo } from "./DateInfo";
 import { GuestInfo } from "./GuestInfo";
 import { SettingsInfo } from "./SettingsInfo";
 import {
+  createVisita,
   getVehicles,
   getVisitaByUniqueID,
   logVisitaIngressEgress,
@@ -25,6 +26,7 @@ import {
   ENDPOINTS,
   getLabelApp,
   ROUTES,
+  toMilitarHours,
   visitaNavigatorBack,
   visitaNavigatorForward,
 } from "@gcVigilantes/utils";
@@ -313,6 +315,29 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               onSave={() => {
                 if ([TABS.SETTINGS].includes(tab)) {
                   // TODO: Update visita or create visita.
+                  if ([""].includes(uniqueID)) {
+                    const payload = {
+                      idUsuario: formValues?.idUsuario,
+                      idTipoVisita: formValues?.idTipoVisita,
+                      idTipoIngreso: formValues?.idTipoIngreso,
+                      idInstalacion: formValues?.idInstalacion,
+                      fechaIngreso: `${
+                        formValues?.fechaIngreso.split("T")[0]
+                      }T${toMilitarHours(formValues?.fechaIngresoHora)}`,
+                      fechaSalida: `${
+                        formValues?.fechaSalida.split("T")[0]
+                      }T${toMilitarHours(formValues?.fechaSalidaHora)}`,
+                      multiple: formValues?.multiple,
+                      notificaciones: formValues?.notificaciones,
+                      appGenerado: 0,
+                      nombreVisita: formValues?.nombre,
+                      vehiculos: JSON.stringify(formValues?.vehicles),
+                      peatones: JSON.stringify(formValues?.peatones),
+                    };
+                    console.log("PAYLOAD::VISITA::CREATE", payload);
+
+                    dispatch(createVisita(payload) as any);
+                  }
                 } else {
                   setTab((prev) => visitaNavigatorForward(prev));
                 }

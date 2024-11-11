@@ -81,10 +81,7 @@ export const DateInfo = ({
                   handleOnChange("dateTypeInput", DATE_TYPES.END);
                   handleOnChange(
                     "fechaIngreso",
-                    `${day.dateString}T${toMilitarHours(
-                      horaIngreso,
-                      startHourAmPm
-                    )}`
+                    `${day.dateString}T${toMilitarHours(horaIngreso)}`
                   );
                   break;
                 case DATE_TYPES.END:
@@ -97,10 +94,7 @@ export const DateInfo = ({
                   handleOnChange("dateTypeInput", DATE_TYPES.START);
                   handleOnChange(
                     "fechaSalida",
-                    `${day.dateString}T${toMilitarHours(
-                      horaSalida,
-                      endHourAmPm
-                    )}`
+                    `${day.dateString}T${toMilitarHours(horaSalida)}`
                   );
                   break;
                 default:

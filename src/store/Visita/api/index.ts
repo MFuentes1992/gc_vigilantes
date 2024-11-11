@@ -107,3 +107,40 @@ export const logVisitaIngressEgress = async (
     body: formData,
   });
 };
+
+export const createVisita =
+  (visita: { [key: string]: any }) => (dispatch: any) => {
+    const formValues = new FormData();
+    Object.keys(visita).forEach((key) => {
+      formValues.append(key, visita[key]);
+    });
+    dispatch(setLoading(true));
+    const url = `${ENDPOINTS.BASE_URL}${ENDPOINTS.VISITAS.CREATE}`;
+    fetch(url, {
+      method: "POST",
+      body: formValues,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        dispatch(setLoading(false));
+        dispatch(
+          setShowAlert({
+            showAlert: true,
+            title: "Visita creada.",
+            message: data.message,
+            type: ALERT_TYPES.SUCCESS,
+          })
+        );
+      })
+      .catch((error) => {
+        dispatch(setLoading(false));
+        dispatch(
+          setShowAlert({
+            showAlert: false,
+            title: "Error",
+            message: "Algo salió mal, intente de nuevo",
+            type: ALERT_TYPES.ERROR,
+          })
+        );
+      });
+  };
