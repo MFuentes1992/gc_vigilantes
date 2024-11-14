@@ -18,7 +18,10 @@ import {
   app_text_title_normal,
 } from "@gcVigilantes/utils/default.styles";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
-import { getCasetaInfo } from "@gcVigilantes/store/Vigilancia/api";
+import {
+  getCasetaInfo,
+  getInstalacionesByRecinto,
+} from "@gcVigilantes/store/Vigilancia/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { clearCasetaInfo } from "@gcVigilantes/store/Vigilancia";
 import { setScreen } from "@gcVigilantes/store/Pagination";
@@ -39,18 +42,17 @@ export const Home = ({ navigation }: any) => {
     navigation.addListener("focus", (e: any) => {
       dispatch(setScreen(ROUTES.HOME));
     });
+    AsyncStorage.getItem("Access_Code")
+      .then((code) => {
+        dispatch(getCasetaInfo(code || "") as any);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
 
   useEffect(() => {
-    if ([""].includes(casetaInfo.residenceName)) {
-      AsyncStorage.getItem("Access_Code")
-        .then((code) => {
-          dispatch(getCasetaInfo(code || "") as any);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    } else {
+    if (![""].includes(casetaInfo.residenceName)) {
       setHomeData((prev) => ({
         residenceAddress: casetaInfo.residenceAddress,
         residenceExt: casetaInfo.residenceExt,
@@ -69,6 +71,7 @@ export const Home = ({ navigation }: any) => {
       });
       // Save the interval reference
       intervalRef.current = interval;
+      dispatch(getInstalacionesByRecinto(casetaInfo.residenceId) as any);
     }
     return () => {
       clearInterval(intervalRef.current);

@@ -1,34 +1,44 @@
+import { VisitaPeaton } from "@gcVigilantes/pages/VisitaInfo/constants";
+
 export type VehiclesResType = {
-  vehicle_id: string;
+  id?: string;
+  idVisita?: string;
+  conductor: string;
   marca: string;
   modelo: string;
   anio: string;
   placas: string;
   color: string;
+  fechaRegistro?: string;
+  fechaActualizacion?: string;
+  estatusRegistro?: string;
 };
 
 export interface IVisita {
-  visita_id: string;
-  nombre: string;
-  desde: string;
-  hasta: string;
-  id_tipo_ingreso: string;
-  multiple_entrada: string;
+  visitaId: string;
+  idTipoVisita: string;
+  idTipoIngreso: string;
+  idUsuario: string;
+  fechaIngreso: string;
+  fechaSalida: string;
+  multiple: string;
   notificaciones: string;
-  nameAutor: string;
+  appGenerado: string;
+  vigenciaQR: string;
+  uniqueId: string;
+  autor: string;
   emailAutor: string;
-  id_tipo_visita: string;
-  uniqueID: string;
-  seccion: string;
-  num_int: string;
-  residencial: string;
-  calle: string;
-  num_ext: string;
-  colonia: string;
-  ciudad: string;
-  estado: string;
-  cp: string;
-  estatus_registro: string;
+  residencialSeccion: string;
+  residencialNumInterior: string;
+  residencialNumExterior: string;
+  residencialCalle: string;
+  residencialColonia: string;
+  residencialCiudad: string | null;
+  residencialEstado: string;
+  residencialCP: string;
+  residencialNombre: string;
+  nombre: string;
+  estatusVisita: string;
   vehicles: VehiclesResType[];
-  [key: string]: string | VehiclesResType[];
+  pedestrians: VisitaPeaton[];
 }

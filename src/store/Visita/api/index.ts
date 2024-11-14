@@ -6,17 +6,17 @@ import {
 } from "@gcVigilantes/utils";
 import { setVisita, setVehicles } from "@gcVigilantes/store/Visita";
 import { IVisita, VehiclesResType } from "../types";
-import data_mock from "./data.json";
 import { setShowAlert } from "@gcVigilantes/store/Alerts";
 import { ALERT_TYPES } from "@gcVigilantes/Components/Alerts/constants";
 import { setLoading } from "@gcVigilantes/store/UI";
 
 export const getVisitaByUniqueID =
-  (uniqueID: string, id_caseta: string, navigation: any) => (dispatch: any) => {
+  (uniqueID: string, navigation: any) => (dispatch: any) => {
     const url = stringTemplateAddQuery(
       `${ENDPOINTS.BASE_URL}${ENDPOINTS.VISITAS.BY_UNIQUEID}`,
-      { qr: uniqueID, id_caseta }
+      { uniqueId: uniqueID }
     );
+    console.log("VISITA::URL::UNIQUE", url);
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
@@ -26,11 +26,14 @@ export const getVisitaByUniqueID =
           });
           return;
         }
-        const [visita] = data;
-        dispatch(setVisita(visita as IVisita));
+        // const [visita] = data;
+        dispatch(setVisita(data as IVisita));
       })
       .catch((error) => {
         console.error("Error:", error);
+        navigation.navigate(ROUTES.HOME, {
+          error: getLabelApp("es", "app_error_message"),
+        });
       });
   };
 
@@ -107,3 +110,43 @@ export const logVisitaIngressEgress = async (
     body: formData,
   });
 };
+
+export const createVisita =
+  (visita: { [key: string]: any }) => (dispatch: any) => {
+    const formValues = new FormData();
+    Object.keys(visita).forEach((key) => {
+      formValues.append(key, visita[key]);
+    });
+    dispatch(setLoading(true));
+    const url = `${ENDPOINTS.BASE_URL}${ENDPOINTS.VISITAS.CREATE}`;
+    fetch(url, {
+      method: "POST",
+      body: formValues,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const { uniqueID } = data;
+        logVisitaIngressEgress(uniqueID, visita.id_caseta, "entry").then(() => {
+          dispatch(setLoading(false));
+          dispatch(
+            setShowAlert({
+              showAlert: true,
+              title: "Visita creada.",
+              message: data.message,
+              type: ALERT_TYPES.SUCCESS,
+            })
+          );
+        });
+      })
+      .catch((error) => {
+        dispatch(setLoading(false));
+        dispatch(
+          setShowAlert({
+            showAlert: false,
+            title: "Error",
+            message: "Algo salió mal, intente de nuevo",
+            type: ALERT_TYPES.ERROR,
+          })
+        );
+      });
+  };

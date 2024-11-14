@@ -8,42 +8,43 @@ import {
   app_text_body,
   app_text_title,
 } from "@gcVigilantes/utils/default.styles";
-import {
-  getTimeZone,
-  militarToTwelveHours,
-  timeFormat,
-  toMilitarHours,
-} from "@gcVigilantes/utils";
+import { getTimeZone, toMilitarHours } from "@gcVigilantes/utils";
 import { HourPicker } from "@gcVigilantes/Components/HourPicker/HourPicker";
 import { SingleButton } from "@gcVigilantes/Components/SingleButton/SingleButton";
 import { Picker } from "@react-native-picker/picker";
 
 export const DateInfo = ({
-  fromDate,
-  toDate,
-  fromHour,
-  toHour,
+  fechaIngreso,
+  fechaSalida,
+  horaIngreso,
+  horaSalida,
   estatus,
+  dateTypeInput,
+  edit,
   handleOnChange,
 }: DateInfoProps) => {
+  console.log("DateInfo props =====>", {
+    fechaIngreso,
+    fechaSalida,
+    horaIngreso,
+    horaSalida,
+    estatus,
+    dateTypeInput,
+  });
+
   const timeZone = new Date().getTimezoneOffset();
-  const [dateEdit, setDateEdit] = React.useState<boolean>(false);
-  const [startDate, setStartDate] = React.useState<string>(fromDate || "");
-  const [endDate, setEndDate] = React.useState<string>(toDate || "");
-  const [startHour, setStartHour] = React.useState<number>(
-    militarToTwelveHours(Number.parseInt(`${fromHour}`, 10) || 0).hour
+  const [startHour, setStartHour] = React.useState<string>(
+    horaIngreso.substring(0, 5)
   );
-  const [endHour, setEndHour] = React.useState<number>(
-    militarToTwelveHours(Number.parseInt(`${toHour}`, 10) || 0).hour
+  const [endHour, setEndHour] = React.useState<string>(
+    horaSalida.substring(0, 5)
   );
   const [startHourAmPm, setStartHourAmPm] = React.useState<string>(
-    militarToTwelveHours(Number.parseInt(`${fromHour}`, 10) || 0).ampm
+    horaIngreso.replaceAll(/[^a-zA-Z]/g, "")
   );
   const [endHourAmPm, setEndHourAmPm] = React.useState<string>(
-    militarToTwelveHours(Number.parseInt(`${toHour}`, 10) || 0).ampm
+    horaSalida.replaceAll(/[^a-zA-Z]/g, "")
   );
-  const [dateType, setDateType] = React.useState<number>(DATE_TYPES.START);
-  const [dateRange, setDateRange] = React.useState<{ [key: string]: any }>({});
   const [hourPicker, setHourPicker] = React.useState<{
     type: "start" | "end";
     visible: boolean;
@@ -53,60 +54,6 @@ export const DateInfo = ({
     visible: boolean;
   }>({ type: "start", visible: false });
 
-  useEffect(() => {
-    if (startDate !== "" && endDate !== "") {
-      const diffDays = Math.abs(
-        new Date(endDate || "").getDate() - new Date(startDate || "").getDate()
-      );
-      let tmp = {} as any;
-      new Array(diffDays).fill(0).forEach((_, index) => {
-        const year = new Date(startDate || "").getFullYear();
-        const month = new Date(startDate || "").getMonth() + 1;
-        const day = new Date(startDate || "").getDate() + index + 1;
-        tmp[
-          `${new Date(`${year}-${month}-${day}`).toISOString().split("T")[0]}`
-        ] = {
-          startingDay: index === 0,
-          endingDay: false,
-          color:
-            index === 0 ? app_colors.calendar_active : app_colors.calendar_pale,
-          textColor: app_colors.white,
-        };
-      });
-      tmp[`${endDate}`] = {
-        startingDay: false,
-        endingDay: true,
-        color: app_colors.calendar_active,
-        textColor: app_colors.white,
-      };
-      setDateRange(tmp);
-      handleOnChange("fromDate", startDate);
-      handleOnChange("toDate", endDate);
-    }
-  }, [startDate, endDate]);
-
-  useEffect(() => {
-    handleOnChange(
-      "fromHour",
-      `${
-        toMilitarHours(Number.parseInt(`${startHour}`, 10), startHourAmPm) < 10
-          ? `0${toMilitarHours(
-              Number.parseInt(`${startHour}`, 10),
-              startHourAmPm
-            )}`
-          : toMilitarHours(Number.parseInt(`${startHour}`, 10), startHourAmPm)
-      }`
-    );
-    handleOnChange(
-      "toHour",
-      `${
-        toMilitarHours(Number.parseInt(`${endHour}`, 10), endHourAmPm) < 10
-          ? `0${toMilitarHours(Number.parseInt(`${endHour}`, 10), endHourAmPm)}`
-          : toMilitarHours(Number.parseInt(`${endHour}`, 10), endHourAmPm)
-      }`
-    );
-  }, [startHour, endHour, startHourAmPm, endHourAmPm]);
-
   const openHourPicker = (type: "start" | "end") => {
     setHourPicker({ type, visible: true });
   };
@@ -114,61 +61,47 @@ export const DateInfo = ({
   return (
     <>
       <View style={card_styles}>
-        <CardTitle
-          title="Vigencia"
-          uppercase
-          editIcon={estatus !== 0}
-          handleEdit={() => {
-            Alert.alert("Fecha de vigencia", "¿Cual fecha deseas editar?", [
-              {
-                text: "Cancelar",
-                onPress: () => console.log("Cancel Pressed"),
-                style: "cancel",
-              },
-              {
-                text: "Inicio",
-                onPress: () => {
-                  setDateType(DATE_TYPES.START);
-                },
-              },
-              {
-                text: "Fin",
-                onPress: () => {
-                  setDateType(DATE_TYPES.END);
-                },
-              },
-            ]);
-            setDateEdit(true);
-          }}
-        />
+        <CardTitle title="Vigencia" uppercase />
         <Calendar
           style={{ width: "100%" }}
-          markingType="period"
           markedDates={{
-            ...dateRange,
+            [fechaIngreso.toString().split("T")[0]]: {
+              selected: true,
+              selectedColor: app_colors.secondary_badge,
+            },
+            [fechaSalida.toString().split("T")[0]]: {
+              selected: true,
+              selectedColor: app_colors.red_inactive_invalid,
+            },
           }}
           onDayPress={(day: any) => {
-            if (dateType === DATE_TYPES.START && dateEdit) {
-              setStartDate(`${day.dateString}`);
-              const year = new Date(day.dateString).getFullYear();
-              const month = new Date(day.dateString).getMonth() + 1;
-              const currDay = new Date(day.dateString).getDate() + 2;
-              setEndDate(`${year}-${month}-${currDay}`);
-              setDateEdit(false);
-            } else if (dateType === DATE_TYPES.END && dateEdit) {
-              if (new Date(day.dateString) < new Date(startDate)) {
-                Alert.alert(
-                  "Error",
-                  "La fecha de fin no puede ser menor a la de inicio"
-                );
-                return;
+            if (edit) {
+              switch (dateTypeInput) {
+                case DATE_TYPES.START:
+                  handleOnChange("dateTypeInput", DATE_TYPES.END);
+                  handleOnChange(
+                    "fechaIngreso",
+                    `${day.dateString}T${toMilitarHours(horaIngreso)}`
+                  );
+                  break;
+                case DATE_TYPES.END:
+                  if (
+                    new Date(day.dateString) <
+                    new Date(fechaIngreso.split("T")[0])
+                  ) {
+                    return;
+                  }
+                  handleOnChange("dateTypeInput", DATE_TYPES.START);
+                  handleOnChange(
+                    "fechaSalida",
+                    `${day.dateString}T${toMilitarHours(horaSalida)}`
+                  );
+                  break;
+                default:
+                  break;
               }
-              setEndDate(`${day.dateString}`);
-              setDateEdit(false);
             }
           }}
-          current={startDate.split("T")[0]}
-          minDate={fromDate?.split("T")[0]}
           shouldRasterizeIOS={true}
         />
       </View>
@@ -185,18 +118,20 @@ export const DateInfo = ({
           <TouchableOpacity onPress={() => estatus && openHourPicker("start")}>
             <Text
               style={{
+                position: "relative",
+                top: -10,
                 fontSize: 28,
                 color: app_colors.black,
                 fontWeight: "bold",
               }}
             >
-              {`${startHour}:00`}
+              {`${horaIngreso.substring(0, 5)}`}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setFormatPicker({ type: "start", visible: true })}
           >
-            <Text style={app_text_title}>{` ${startHourAmPm}`}</Text>
+            <Text style={[app_text_title]}>{` ${startHourAmPm}`}</Text>
           </TouchableOpacity>
           <Text style={app_text_body}>{getTimeZone(timeZone)}</Text>
         </View>
@@ -215,9 +150,10 @@ export const DateInfo = ({
                 fontSize: 28,
                 color: app_colors.black,
                 fontWeight: "bold",
+                top: -5,
               }}
             >
-              {`${endHour}:00`}
+              {`${horaSalida.substring(0, 5)}`}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -235,15 +171,22 @@ export const DateInfo = ({
       >
         <View>
           <HourPicker
-            totalHours={12}
-            currValue={hourPicker.type === "start" ? startHour : endHour}
-            handleChange={(value: number) => {
+            totalHours={24}
+            currValue={
+              hourPicker.type === "start"
+                ? horaIngreso.substring(0, 5)
+                : horaSalida.substring(0, 5)
+            }
+            handleChange={(value: string) => {
               switch (hourPicker.type) {
                 case "start":
-                  setStartHour(value);
+                  handleOnChange(
+                    "fechaIngresoHora",
+                    `${value} ${startHourAmPm}`
+                  );
                   break;
                 case "end":
-                  setEndHour(value);
+                  handleOnChange("fechaSalidaHora", `${value} ${endHourAmPm}`);
                   break;
                 default:
                   break;
@@ -269,9 +212,17 @@ export const DateInfo = ({
             switch (formatPicker.type) {
               case "start":
                 setStartHourAmPm(value);
+                handleOnChange(
+                  "fechaIngresoHora",
+                  `${horaIngreso.replaceAll(/AM|PM/g, value)}`
+                );
                 break;
               case "end":
                 setEndHourAmPm(value);
+                handleOnChange(
+                  "fechaSalidaHora",
+                  `${horaSalida.replaceAll(/AM|PM/g, value)}`
+                );
                 break;
               default:
                 break;

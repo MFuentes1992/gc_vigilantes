@@ -1,28 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   FontAwesome,
   FontAwesome5,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import * as Animatable from "react-native-animatable";
 import { CardTitle } from "@gcVigilantes/Components/CardTitle/CardTitle";
 import RadioGroup from "@gcVigilantes/Components/RadioGroup";
 
-import { TextInput, View, Image, Text, Modal } from "react-native";
-import {
-  MainInfoProps,
-  TIPO_INGRESO,
-  card_styles,
-  getVehicleInfoStyles,
-  mainInfoVehicleScrollStyles,
-} from "./constants";
+import { TextInput, View, Text } from "react-native";
+import { MainInfoProps, card_styles } from "./constants";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
-import { ScrollView } from "react-native-gesture-handler";
-import { VehicleCard } from "@gcVigilantes/Components/VehicleCard/VehicleCard";
-import { useSelector } from "react-redux";
-import { RootState } from "@gcVigilantes/store";
-import { VehiclesResType } from "@gcVigilantes/store/Visita/types";
-import { EditVehicles } from "@gcVigilantes/Components/EditVehicles/EditVehicles";
+import { InstalationPicker } from "@gcVigilantes/Components/InstalationPicker/InstalationPicker";
+import { Instalacion } from "@gcVigilantes/store/Vigilancia/types";
 
 export const TipoVisitasIcon: { [key: string]: React.ReactNode } = {
   ["1"]: <FontAwesome name="user" size={18} color="darkgray" />,
@@ -46,33 +35,46 @@ export const MainInfo = ({
   nombreVisita,
   catalogVisitas,
   catalogIngreso,
-  visitVehicles,
   estatus,
+  newVisita,
+  selectedInstalacion,
+  instalaciones,
   handleOnChange,
 }: MainInfoProps) => {
-  const [nombreVisitaState, setNombreVisita] = useState<string>(nombreVisita);
   // -- Disabling and enabling Cards
-  const [tipoVisitaDisabled, setTipoVisitaDisabled] = useState<boolean>(true);
-  const [tipoIngresoDisabled, setTipoIngresoDisabled] = useState<boolean>(true);
-  const [nombreVisitaDisabled, setNombreVisitaDisabled] =
-    useState<boolean>(true);
-  // -- Vehicle info
+  const [tipoVisitaDisabled, setTipoVisitaDisabled] = useState<boolean>(
+    !newVisita
+  );
+  const [tipoIngresoDisabled, setTipoIngresoDisabled] = useState<boolean>(
+    !newVisita
+  );
+  const [nombreVisitaDisabled, setNombreVisitaDisabled] = useState<boolean>(
+    !newVisita
+  );
 
-  const [vehicles, setVehicles] = useState<VehiclesResType[]>([]);
-  const [editVehicle, setEditVehicle] = useState<{
-    id: number | undefined;
-    visible: boolean;
-  }>({
-    id: undefined,
-    visible: false,
-  });
-
-  useEffect(() => {
-    setVehicles(visitVehicles);
-  }, [visitVehicles]);
+  const handleOnChangeInstalacion = (_instalacion: string) => {
+    const instalacion = JSON.parse(_instalacion) as Instalacion;
+    const idInstalacion = instalacion.idInstalacion;
+    handleOnChange("idInstalacion", idInstalacion);
+    const idUsuario = instalacion.idUsuario;
+    handleOnChange("idUsuario", idUsuario);
+    const owner = instalacion.owner;
+    handleOnChange("autor", owner);
+    const seccion = instalacion.seccion;
+    handleOnChange("residencialSeccion", seccion);
+    const numInt = instalacion.numInt;
+    handleOnChange("residencialNumInterior", numInt);
+  };
 
   return (
     <View>
+      {newVisita && (
+        <InstalationPicker
+          instalaciones={instalaciones}
+          selectedInstalacion={selectedInstalacion}
+          handleOnChange={handleOnChangeInstalacion}
+        />
+      )}
       <View style={card_styles}>
         <CardTitle
           title="tipo de visita"
@@ -86,12 +88,10 @@ export const MainInfo = ({
           options={catalogVisitas.map((catalog) => ({
             id: catalog.id,
             label: catalog.tipo_visita,
-            icon: TipoVisitasIcon[
-              catalog.tipo_visita
-            ] as unknown as React.ReactNode,
+            icon: TipoVisitasIcon[catalog.id] as unknown as React.ReactNode,
           }))}
           handleChange={(value: string) => {
-            handleOnChange("tipo_visita", value);
+            handleOnChange("idTipoVisita", value);
           }}
         />
       </View>
@@ -120,8 +120,7 @@ export const MainInfo = ({
             value={nombreVisita}
             placeholder="Ingrese aqui el nombre de la visita"
             onChangeText={(value: string) => {
-              setNombreVisita(value);
-              handleOnChange("nombre_visita", value);
+              handleOnChange("nombre", value);
             }}
             autoCapitalize="words"
             maxLength={50}
@@ -154,54 +153,22 @@ export const MainInfo = ({
           selectedValue={tipoIngreso}
           disabled={tipoIngresoDisabled}
           handleChange={(value: string) => {
-            handleOnChange("tipo_ingreso", value);
+            handleOnChange("idTipoIngreso", value);
           }}
         />
       </View>
-      {tipoIngreso == TIPO_INGRESO.VEHICULO.id && (
-        <>
-          <ScrollView
-            style={mainInfoVehicleScrollStyles}
-            contentContainerStyle={getVehicleInfoStyles(vehicles)}
-            horizontal
-          >
-            {vehicles?.map((vehicle: VehiclesResType, index: number) => (
-              <VehicleCard
-                key={vehicle.placas}
-                id={index}
-                vehicle={vehicle}
-                openModal={(id) => setEditVehicle({ id, visible: true })}
-              />
-            ))}
-          </ScrollView>
-        </>
-      )}
-      {editVehicle.visible && (
-        <EditVehicles
-          id={editVehicle.id || 0}
-          visible={editVehicle.visible}
-          brand={vehicles[editVehicle?.id || 0]?.marca}
-          model={vehicles[editVehicle?.id || 0]?.modelo}
-          year={vehicles[editVehicle?.id || 0]?.anio}
-          color={vehicles[editVehicle?.id || 0]?.color}
-          plate={vehicles[editVehicle?.id || 0]?.placas}
-          handleOnChange={(index: number, key: string, value: string) => {
-            const newVehicles = vehicles?.map((vehicle, i) => {
-              if (i === index) {
-                return {
-                  ...vehicle,
-                  [key]: value,
-                };
-              }
-              return vehicle;
-            });
-            handleOnChange("vehicles", newVehicles as any);
-          }}
-          handleClose={() => {
-            setEditVehicle({ id: undefined, visible: false });
-          }}
-        />
-      )}
     </View>
   );
+};
+
+MainInfo.defaultProps = {
+  catalogVisitas: [],
+  catalogIngreso: [],
+  tipoVisita: "",
+  tipoIngreso: "",
+  nombreVisita: "",
+  visitVehicles: [],
+  estatus: 0,
+  newVisita: false,
+  handleOnChange: () => {},
 };

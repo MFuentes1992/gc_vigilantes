@@ -38,6 +38,14 @@ export const Footer = () => {
           <TouchableOpacity
             onPress={() => {
               setSelectedTab(0);
+              navigate.navigate({
+                name: ROUTES.VISIT_INFO,
+                params: {
+                  uniqueID: "",
+                  uri: "",
+                  tabAction: "",
+                },
+              } as never);
             }}
           >
             <FontAwesome

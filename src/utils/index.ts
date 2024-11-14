@@ -1,3 +1,4 @@
+import { TABS } from "@gcVigilantes/pages/VisitaInfo/constants";
 import lang_es from "@gcVigilantes/utils/Messages/lang_esp.json";
 
 export const ENDPOINTS = {
@@ -7,7 +8,8 @@ export const ENDPOINTS = {
   CATALOG_TIPO_VISITAS: "/visita/catalogs/GetTipoVisita/index.php",
   CATALOG_TIPO_INGRESO: "/visita/catalogs/GetTipoIngreso/index.php",
   VISITAS: {
-    BY_UNIQUEID: "/visita/read-qr/index.php",
+    CREATE: "/visita/crear/index.php",
+    BY_UNIQUEID: "/visita/consulta/uniqueId/index.php",
     VEHICLES: "/visita/getVisitVehicles/index.php?qr={qr}",
     UPDATE: "/visita/update/index.php",
     LOG_INGRESS: "/visita/read-qr/index.php",
@@ -16,6 +18,7 @@ export const ENDPOINTS = {
     CODE: "/vigilante/activationCode/index.php",
     INFO: "/vigilante/caseta-info/index.php",
     LOGS: "/vigilante/logs/by-caseta/index.php",
+    INSTALACIONES: "/vigilante/instalaciones/index.php",
   },
 };
 
@@ -69,27 +72,24 @@ export const getLabelApp = (lang: string, key: string) => {
   return labels[key];
 };
 
-export const militarToTwelveHours = (
-  hour: number
-): { hour: number; ampm: string } => {
-  const ampm = hour >= 12 ? "PM" : "AM";
-  if (hour > 12) {
-    return {
-      hour: hour - 12,
-      ampm,
-    };
+export const militarToTwelveHours = (hour: string) => {
+  const hourInt = parseInt(hour.split(":")[0]);
+  const ampm = hourInt >= 12 ? "PM" : "AM";
+  if (hourInt > 12) {
+    return `${hourInt - 12}:${hour.split(":")[1]} ${ampm}`;
   }
-  return {
-    hour,
-    ampm,
-  };
+  return `${hourInt}:${hour.split(":")[1]} ${ampm}`;
 };
 
-export const toMilitarHours = (hour: number, ampm: string) => {
-  if (ampm === "PM") {
-    return hour + 12;
+export const toMilitarHours = (hour: string) => {
+  const hourInt = parseInt(hour.split(":")[0]);
+  if (hour.includes("PM") && hourInt < 12) {
+    return `${hourInt + 12}:${hour
+      .split(":")[1]
+      .replace(/AM|PM/g, "")
+      .replace(" ", ":00")}`;
   }
-  return hour;
+  return `${hour.replace(/AM|PM/g, "").replace(" ", ":00")}`;
 };
 
 export const stringTemplateAddQuery = (cadena: string, object: any) => {
@@ -111,8 +111,9 @@ export const hourFormat = (time: number) => {
   const date = new Date(time);
   const hours = date.getHours();
   const minutes = date.getMinutes();
-  const { hour, ampm } = militarToTwelveHours(hours);
-  return `${hour}:${timeFormat(minutes)} ${ampm}`;
+  // onst { hour, ampm } = militarToTwelveHours(hours);
+  // return `${hour}:${timeFormat(minutes)} ${ampm}`;
+  return "";
 };
 
 export const loadAsyncStorageData = async (
@@ -141,4 +142,32 @@ export const datePoller = (callback: () => void) => {
   setInterval(() => {
     callback();
   }, 1000);
+};
+
+export const visitaNavigatorForward = (tab: string) => {
+  switch (tab) {
+    case TABS.MAIN:
+      return TABS.VEHICLES;
+    case TABS.VEHICLES:
+      return TABS.DATE;
+    case TABS.DATE:
+      return TABS.GUEST;
+    case TABS.GUEST:
+      return TABS.SETTINGS;
+  }
+  return TABS.MAIN;
+};
+
+export const visitaNavigatorBack = (tab: string) => {
+  switch (tab) {
+    case TABS.SETTINGS:
+      return TABS.GUEST;
+    case TABS.GUEST:
+      return TABS.DATE;
+    case TABS.DATE:
+      return TABS.VEHICLES;
+    case TABS.VEHICLES:
+      return TABS.MAIN;
+  }
+  return TABS.MAIN;
 };
