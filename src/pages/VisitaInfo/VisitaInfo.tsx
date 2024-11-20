@@ -84,7 +84,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
     residencialCP: 0,
     residencialNombre: "",
     nombre: "",
-    estatusVisita: 1,
+    estatusVisita: "Activa",
     vehicles: [],
     peatones: [],
     id_caseta,
@@ -165,7 +165,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
             autor={formValues?.autor || ""}
             emailAutor={formValues?.emailAutor || ""}
             direccion={`${formValues?.residencialNombre}, ${formValues?.residencialCalle}, ${formValues?.residencialNumExterior}`}
-            estatus={Number.parseInt(formValues?.estatusVisita) || 0}
+            estatus={formValues?.estatusVisita}
             notificaciones={[...SWITCHER_VALUES.TRUE].includes(
               formValues?.notificaciones,
             )}
@@ -220,14 +220,14 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               horaIngreso={formValues?.fechaIngresoHora}
               horaSalida={formValues?.fechaSalidaHora}
               dateTypeInput={formValues?.dateTypeInput}
-              estatus={Number.parseInt(formValues?.estatusVisita) || 0}
+              estatus={formValues?.estatusVisita}
               edit={[""].includes(uniqueID)}
               handleOnChange={handleOnChange}
             />
           )}
           {tab === TABS.GUEST && (
             <GuestInfo
-              estatus={[1].includes(formValues?.estatusVisita)}
+              estatus={["Activa"].includes(formValues?.estatusVisita)}
               peatones={formValues?.peatones || []}
               handleOnChange={(key: string, value: any) => {
                 setFormValues((prev) => {
@@ -260,7 +260,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               handleOnchange={handleOnChange}
             />
           )}
-          {[1, "1"].includes(formValues?.estatusVisita) && (
+          {["Activa"].includes(formValues?.estatusVisita) && (
             <FormSaveButtons
               onCancel={() => {
                 if ([TABS.MAIN].includes(tab)) {

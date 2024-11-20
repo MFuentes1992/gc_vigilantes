@@ -5,9 +5,9 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import {
   VisitaDetailsProps,
+  badge_colors,
   defaultRow,
-  details_badge_active,
-  details_badge_inactive,
+  details_badge,
   details_badge_text,
   details_container,
   details_info,
@@ -64,11 +64,12 @@ export const VisitaDetails = ({
               }}
             >
               <View
-                style={estatus ? details_badge_active : details_badge_inactive}
+                style={[
+                  details_badge,
+                  { backgroundColor: badge_colors[estatus] },
+                ]}
               >
-                <Text style={details_badge_text}>
-                  {estatus ? "Activa" : "Inactiva"}
-                </Text>
+                <Text style={details_badge_text}>{estatus}</Text>
               </View>
             </View>
           </View>

@@ -5,7 +5,7 @@ export type VisitaDetailsProps = {
   uri: string;
   autor: string;
   emailAutor: string;
-  estatus: number;
+  estatus: string;
   num_int: string;
   seccion: string;
   direccion: string;
@@ -50,20 +50,18 @@ export const defaultRow: ViewStyle = {
   justifyContent: "space-between",
 };
 
-export const details_badge_active: ViewStyle = {
-  width: "25%",
+export const details_badge: ViewStyle = {
+  width: "30%",
   padding: "1%",
-  backgroundColor: app_colors.secondary_badge,
+  // backgroundColor: app_colors.secondary_badge,
   justifyContent: "center",
   alignItems: "center",
 };
 
-export const details_badge_inactive: ViewStyle = {
-  width: "25%",
-  padding: "1%",
-  backgroundColor: app_colors.red_inactive_invalid,
-  justifyContent: "center",
-  alignItems: "center",
+export const badge_colors: any = {
+  Activa: app_colors.primary,
+  Registrada: app_colors.yellow_badge,
+  Inactiva: app_colors.red_inactive_invalid,
 };
 
 export const details_badge_text: TextStyle = {

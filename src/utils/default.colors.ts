@@ -17,6 +17,7 @@ export const app_colors = {
   calendar_pale: "#FF9671",
   light_blue_pale: "#F5FBFF",
   active_blue: "#9ABDDC",
+  yellow_badge: "#F09319",
 };
 
 // -- Palette: https://mycolor.space/?hex=%23845EC2&sub=1
