@@ -1,6 +1,12 @@
 import { TextStyle } from "react-native";
 import { app_colors } from "./default.colors";
 
+export const app_error_required: TextStyle = {
+  fontSize: 12,
+  color: app_colors.red,
+  marginBottom: 3,
+};
+
 export const app_text_h2: TextStyle = {
   fontSize: 24,
   fontWeight: "bold",

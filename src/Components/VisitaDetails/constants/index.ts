@@ -59,7 +59,7 @@ export const details_badge: ViewStyle = {
 };
 
 export const badge_colors: any = {
-  Activa: app_colors.primary,
+  Activa: app_colors.secondary_badge,
   Registrada: app_colors.yellow_badge,
   Inactiva: app_colors.red_inactive_invalid,
 };

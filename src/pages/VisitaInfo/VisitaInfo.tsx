@@ -30,6 +30,7 @@ import {
   toMilitarHours,
   visitaNavigatorBack,
   visitaNavigatorForward,
+  validateForm,
 } from "@gcVigilantes/utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { clearVisita } from "@gcVigilantes/store/Visita";
@@ -43,6 +44,9 @@ export const VisitaInfo = ({ navigation, route }: any) => {
   const { instalaciones } = useSelector((state: RootState) => state.vigilancia);
   const { id_caseta } = useSelector((state: RootState) => state.userData);
   const [tab, setTab] = useState<string>(TABS.MAIN);
+  const [errors, setErrors] = useState<{
+    [key: string]: { required: boolean };
+  }>({});
   const [formValues, setFormValues] = useState<{
     [key: string]:
       | string
@@ -190,6 +194,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               newVisita={[""].includes(uniqueID)}
               estatus={Number.parseInt(formValues?.status_registro) || 1}
               instalaciones={instalaciones}
+              errorValidator={errors}
               selectedInstalacion={{
                 idInstalacion: formValues?.idInstalacion || "",
                 idUsuario: formValues?.idUsuario || 0,
@@ -292,7 +297,23 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                       peatones: JSON.stringify(formValues?.peatones),
                       id_caseta: formValues?.id_caseta,
                     };
-                    dispatch(createVisita(payload) as any);
+                    const formValid = validateForm(payload);
+                    if (formValid.isValid) {
+                      dispatch(createVisita(payload) as any);
+                    } else {
+                      setErrors(formValid.errors);
+                      dispatch(
+                        setShowAlert({
+                          showAlert: true,
+                          title: "Error",
+                          message: getLabelApp(
+                            preferences.language,
+                            "app_empty_field",
+                          ),
+                          type: ALERT_TYPES.ERROR,
+                        }) as any,
+                      );
+                    }
                   } else {
                     const payload = {
                       idVisita: formValues?.visitaId,
@@ -312,7 +333,23 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                       peatones: JSON.stringify(formValues?.peatones),
                       id_caseta: formValues?.id_caseta,
                     };
-                    dispatch(updateVisita(payload) as any);
+                    const formValid = validateForm(payload);
+                    if (formValid.isValid) {
+                      dispatch(updateVisita(payload) as any);
+                    } else {
+                      setErrors(formValid.errors);
+                      dispatch(
+                        setShowAlert({
+                          showAlert: true,
+                          title: "Error",
+                          message: getLabelApp(
+                            preferences.language,
+                            "app_empty_field",
+                          ),
+                          type: ALERT_TYPES.ERROR,
+                        }) as any,
+                      );
+                    }
                   }
                 } else {
                   setTab((prev) => visitaNavigatorForward(prev));

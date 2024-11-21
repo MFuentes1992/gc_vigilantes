@@ -71,6 +71,7 @@ export type MainInfoProps = {
   newVisita: boolean;
   selectedInstalacion: Instalacion;
   instalaciones: Instalacion[];
+  errorValidator: { [key: string]: { required: boolean } };
   handleOnChange: (key: string, value: string) => void;
 };
 

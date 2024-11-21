@@ -118,7 +118,7 @@ export const hourFormat = (time: number) => {
 
 export const loadAsyncStorageData = async (
   keys: string[],
-  AsyncStorage: any
+  AsyncStorage: any,
 ) => {
   const promises = keys.map((key) => AsyncStorage.getItem(key));
   const results: { [key: string]: string | number }[] = [];
@@ -170,4 +170,17 @@ export const visitaNavigatorBack = (tab: string) => {
       return TABS.MAIN;
   }
   return TABS.MAIN;
+};
+
+export const validateForm = (form: any) => {
+  const errors = {} as any;
+  Object.keys(form).forEach((key) => {
+    if (form[key] === "" || form[key] === undefined) {
+      errors[key] = { required: true };
+    }
+  });
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors,
+  };
 };
