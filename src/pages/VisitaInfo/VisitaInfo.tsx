@@ -176,6 +176,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
             handleNotificaciones={(value) => {
               setFormValues((prev) => ({ ...prev, notificaciones: value }));
             }}
+            idTipoIngreso={formValues?.idTipoIngreso || 0}
             handleChangeTab={(tab) => setTab(tab)}
             num_int={formValues?.residencialNumInterior || ""}
             seccion={formValues?.residencialSeccion || ""}
@@ -205,19 +206,21 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               handleOnChange={handleOnChange}
             />
           )}
-          {tab === TABS.VEHICLES && (
-            <AddVehicle
-              visitVehicles={formValues.vehicles}
-              register={[""].includes(uniqueID)}
-              handleOnChange={(key: string, value: any) => {
-                setFormValues((prev) => {
-                  const tmp = { ...prev };
-                  tmp[key] = value;
-                  return tmp;
-                });
-              }}
-            />
-          )}
+          {tab === TABS.VEHICLES &&
+            ["1"].includes(formValues?.idTipoIngreso) && (
+              <AddVehicle
+                visitVehicles={formValues.vehicles}
+                errorValidator={errors}
+                register={[""].includes(uniqueID)}
+                handleOnChange={(key: string, value: any) => {
+                  setFormValues((prev) => {
+                    const tmp = { ...prev };
+                    tmp[key] = value;
+                    return tmp;
+                  });
+                }}
+              />
+            )}
           {tab === TABS.DATE && (
             <DateInfo
               fechaIngreso={formValues?.fechaIngreso}
@@ -293,12 +296,18 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                       notificaciones: formValues?.notificaciones,
                       appGenerado: 0,
                       nombreVisita: formValues?.nombre,
-                      vehiculos: JSON.stringify(formValues?.vehicles),
-                      peatones: JSON.stringify(formValues?.peatones),
+                      vehiculos: formValues?.vehicles,
+                      peatones: formValues?.peatones,
+                      //                  vehiculos: JSON.stringify(formValues?.vehicles),
+                      //                  peatones: JSON.stringify(formValues?.peatones),
                       id_caseta: formValues?.id_caseta,
                     };
                     const formValid = validateForm(payload);
+                    console.log("formValid ====>", formValid);
+
                     if (formValid.isValid) {
+                      payload.vehiculos = JSON.stringify(payload.vehiculos);
+                      payload.peatones = JSON.stringify(payload.peatones);
                       dispatch(createVisita(payload) as any);
                     } else {
                       setErrors(formValid.errors);

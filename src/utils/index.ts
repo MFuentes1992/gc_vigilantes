@@ -177,6 +177,16 @@ export const validateForm = (form: any) => {
   Object.keys(form).forEach((key) => {
     if (form[key] === "" || form[key] === undefined) {
       errors[key] = { required: true };
+    } else if (Array.isArray(form[key]) && form[key].length === 0) {
+      errors[key] = { required: true };
+    } else if (Array.isArray(form[key])) {
+      form[key].forEach((item: any) => {
+        Object.keys(item).forEach((subkey: string) => {
+          if (item[subkey] === "" || item[subkey] === undefined) {
+            errors[key] = { required: true };
+          }
+        });
+      });
     }
   });
   return {
