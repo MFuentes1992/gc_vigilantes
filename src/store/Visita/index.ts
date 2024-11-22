@@ -88,6 +88,8 @@ const visitaSlice = createSlice({
       state.appGenerado = "";
       state.uniqueId = "";
       state.vehicles = [];
+      state.pedestrians = [];
+      state.estatusVisita = "";
     },
   },
 });

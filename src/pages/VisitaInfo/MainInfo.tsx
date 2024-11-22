@@ -72,11 +72,23 @@ export const MainInfo = ({
   return (
     <View>
       {newVisita && (
-        <InstalationPicker
-          instalaciones={instalaciones}
-          selectedInstalacion={selectedInstalacion}
-          handleOnChange={handleOnChangeInstalacion}
-        />
+        <View style={card_styles}>
+          <InstalationPicker
+            instalaciones={instalaciones}
+            selectedInstalacion={selectedInstalacion}
+            handleOnChange={handleOnChangeInstalacion}
+          />
+
+          {Object.hasOwn(errorValidator, "idInstalacion") &&
+            errorValidator.idInstalacion.required && (
+              <Text style={[app_error_required]}>
+                {getLabelApp(
+                  preferences.language,
+                  "app_default_required_field",
+                )}
+              </Text>
+            )}
+        </View>
       )}
       <View style={card_styles}>
         <CardTitle

@@ -34,16 +34,16 @@ export const DateInfo = ({
 
   const timeZone = new Date().getTimezoneOffset();
   const [startHour, setStartHour] = React.useState<string>(
-    horaIngreso.substring(0, 5)
+    horaIngreso.substring(0, 5),
   );
   const [endHour, setEndHour] = React.useState<string>(
-    horaSalida.substring(0, 5)
+    horaSalida.substring(0, 5),
   );
   const [startHourAmPm, setStartHourAmPm] = React.useState<string>(
-    horaIngreso.replaceAll(/[^a-zA-Z]/g, "")
+    horaIngreso.replaceAll(/[^a-zA-Z]/g, "").toUpperCase(),
   );
   const [endHourAmPm, setEndHourAmPm] = React.useState<string>(
-    horaSalida.replaceAll(/[^a-zA-Z]/g, "")
+    horaSalida.replaceAll(/[^a-zA-Z]/g, "").toUpperCase(),
   );
   const [hourPicker, setHourPicker] = React.useState<{
     type: "start" | "end";
@@ -81,7 +81,7 @@ export const DateInfo = ({
                   handleOnChange("dateTypeInput", DATE_TYPES.END);
                   handleOnChange(
                     "fechaIngreso",
-                    `${day.dateString}T${toMilitarHours(horaIngreso)}`
+                    `${day.dateString}T${toMilitarHours(horaIngreso)}`,
                   );
                   break;
                 case DATE_TYPES.END:
@@ -94,7 +94,7 @@ export const DateInfo = ({
                   handleOnChange("dateTypeInput", DATE_TYPES.START);
                   handleOnChange(
                     "fechaSalida",
-                    `${day.dateString}T${toMilitarHours(horaSalida)}`
+                    `${day.dateString}T${toMilitarHours(horaSalida)}`,
                   );
                   break;
                 default:
@@ -182,7 +182,7 @@ export const DateInfo = ({
                 case "start":
                   handleOnChange(
                     "fechaIngresoHora",
-                    `${value} ${startHourAmPm}`
+                    `${value} ${startHourAmPm}`,
                   );
                   break;
                 case "end":
@@ -214,14 +214,14 @@ export const DateInfo = ({
                 setStartHourAmPm(value);
                 handleOnChange(
                   "fechaIngresoHora",
-                  `${horaIngreso.replaceAll(/AM|PM/g, value)}`
+                  `${horaIngreso.replaceAll(/AM|PM/g, value)}`,
                 );
                 break;
               case "end":
                 setEndHourAmPm(value);
                 handleOnChange(
                   "fechaSalidaHora",
-                  `${horaSalida.replaceAll(/AM|PM/g, value)}`
+                  `${horaSalida.replaceAll(/AM|PM/g, value)}`,
                 );
                 break;
               default:

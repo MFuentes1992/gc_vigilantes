@@ -59,7 +59,8 @@ export const VisitaInfo = ({ navigation, route }: any) => {
   }>({
     idTipoVisita: "1",
     idTipoIngreso: "1",
-    idUsuario: 2,
+    idInstalacion: "",
+    idUsuario: "",
     fechaIngreso: new Date().toISOString(),
     fechaIngresoHora: new Date().toLocaleTimeString(preferences.locale, {
       hour: "2-digit",
@@ -102,7 +103,6 @@ export const VisitaInfo = ({ navigation, route }: any) => {
     (state: RootState) => state.tipoIngreso,
   );
   const visitaRedux = useSelector((state: RootState) => state.visita);
-  const Tab = createBottomTabNavigator();
 
   useEffect(() => {
     dispatch(setLoading(true));
@@ -125,7 +125,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
   };
 
   useEffect(() => {
-    if (visitaRedux) {
+    if (![""].includes(visitaRedux.visitaId)) {
       AsyncStorage.getItem("id_caseta")
         .then((data) => {
           setFormValues(() => ({
@@ -198,7 +198,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               errorValidator={errors}
               selectedInstalacion={{
                 idInstalacion: formValues?.idInstalacion || "",
-                idUsuario: formValues?.idUsuario || 0,
+                idUsuario: formValues?.idUsuario || "",
                 seccion: formValues?.residencialSeccion || "",
                 numInt: formValues?.residencialNumInterior || "",
                 owner: formValues?.autor || "",
@@ -281,27 +281,32 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                 if ([TABS.SETTINGS].includes(tab)) {
                   // TODO: Update visita or create visita.
                   if ([""].includes(uniqueID)) {
-                    const payload = {
-                      idUsuario: formValues?.idUsuario,
-                      idTipoVisita: formValues?.idTipoVisita,
-                      idTipoIngreso: formValues?.idTipoIngreso,
-                      idInstalacion: formValues?.idInstalacion,
-                      fechaIngreso: `${
-                        formValues?.fechaIngreso.split("T")[0]
-                      }T${toMilitarHours(formValues?.fechaIngresoHora)}`,
-                      fechaSalida: `${
-                        formValues?.fechaSalida.split("T")[0]
-                      }T${toMilitarHours(formValues?.fechaSalidaHora)}`,
-                      multiple: formValues?.multiple,
-                      notificaciones: formValues?.notificaciones,
-                      appGenerado: 0,
-                      nombreVisita: formValues?.nombre,
-                      vehiculos: formValues?.vehicles,
-                      peatones: formValues?.peatones,
-                      //                  vehiculos: JSON.stringify(formValues?.vehicles),
-                      //                  peatones: JSON.stringify(formValues?.peatones),
-                      id_caseta: formValues?.id_caseta,
-                    };
+                    const payload: { [key: string]: string | number | Array } =
+                      {
+                        idUsuario: formValues?.idUsuario,
+                        idTipoVisita: formValues?.idTipoVisita,
+                        idTipoIngreso: formValues?.idTipoIngreso,
+                        idInstalacion: formValues?.idInstalacion,
+                        fechaIngreso: `${
+                          formValues?.fechaIngreso.split("T")[0]
+                        }T${toMilitarHours(formValues?.fechaIngresoHora)}`,
+                        fechaSalida: `${
+                          formValues?.fechaSalida.split("T")[0]
+                        }T${toMilitarHours(formValues?.fechaSalidaHora)}`,
+                        multiple: formValues?.multiple,
+                        notificaciones: formValues?.notificaciones,
+                        appGenerado: 0,
+                        nombreVisita: formValues?.nombre,
+                        // vehiculos: formValues?.vehicles,
+                        // peatones: formValues?.peatones,
+                        //                  vehiculos: JSON.stringify(formValues?.vehicles),
+                        //                  peatones: JSON.stringify(formValues?.peatones),
+                        id_caseta: formValues?.id_caseta,
+                      };
+                    if (["1"].includes(formValues?.idTipoIngreso))
+                      payload.vehicles = formValues?.vehicles;
+                    if (["2"].includes(formValues?.idTipoIngreso))
+                      payload.peatones = formValues?.peatones;
                     const formValid = validateForm(payload);
                     console.log("formValid ====>", formValid);
 
