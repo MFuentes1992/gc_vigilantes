@@ -87,7 +87,7 @@ export const toMilitarHours = (hour: string) => {
     return `${hourInt + 12}:${hour
       .split(":")[1]
       .replace(/AM|PM/g, "")
-      .replace(/ /g, ":00")}`;
+      .replace(/\s/g, ":00")}`;
   }
   return `${hour.replace(/AM|PM/g, "").replace(" ", ":00")}`;
 };

@@ -281,6 +281,11 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                 if ([TABS.SETTINGS].includes(tab)) {
                   // TODO: Update visita or create visita.
                   if ([""].includes(uniqueID)) {
+                    console.log({
+                      horaSalida: formValues?.fechaSalidaHora,
+                      horaEntrada: formValues?.fechaIngresoHora,
+                    });
+
                     const payload: { [key: string]: string | number | Array } =
                       {
                         idUsuario: formValues?.idUsuario,
@@ -297,10 +302,6 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                         notificaciones: formValues?.notificaciones,
                         appGenerado: 0,
                         nombreVisita: formValues?.nombre,
-                        // vehiculos: formValues?.vehicles,
-                        // peatones: formValues?.peatones,
-                        //                  vehiculos: JSON.stringify(formValues?.vehicles),
-                        //                  peatones: JSON.stringify(formValues?.peatones),
                         id_caseta: formValues?.id_caseta,
                       };
                     if (["1"].includes(formValues?.idTipoIngreso))
