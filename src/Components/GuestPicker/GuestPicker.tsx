@@ -52,52 +52,45 @@ export const GuestPicker = ({
   };
 
   return (
-    <>
-      <View style={[addVehicleNotificationsStyles.container]}>
-        <Text style={[addVehicleNotificationsStyles.text]}>
-          {getLabelApp(preferences.language, "app_empty_pedestrians")}
-        </Text>
-      </View>
-      <View style={guestpicker_contaier}>
-        <TouchableOpacity
-          style={add_guest}
-          onPress={() => handleAddGuest(estatus)}
-        >
-          <AntDesign
-            name="adduser"
-            size={24}
-            color={estatus ? app_colors.secondary_badge : app_colors.text_gray}
-          />
-        </TouchableOpacity>
-        <View style={guest_input_container}>
-          {peatones.map((pedestrian, index) => {
-            return (
-              <View style={guest_row}>
-                <TextInput
-                  key={index}
-                  value={pedestrian.nombre}
-                  style={guest_input}
-                  placeholder="Nombre del invitado"
-                  onChangeText={(value: string) =>
-                    handleTextChange(pedestrian.id, value)
-                  }
+    <View style={guestpicker_contaier}>
+      <TouchableOpacity
+        style={add_guest}
+        onPress={() => handleAddGuest(estatus)}
+      >
+        <AntDesign
+          name="adduser"
+          size={24}
+          color={estatus ? app_colors.secondary_badge : app_colors.text_gray}
+        />
+      </TouchableOpacity>
+      <View style={guest_input_container}>
+        {peatones.map((pedestrian, index) => {
+          return (
+            <View style={guest_row}>
+              <TextInput
+                key={index}
+                value={pedestrian.nombre}
+                style={guest_input}
+                placeholder="Nombre del invitado"
+                onChangeText={(value: string) =>
+                  handleTextChange(pedestrian.id, value)
+                }
+              />
+              <TouchableOpacity
+                onPress={() => handleRemoveGuest(pedestrian.id)}
+              >
+                <AntDesign
+                  name="close"
+                  size={18}
+                  color="black"
+                  style={{ marginTop: "50%", color: app_colors.text_gray }}
                 />
-                <TouchableOpacity
-                  onPress={() => handleRemoveGuest(pedestrian.id)}
-                >
-                  <AntDesign
-                    name="close"
-                    size={18}
-                    color="black"
-                    style={{ marginTop: "50%", color: app_colors.text_gray }}
-                  />
-                </TouchableOpacity>
-              </View>
-            );
-          })}
-        </View>
+              </TouchableOpacity>
+            </View>
+          );
+        })}
       </View>
-    </>
+    </View>
   );
 };
 

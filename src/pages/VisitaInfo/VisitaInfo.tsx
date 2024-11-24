@@ -238,6 +238,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
             <GuestInfo
               estatus={["Activa"].includes(formValues?.estatusVisita)}
               peatones={formValues?.peatones || []}
+              errorValidator={errors}
               handleOnChange={(key: string, value: any) => {
                 setFormValues((prev) => {
                   const tmp = { ...prev };
@@ -316,8 +317,8 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                     console.log("formValid ====>", formValid);
 
                     if (formValid.isValid) {
-                      payload.vehiculos = JSON.stringify(payload.vehiculos);
-                      payload.peatones = JSON.stringify(payload.peatones);
+                      payload.vehiculos = JSON.stringify(payload?.vehiculos);
+                      payload.peatones = JSON.stringify(payload?.peatones);
                       dispatch(createVisita(payload) as any);
                     } else {
                       setErrors(formValid.errors);

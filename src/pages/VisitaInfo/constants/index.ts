@@ -98,6 +98,7 @@ export type VisitaPeaton = {
 export type GuestInfoProps = {
   estatus: boolean;
   peatones: VisitaPeaton[];
+  errorValidator: { [key: string]: { required: boolean } };
   handleOnChange: (key: string, value: VisitaPeaton[]) => void;
 };
 
