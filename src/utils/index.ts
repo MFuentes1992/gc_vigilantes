@@ -31,6 +31,29 @@ export const ROUTES = {
   LOGS: "logs",
 };
 
+export const formRouter = (idTipoIngreso: string) => ({
+  [TABS.MAIN]: {
+    next: ["1"].includes(idTipoIngreso) ? TABS.VEHICLES : TABS.DATE,
+    back: "",
+  },
+  [TABS.VEHICLES]: {
+    next: TABS.DATE,
+    back: TABS.MAIN,
+  },
+  [TABS.DATE]: {
+    next: ["2"].includes(idTipoIngreso) ? TABS.GUEST : TABS.SETTINGS,
+    back: ["1"].includes(idTipoIngreso) ? TABS.VEHICLES : TABS.MAIN,
+  },
+  [TABS.GUEST]: {
+    next: TABS.SETTINGS,
+    back: TABS.DATE,
+  },
+  [TABS.SETTINGS]: {
+    next: "",
+    back: ["2"].includes(idTipoIngreso) ? TABS.GUEST : TABS.DATE,
+  },
+});
+
 const TIME_ZONES = {
   CST: {
     id: 6,
@@ -87,7 +110,7 @@ export const toMilitarHours = (hour: string) => {
     return `${hourInt + 12}:${hour
       .split(":")[1]
       .replace(/AM|PM/g, "")
-      .replace(" ", ":00")}`;
+      .replace(/\s/g, ":00")}`;
   }
   return `${hour.replace(/AM|PM/g, "").replace(" ", ":00")}`;
 };
@@ -118,7 +141,7 @@ export const hourFormat = (time: number) => {
 
 export const loadAsyncStorageData = async (
   keys: string[],
-  AsyncStorage: any
+  AsyncStorage: any,
 ) => {
   const promises = keys.map((key) => AsyncStorage.getItem(key));
   const results: { [key: string]: string | number }[] = [];
@@ -144,30 +167,33 @@ export const datePoller = (callback: () => void) => {
   }, 1000);
 };
 
-export const visitaNavigatorForward = (tab: string) => {
-  switch (tab) {
-    case TABS.MAIN:
-      return TABS.VEHICLES;
-    case TABS.VEHICLES:
-      return TABS.DATE;
-    case TABS.DATE:
-      return TABS.GUEST;
-    case TABS.GUEST:
-      return TABS.SETTINGS;
-  }
-  return TABS.MAIN;
+export const visitaNavigatorForward = (tab: string, idTipoIngreso: string) => {
+  return formRouter(idTipoIngreso)[tab].next;
 };
 
-export const visitaNavigatorBack = (tab: string) => {
-  switch (tab) {
-    case TABS.SETTINGS:
-      return TABS.GUEST;
-    case TABS.GUEST:
-      return TABS.DATE;
-    case TABS.DATE:
-      return TABS.VEHICLES;
-    case TABS.VEHICLES:
-      return TABS.MAIN;
-  }
-  return TABS.MAIN;
+export const visitaNavigatorBack = (tab: string, idTipoIngreso: string) => {
+  return formRouter(idTipoIngreso)[tab].back;
+};
+
+export const validateForm = (form: any) => {
+  const errors = {} as any;
+  Object.keys(form).forEach((key) => {
+    if (form[key] === "" || form[key] === undefined) {
+      errors[key] = { required: true };
+    } else if (Array.isArray(form[key]) && form[key].length === 0) {
+      errors[key] = { required: true };
+    } else if (Array.isArray(form[key])) {
+      form[key].forEach((item: any) => {
+        Object.keys(item).forEach((subkey: string) => {
+          if (item[subkey] === "" || item[subkey] === undefined) {
+            errors[key] = { required: true };
+          }
+        });
+      });
+    }
+  });
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors,
+  };
 };

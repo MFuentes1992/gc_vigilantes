@@ -71,6 +71,7 @@ export type MainInfoProps = {
   newVisita: boolean;
   selectedInstalacion: Instalacion;
   instalaciones: Instalacion[];
+  errorValidator: { [key: string]: { required: boolean } };
   handleOnChange: (key: string, value: string) => void;
 };
 
@@ -97,6 +98,7 @@ export type VisitaPeaton = {
 export type GuestInfoProps = {
   estatus: boolean;
   peatones: VisitaPeaton[];
+  errorValidator: { [key: string]: { required: boolean } };
   handleOnChange: (key: string, value: VisitaPeaton[]) => void;
 };
 

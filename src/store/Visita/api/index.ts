@@ -14,7 +14,7 @@ export const getVisitaByUniqueID =
   (uniqueID: string, navigation: any) => (dispatch: any) => {
     const url = stringTemplateAddQuery(
       `${ENDPOINTS.BASE_URL}${ENDPOINTS.VISITAS.BY_UNIQUEID}`,
-      { uniqueId: uniqueID }
+      { uniqueId: uniqueID },
     );
     console.log("VISITA::URL::UNIQUE", url);
     fetch(url)
@@ -40,7 +40,7 @@ export const getVisitaByUniqueID =
 export const getVehicles = (uniqueID: string) => (dispatch: any) => {
   const url = `${ENDPOINTS.BASE_URL}${ENDPOINTS.VISITAS.VEHICLES.replace(
     "{qr}",
-    uniqueID
+    uniqueID,
   )}`;
   fetch(url)
     .then((response) => response.json())
@@ -66,23 +66,31 @@ export const updateVisita =
     })
       .then((response) => response.json())
       .then((data) => {
-        new Promise((resolve) => {
-          dispatch(setLoading(false));
-          resolve("success");
-        }).then(() => {
-          setTimeout(() => {
+        logVisitaIngressEgress(visita.uniqueID, visita.id_caseta, "entry")
+          .then(() => {
+            dispatch(setLoading(false));
             dispatch(
               setShowAlert({
                 showAlert: true,
                 title: "Exito!",
-                message: data.message,
+                message: data?.message,
                 type: ALERT_TYPES.SUCCESS,
-              })
+              }),
             );
-          }, 500);
-        });
+          })
+          .catch(() => {
+            dispatch(setLoading(false));
+            dispatch(
+              setShowAlert({
+                showAlert: false,
+                title: "Error",
+                message: "Algo salió mal, intente de nuevo",
+                type: ALERT_TYPES.ERROR,
+              }),
+            );
+          });
       })
-      .catch((error) => {
+      .catch(() => {
         dispatch(setLoading(false));
         dispatch(
           setShowAlert({
@@ -90,7 +98,7 @@ export const updateVisita =
             title: "Error",
             message: "Algo salió mal, intente de nuevo",
             type: ALERT_TYPES.ERROR,
-          })
+          }),
         );
       });
   };
@@ -98,7 +106,7 @@ export const updateVisita =
 export const logVisitaIngressEgress = async (
   qr: string,
   id_caseta: number,
-  type: string
+  type: string,
 ) => {
   const url = `${ENDPOINTS.BASE_URL}${ENDPOINTS.VISITAS.LOG_INGRESS}`;
   const formData = new FormData();
@@ -134,7 +142,7 @@ export const createVisita =
               title: "Visita creada.",
               message: data.message,
               type: ALERT_TYPES.SUCCESS,
-            })
+            }),
           );
         });
       })
@@ -146,7 +154,7 @@ export const createVisita =
             title: "Error",
             message: "Algo salió mal, intente de nuevo",
             type: ALERT_TYPES.ERROR,
-          })
+          }),
         );
       });
   };

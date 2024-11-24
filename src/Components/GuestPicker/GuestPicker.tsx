@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextInput, TouchableOpacity, View } from "react-native";
+import { TextInput, TouchableOpacity, View, Text } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import {
   add_guest,
@@ -8,8 +8,12 @@ import {
   guest_row,
   guestpicker_contaier,
 } from "./constants";
+import { getLabelApp } from "@gcVigilantes/utils";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { VisitaPeaton } from "@gcVigilantes/pages/VisitaInfo/constants";
+import { addVehicleNotificationsStyles } from "../AddVehicle/constants";
+import { useSelector } from "react-redux";
+import { RootState } from "@gcVigilantes/store";
 
 export const GuestPicker = ({
   peatones,
@@ -20,6 +24,7 @@ export const GuestPicker = ({
   peatones: VisitaPeaton[];
   handleOnChange: (key: string, value: VisitaPeaton[]) => void;
 }) => {
+  const preferences = useSelector((state: RootState) => state.preferences);
   const handleTextChange = (id: string, value: string) => {
     const peaton = peatones.find((peaton) => peaton?.id === id);
     const filteredPeatones = peatones.filter((peaton) => peaton?.id !== id);

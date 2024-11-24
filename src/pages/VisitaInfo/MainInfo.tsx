@@ -6,12 +6,16 @@ import {
 } from "@expo/vector-icons";
 import { CardTitle } from "@gcVigilantes/Components/CardTitle/CardTitle";
 import RadioGroup from "@gcVigilantes/Components/RadioGroup";
+import { RootState } from "@gcVigilantes/store";
+import { useSelector } from "react-redux";
 
 import { TextInput, View, Text } from "react-native";
 import { MainInfoProps, card_styles } from "./constants";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { InstalationPicker } from "@gcVigilantes/Components/InstalationPicker/InstalationPicker";
 import { Instalacion } from "@gcVigilantes/store/Vigilancia/types";
+import { getLabelApp } from "@gcVigilantes/utils";
+import { app_error_required } from "@gcVigilantes/utils/default.styles";
 
 export const TipoVisitasIcon: { [key: string]: React.ReactNode } = {
   ["1"]: <FontAwesome name="user" size={18} color="darkgray" />,
@@ -39,18 +43,17 @@ export const MainInfo = ({
   newVisita,
   selectedInstalacion,
   instalaciones,
+  errorValidator,
   handleOnChange,
 }: MainInfoProps) => {
+  const preferences = useSelector((state: RootState) => state.preferences);
   // -- Disabling and enabling Cards
-  const [tipoVisitaDisabled, setTipoVisitaDisabled] = useState<boolean>(
-    !newVisita
-  );
-  const [tipoIngresoDisabled, setTipoIngresoDisabled] = useState<boolean>(
-    !newVisita
-  );
-  const [nombreVisitaDisabled, setNombreVisitaDisabled] = useState<boolean>(
-    !newVisita
-  );
+  const [tipoVisitaDisabled, setTipoVisitaDisabled] =
+    useState<boolean>(!newVisita);
+  const [tipoIngresoDisabled, setTipoIngresoDisabled] =
+    useState<boolean>(!newVisita);
+  const [nombreVisitaDisabled, setNombreVisitaDisabled] =
+    useState<boolean>(!newVisita);
 
   const handleOnChangeInstalacion = (_instalacion: string) => {
     const instalacion = JSON.parse(_instalacion) as Instalacion;
@@ -69,11 +72,23 @@ export const MainInfo = ({
   return (
     <View>
       {newVisita && (
-        <InstalationPicker
-          instalaciones={instalaciones}
-          selectedInstalacion={selectedInstalacion}
-          handleOnChange={handleOnChangeInstalacion}
-        />
+        <View style={card_styles}>
+          <InstalationPicker
+            instalaciones={instalaciones}
+            selectedInstalacion={selectedInstalacion}
+            handleOnChange={handleOnChangeInstalacion}
+          />
+
+          {Object.hasOwn(errorValidator, "idInstalacion") &&
+            errorValidator.idInstalacion.required && (
+              <Text style={[app_error_required]}>
+                {getLabelApp(
+                  preferences.language,
+                  "app_default_required_field",
+                )}
+              </Text>
+            )}
+        </View>
       )}
       <View style={card_styles}>
         <CardTitle
@@ -94,6 +109,12 @@ export const MainInfo = ({
             handleOnChange("idTipoVisita", value);
           }}
         />
+        {Object.hasOwn(errorValidator, "idTipoVisita") &&
+          errorValidator.idTipoVisita.required && (
+            <Text style={[app_error_required]}>
+              {getLabelApp(preferences.language, "app_default_required_field")}
+            </Text>
+          )}
       </View>
       <View style={card_styles}>
         <CardTitle
@@ -108,23 +129,36 @@ export const MainInfo = ({
           </Text>
         )}
         {!nombreVisitaDisabled && (
-          <TextInput
-            style={{
-              width: "90%",
-              height: 40,
-              borderBottomColor: "gray",
-              borderBottomWidth: 0.5,
-              left: 10,
-              color: app_colors.text_dark,
-            }}
-            value={nombreVisita}
-            placeholder="Ingrese aqui el nombre de la visita"
-            onChangeText={(value: string) => {
-              handleOnChange("nombre", value);
-            }}
-            autoCapitalize="words"
-            maxLength={50}
-          />
+          <>
+            <TextInput
+              style={{
+                width: "90%",
+                height: 40,
+                borderBottomColor: "gray",
+                borderBottomWidth: 0.5,
+                left: 10,
+                color: app_colors.text_dark,
+                marginBottom: 10,
+              }}
+              value={nombreVisita}
+              placeholder="Ingrese aqui el nombre de la visita"
+              onChangeText={(value: string) => {
+                handleOnChange("nombre", value);
+              }}
+              autoCapitalize="words"
+              maxLength={50}
+            />
+
+            {Object.hasOwn(errorValidator, "nombreVisita") &&
+              errorValidator.nombreVisita.required && (
+                <Text style={[app_error_required]}>
+                  {getLabelApp(
+                    preferences.language,
+                    "app_default_required_field",
+                  )}
+                </Text>
+              )}
+          </>
         )}
       </View>
       <View
@@ -156,6 +190,13 @@ export const MainInfo = ({
             handleOnChange("idTipoIngreso", value);
           }}
         />
+
+        {Object.hasOwn(errorValidator, "idTipoIngreso") &&
+          errorValidator?.idTipoIngreso?.required && (
+            <Text style={[app_error_required]}>
+              {getLabelApp(preferences.language, "app_default_required_field")}
+            </Text>
+          )}
       </View>
     </View>
   );

@@ -30,6 +30,7 @@ import {
   toMilitarHours,
   visitaNavigatorBack,
   visitaNavigatorForward,
+  validateForm,
 } from "@gcVigilantes/utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { clearVisita } from "@gcVigilantes/store/Visita";
@@ -43,6 +44,9 @@ export const VisitaInfo = ({ navigation, route }: any) => {
   const { instalaciones } = useSelector((state: RootState) => state.vigilancia);
   const { id_caseta } = useSelector((state: RootState) => state.userData);
   const [tab, setTab] = useState<string>(TABS.MAIN);
+  const [errors, setErrors] = useState<{
+    [key: string]: { required: boolean };
+  }>({});
   const [formValues, setFormValues] = useState<{
     [key: string]:
       | string
@@ -55,7 +59,8 @@ export const VisitaInfo = ({ navigation, route }: any) => {
   }>({
     idTipoVisita: "1",
     idTipoIngreso: "1",
-    idUsuario: 2,
+    idInstalacion: "",
+    idUsuario: "",
     fechaIngreso: new Date().toISOString(),
     fechaIngresoHora: new Date().toLocaleTimeString(preferences.locale, {
       hour: "2-digit",
@@ -84,7 +89,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
     residencialCP: 0,
     residencialNombre: "",
     nombre: "",
-    estatusVisita: 1,
+    estatusVisita: "Activa",
     vehicles: [],
     peatones: [],
     id_caseta,
@@ -92,13 +97,12 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 
   const dispatch = useDispatch();
   const { catalogVisitas } = useSelector(
-    (state: RootState) => state.tipoVisitas
+    (state: RootState) => state.tipoVisitas,
   );
   const { catalogIngreso } = useSelector(
-    (state: RootState) => state.tipoIngreso
+    (state: RootState) => state.tipoIngreso,
   );
   const visitaRedux = useSelector((state: RootState) => state.visita);
-  const Tab = createBottomTabNavigator();
 
   useEffect(() => {
     dispatch(setLoading(true));
@@ -106,61 +110,10 @@ export const VisitaInfo = ({ navigation, route }: any) => {
     dispatch(getCatalogTipoIngreso() as any);
     if (uniqueID) {
       dispatch(getVisitaByUniqueID(uniqueID, navigation) as any);
-      /* AsyncStorage.getItem("id_caseta")
-        .then((data) => {
-          logVisitaIngressEgress(
-            uniqueID,
-            Number.parseInt(data || "0", 10),
-            [0].includes(tabAction) ? "entry" : "exit"
-          )
-            .then((res) => res.json())
-            .then((data) => {
-              if (["400", 400].includes(data.estatus)) {
-                throw new Error(data.message);
-              }
-              if ([0].includes(tabAction)) {
-
-              } else {
-                dispatch(
-                  setShowAlert({
-                    showAlert: true,
-                    title: "Éxito!",
-                    type: ALERT_TYPES.SUCCESS,
-                    message: data.message,
-                  })
-                );
-                navigation.navigate(ROUTES.QR);
-              }
-            })
-            .catch((error) => {
-              console.error("Error al registrar el ingreso", error);
-              dispatch(
-                setShowAlert({
-                  showAlert: true,
-                  title: "Error",
-                  type: ALERT_TYPES.ERROR,
-                  message: `Error: ${
-                    error
-                      ? error
-                      : getLabelApp(
-                          preferences.language,
-                          "app_screen_visit_info_error_ingress"
-                        )
-                  }`,
-                })
-              );
-              navigation.navigate(ROUTES.QR);
-            });
-        })
-        .catch((error) =>
-          console.error("Error al obtener información de la caseta", error)
-        );
-
-      dispatch(getVehicles(uniqueID) as any); */
     }
-
     return () => {
       dispatch(clearVisita());
+      setFormValues({});
     };
   }, []);
 
@@ -173,31 +126,36 @@ export const VisitaInfo = ({ navigation, route }: any) => {
   };
 
   useEffect(() => {
-    console.log("visitaRedux::", visitaRedux);
-
-    if (visitaRedux) {
-      setFormValues(() => ({
-        ...visitaRedux,
-        fechaIngreso: visitaRedux?.fechaIngreso?.split("T")[0],
-        fechaIngresoHora: militarToTwelveHours(
-          visitaRedux?.fechaIngreso?.split("T")[1] ||
-            new Date().toLocaleTimeString(preferences.locale, {
-              hour: "2-digit",
-              minute: "2-digit",
-            })
-        ),
-        fechaSalida: visitaRedux?.fechaSalida?.split("T")[0],
-        fechaSalidaHora: militarToTwelveHours(
-          visitaRedux?.fechaSalida?.split("T")[1] ||
-            new Date().toLocaleTimeString(preferences.locale, {
-              hour: "2-digit",
-              minute: "2-digit",
-            })
-        ),
-        dateTypeInput: DATE_TYPES.END,
-        vehicles: visitaRedux.vehicles,
-        peatones: visitaRedux.pedestrians,
-      }));
+    if (![""].includes(visitaRedux.visitaId)) {
+      AsyncStorage.getItem("id_caseta")
+        .then((data) => {
+          setFormValues(() => ({
+            ...visitaRedux,
+            fechaIngreso: visitaRedux?.fechaIngreso?.split("T")[0],
+            fechaIngresoHora: militarToTwelveHours(
+              visitaRedux?.fechaIngreso?.split("T")[1] ||
+                new Date().toLocaleTimeString(preferences.locale, {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                }),
+            ),
+            fechaSalida: visitaRedux?.fechaSalida?.split("T")[0],
+            fechaSalidaHora: militarToTwelveHours(
+              visitaRedux?.fechaSalida?.split("T")[1] ||
+                new Date().toLocaleTimeString(preferences.locale, {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                }),
+            ),
+            dateTypeInput: DATE_TYPES.END,
+            vehicles: visitaRedux.vehicles,
+            peatones: visitaRedux.pedestrians,
+            id_caseta: data,
+          }));
+        })
+        .catch((error) => {
+          console.error(error);
+        });
       dispatch(setLoading(false));
     }
     dispatch(setLoading(false));
@@ -212,13 +170,14 @@ export const VisitaInfo = ({ navigation, route }: any) => {
             autor={formValues?.autor || ""}
             emailAutor={formValues?.emailAutor || ""}
             direccion={`${formValues?.residencialNombre}, ${formValues?.residencialCalle}, ${formValues?.residencialNumExterior}`}
-            estatus={Number.parseInt(formValues?.estatusVisita) || 0}
+            estatus={formValues?.estatusVisita}
             notificaciones={[...SWITCHER_VALUES.TRUE].includes(
-              formValues?.notificaciones
+              formValues?.notificaciones,
             )}
             handleNotificaciones={(value) => {
               setFormValues((prev) => ({ ...prev, notificaciones: value }));
             }}
+            idTipoIngreso={formValues?.idTipoIngreso || 0}
             handleChangeTab={(tab) => setTab(tab)}
             num_int={formValues?.residencialNumInterior || ""}
             seccion={formValues?.residencialSeccion || ""}
@@ -237,9 +196,10 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               newVisita={[""].includes(uniqueID)}
               estatus={Number.parseInt(formValues?.status_registro) || 1}
               instalaciones={instalaciones}
+              errorValidator={errors}
               selectedInstalacion={{
                 idInstalacion: formValues?.idInstalacion || "",
-                idUsuario: formValues?.idUsuario || 0,
+                idUsuario: formValues?.idUsuario || "",
                 seccion: formValues?.residencialSeccion || "",
                 numInt: formValues?.residencialNumInterior || "",
                 owner: formValues?.autor || "",
@@ -247,19 +207,21 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               handleOnChange={handleOnChange}
             />
           )}
-          {tab === TABS.VEHICLES && (
-            <AddVehicle
-              visitVehicles={formValues.vehicles}
-              register={[""].includes(uniqueID)}
-              handleOnChange={(key: string, value: any) => {
-                setFormValues((prev) => {
-                  const tmp = { ...prev };
-                  tmp[key] = value;
-                  return tmp;
-                });
-              }}
-            />
-          )}
+          {tab === TABS.VEHICLES &&
+            ["1"].includes(formValues?.idTipoIngreso) && (
+              <AddVehicle
+                visitVehicles={formValues.vehicles}
+                errorValidator={errors}
+                register={[""].includes(uniqueID)}
+                handleOnChange={(key: string, value: any) => {
+                  setFormValues((prev) => {
+                    const tmp = { ...prev };
+                    tmp[key] = value;
+                    return tmp;
+                  });
+                }}
+              />
+            )}
           {tab === TABS.DATE && (
             <DateInfo
               fechaIngreso={formValues?.fechaIngreso}
@@ -267,15 +229,16 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               horaIngreso={formValues?.fechaIngresoHora}
               horaSalida={formValues?.fechaSalidaHora}
               dateTypeInput={formValues?.dateTypeInput}
-              estatus={Number.parseInt(formValues?.estatusVisita) || 0}
+              estatus={formValues?.estatusVisita}
               edit={[""].includes(uniqueID)}
               handleOnChange={handleOnChange}
             />
           )}
           {tab === TABS.GUEST && (
             <GuestInfo
-              estatus={[1].includes(formValues?.estatusVisita)}
+              estatus={["Activa"].includes(formValues?.estatusVisita)}
               peatones={formValues?.peatones || []}
+              errorValidator={errors}
               handleOnChange={(key: string, value: any) => {
                 setFormValues((prev) => {
                   const tmp = { ...prev };
@@ -299,28 +262,37 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               estado={formValues?.residencialEstado || ""}
               cp={formValues?.residencialCP || ""}
               notificaciones={[...SWITCHER_VALUES.TRUE].includes(
-                formValues?.notificaciones
+                formValues?.notificaciones,
               )}
               multiple_entrada={[...SWITCHER_VALUES.TRUE].includes(
-                formValues?.multiple
+                formValues?.multiple,
               )}
               handleOnchange={handleOnChange}
             />
           )}
-          {[1, "1"].includes(formValues?.estatusVisita) && (
+          {["Activa"].includes(formValues?.estatusVisita) && (
             <FormSaveButtons
               onCancel={() => {
                 if ([TABS.MAIN].includes(tab)) {
                   navigation.navigate(ROUTES.HOME);
                 } else {
-                  setTab((prev) => visitaNavigatorBack(prev));
+                  setTab((prev) =>
+                    visitaNavigatorBack(prev, formValues?.idTipoIngreso),
+                  );
                 }
               }}
               onSave={() => {
                 if ([TABS.SETTINGS].includes(tab)) {
                   // TODO: Update visita or create visita.
                   if ([""].includes(uniqueID)) {
-                    const payload = {
+                    console.log({
+                      horaSalida: formValues?.fechaSalidaHora,
+                      horaEntrada: formValues?.fechaIngresoHora,
+                    });
+
+                    const payload: {
+                      [key: string]: string | number | Array<any>;
+                    } = {
                       idUsuario: formValues?.idUsuario,
                       idTipoVisita: formValues?.idTipoVisita,
                       idTipoIngreso: formValues?.idTipoIngreso,
@@ -335,31 +307,91 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                       notificaciones: formValues?.notificaciones,
                       appGenerado: 0,
                       nombreVisita: formValues?.nombre,
+                      id_caseta: formValues?.id_caseta,
+                    };
+                    if (["1"].includes(formValues?.idTipoIngreso))
+                      payload.vehicles = formValues?.vehicles;
+                    if (["2"].includes(formValues?.idTipoIngreso))
+                      payload.peatones = formValues?.peatones;
+                    const formValid = validateForm(payload);
+                    console.log("formValid ====>", formValid);
+
+                    if (formValid.isValid) {
+                      payload.vehiculos = JSON.stringify(payload?.vehiculos);
+                      payload.peatones = JSON.stringify(payload?.peatones);
+                      dispatch(createVisita(payload) as any);
+                    } else {
+                      setErrors(formValid.errors);
+                      dispatch(
+                        setShowAlert({
+                          showAlert: true,
+                          title: "Error",
+                          message: getLabelApp(
+                            preferences.language,
+                            "app_empty_field",
+                          ),
+                          type: ALERT_TYPES.ERROR,
+                        }) as any,
+                      );
+                    }
+                  } else {
+                    const payload = {
+                      idVisita: formValues?.visitaId,
+                      idTipoVisita: formValues?.idTipoVisita,
+                      idTipoIngreso: formValues?.idTipoIngreso,
+                      uniqueID: formValues?.uniqueId,
+                      fechaIngreso: `${
+                        formValues?.fechaIngreso.split("T")[0]
+                      }T${toMilitarHours(formValues?.fechaIngresoHora)}`,
+                      fechaSalida: `${
+                        formValues?.fechaSalida.split("T")[0]
+                      }T${toMilitarHours(formValues?.fechaSalidaHora)}`,
+                      multiple: formValues?.multiple,
+                      notificaciones: formValues?.notificaciones,
+                      nombreVisita: formValues?.nombre,
                       vehiculos: JSON.stringify(formValues?.vehicles),
                       peatones: JSON.stringify(formValues?.peatones),
                       id_caseta: formValues?.id_caseta,
                     };
-                    dispatch(createVisita(payload) as any);
+                    const formValid = validateForm(payload);
+                    if (formValid.isValid) {
+                      dispatch(updateVisita(payload) as any);
+                    } else {
+                      setErrors(formValid.errors);
+                      dispatch(
+                        setShowAlert({
+                          showAlert: true,
+                          title: "Error",
+                          message: getLabelApp(
+                            preferences.language,
+                            "app_empty_field",
+                          ),
+                          type: ALERT_TYPES.ERROR,
+                        }) as any,
+                      );
+                    }
                   }
                 } else {
-                  setTab((prev) => visitaNavigatorForward(prev));
+                  setTab((prev) =>
+                    visitaNavigatorForward(prev, formValues?.idTipoIngreso),
+                  );
                 }
               }}
               saveText={getLabelApp(
                 preferences.language,
                 [TABS.SETTINGS].includes(tab)
                   ? "app_screen_visit_info_save_button_complete"
-                  : "app_screen_visit_info_save_button_next"
+                  : "app_screen_visit_info_save_button_next",
               )}
               cancelText={
                 [TABS.MAIN].includes(tab)
                   ? getLabelApp(
                       preferences.language,
-                      "app_screen_visit_info_cancel_button"
+                      "app_screen_visit_info_cancel_button",
                     )
                   : getLabelApp(
                       preferences.language,
-                      "app_screen_visit_info_cancel_button_back"
+                      "app_screen_visit_info_cancel_button_back",
                     )
               }
             />

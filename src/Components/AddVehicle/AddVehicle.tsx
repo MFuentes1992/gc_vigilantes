@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView, View, Text } from "react-native";
 import { HeaderActionButton } from "../HeaderActionButton/HeaderActionButton";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
-import { vehicleCardStyles } from "./constants";
+import { vehicleCardStyles, addVehicleNotificationsStyles } from "./constants";
 import {
   card_styles,
   getVehicleInfoStyles,
@@ -20,6 +20,7 @@ import { EditVehicles } from "../EditVehicles/EditVehicles";
 type AddVehicleProps = {
   visitVehicles: VehiclesResType[];
   register: boolean;
+  errorValidator: { [key: string]: { required: boolean } };
   handleOnChange: (key: string, value: any) => void;
 };
 
@@ -43,6 +44,14 @@ export const AddVehicle = (props: AddVehicleProps) => {
 
   return (
     <>
+      {Object.hasOwn(props.errorValidator, "vehiculos") &&
+        props.errorValidator?.vehiculos?.required && (
+          <View style={[addVehicleNotificationsStyles.container]}>
+            <Text style={[addVehicleNotificationsStyles.text]}>
+              {getLabelApp(preferences.language, "app_empty_vehicles")}
+            </Text>
+          </View>
+        )}
       <View style={card_styles}>
         <View
           style={{
@@ -65,11 +74,11 @@ export const AddVehicle = (props: AddVehicleProps) => {
                 props.register
                   ? getLabelApp(
                       preferences.language,
-                      "app_screen_visit_info_register_vehicle"
+                      "app_screen_visit_info_register_vehicle",
                     )
                   : getLabelApp(
                       preferences.language,
-                      "app_screen_visit_info_edit_vehicle"
+                      "app_screen_visit_info_edit_vehicle",
                     )
               }
               uppercase
@@ -104,12 +113,12 @@ export const AddVehicle = (props: AddVehicleProps) => {
               plate={vehicle.placas}
               handleOnChange={(id: string, key: string, value: string) => {
                 const currVehicle = vehicles.find(
-                  (vehicle) => vehicle.id === id
+                  (vehicle) => vehicle.id === id,
                 );
                 if (currVehicle) {
                   const tmp = { ...currVehicle, [key]: value };
                   const updatedVehicles = vehicles.map((vehicle) =>
-                    vehicle.id === id ? tmp : vehicle
+                    vehicle.id === id ? tmp : vehicle,
                   );
                   setVehicles(updatedVehicles);
                   props.handleOnChange("vehicles", updatedVehicles as any);
@@ -117,7 +126,7 @@ export const AddVehicle = (props: AddVehicleProps) => {
               }}
               handleClose={() => {
                 const fltrVehicles = vehicles.filter(
-                  (v) => v.id !== vehicle.id
+                  (v) => v.id !== vehicle.id,
                 );
                 setVehicles(fltrVehicles);
                 props.handleOnChange("vehicles", fltrVehicles as any);
@@ -160,7 +169,7 @@ export const AddVehicle = (props: AddVehicleProps) => {
             if (currVehicle) {
               const tmp = { ...currVehicle, [key]: value };
               const updatedVehicles = vehicles.map((vehicle) =>
-                vehicle.id === id ? tmp : vehicle
+                vehicle.id === id ? tmp : vehicle,
               );
               setVehicles(updatedVehicles);
               props.handleOnChange("vehicles", updatedVehicles as any);
@@ -168,7 +177,7 @@ export const AddVehicle = (props: AddVehicleProps) => {
           }}
           handleClose={() => {
             const fltrVehicles = vehicles.filter(
-              (v) => v.id !== editVehicle.id
+              (v) => v.id !== editVehicle.id,
             );
             setVehicles(fltrVehicles);
             props.handleOnChange("vehicles", fltrVehicles as any);

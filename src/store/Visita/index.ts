@@ -58,6 +58,7 @@ const visitaSlice = createSlice({
       state.appGenerado = action.payload.appGenerado;
       state.uniqueId = action.payload.uniqueId;
       state.vehicles = action.payload.vehicles;
+      state.pedestrians = action.payload.pedestrians;
       state.estatusVisita = action.payload.estatusVisita;
     },
     setVehicles(state, action: PayloadAction<VehiclesResType[]>) {
@@ -87,6 +88,8 @@ const visitaSlice = createSlice({
       state.appGenerado = "";
       state.uniqueId = "";
       state.vehicles = [];
+      state.pedestrians = [];
+      state.estatusVisita = "";
     },
   },
 });

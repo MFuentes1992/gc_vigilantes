@@ -5,9 +5,9 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import {
   VisitaDetailsProps,
+  badge_colors,
   defaultRow,
-  details_badge_active,
-  details_badge_inactive,
+  details_badge,
   details_badge_text,
   details_container,
   details_info,
@@ -31,6 +31,7 @@ export const VisitaDetails = ({
   direccion,
   selectedTab,
   newVisita,
+  idTipoIngreso,
   handleChangeTab,
 }: VisitaDetailsProps) => {
   return (
@@ -64,11 +65,12 @@ export const VisitaDetails = ({
               }}
             >
               <View
-                style={estatus ? details_badge_active : details_badge_inactive}
+                style={[
+                  details_badge,
+                  { backgroundColor: badge_colors[estatus] },
+                ]}
               >
-                <Text style={details_badge_text}>
-                  {estatus ? "Activa" : "Inactiva"}
-                </Text>
+                <Text style={details_badge_text}>{estatus}</Text>
               </View>
             </View>
           </View>
@@ -104,37 +106,39 @@ export const VisitaDetails = ({
             RESUMEN
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            paddingTop: 5,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          onPress={() => handleChangeTab(TABS.VEHICLES)}
-        >
-          <MaterialCommunityIcons
-            name="car-arrow-right"
-            size={18}
-            color={
-              selectedTab === TABS.VEHICLES
-                ? app_colors.third
-                : app_colors.ligth_bg
-            }
-          />
-          <Text
-            style={[
-              app_text_menu,
-              {
-                color:
-                  selectedTab === TABS.VEHICLES
-                    ? app_colors.third
-                    : app_colors.text_gray,
-              },
-            ]}
+        {["1"].includes(idTipoIngreso) && (
+          <TouchableOpacity
+            style={{
+              paddingTop: 5,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            onPress={() => handleChangeTab(TABS.VEHICLES)}
           >
-            VEHICULOS
-          </Text>
-        </TouchableOpacity>
+            <MaterialCommunityIcons
+              name="car-arrow-right"
+              size={18}
+              color={
+                selectedTab === TABS.VEHICLES
+                  ? app_colors.third
+                  : app_colors.ligth_bg
+              }
+            />
+            <Text
+              style={[
+                app_text_menu,
+                {
+                  color:
+                    selectedTab === TABS.VEHICLES
+                      ? app_colors.third
+                      : app_colors.text_gray,
+                },
+              ]}
+            >
+              VEHICULOS
+            </Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           style={{
             paddingTop: 5,
@@ -164,37 +168,39 @@ export const VisitaDetails = ({
             FECHAS
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            paddingTop: 5,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          onPress={() => handleChangeTab(TABS.GUEST)}
-        >
-          <MaterialIcons
-            name="people-alt"
-            size={18}
-            color={
-              selectedTab === TABS.GUEST
-                ? app_colors.third
-                : app_colors.ligth_bg
-            }
-          />
-          <Text
-            style={[
-              app_text_menu,
-              {
-                color:
-                  selectedTab === TABS.GUEST
-                    ? app_colors.third
-                    : app_colors.text_gray,
-              },
-            ]}
+        {["2"].includes(idTipoIngreso) && (
+          <TouchableOpacity
+            style={{
+              paddingTop: 5,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            onPress={() => handleChangeTab(TABS.GUEST)}
           >
-            PEATONES
-          </Text>
-        </TouchableOpacity>
+            <MaterialIcons
+              name="people-alt"
+              size={18}
+              color={
+                selectedTab === TABS.GUEST
+                  ? app_colors.third
+                  : app_colors.ligth_bg
+              }
+            />
+            <Text
+              style={[
+                app_text_menu,
+                {
+                  color:
+                    selectedTab === TABS.GUEST
+                      ? app_colors.third
+                      : app_colors.text_gray,
+                },
+              ]}
+            >
+              PEATONES
+            </Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           style={{
             paddingTop: 5,
