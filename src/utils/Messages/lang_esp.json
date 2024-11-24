@@ -5,6 +5,7 @@
   "app_database_code_placeholder": "DB Código.",
   "app_empty_field": "Por favor, rellene todos los campos.",
   "app_empty_vehicles": "Por favor, registre al menos 1 vehículo.",
+  "app_empty_pedestrians": "Por favor, registre al menos 1 peatón.",
   "app_activation_code_placeholder": "Código.",
   "app_submit_button": "Aceptar",
   "app_submit_continue": "Continuar",

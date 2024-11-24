@@ -113,6 +113,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
     }
     return () => {
       dispatch(clearVisita());
+      setFormValues({});
     };
   }, []);
 
@@ -274,7 +275,9 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                 if ([TABS.MAIN].includes(tab)) {
                   navigation.navigate(ROUTES.HOME);
                 } else {
-                  setTab((prev) => visitaNavigatorBack(prev));
+                  setTab((prev) =>
+                    visitaNavigatorBack(prev, formValues?.idTipoIngreso),
+                  );
                 }
               }}
               onSave={() => {
@@ -286,24 +289,25 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                       horaEntrada: formValues?.fechaIngresoHora,
                     });
 
-                    const payload: { [key: string]: string | number | Array } =
-                      {
-                        idUsuario: formValues?.idUsuario,
-                        idTipoVisita: formValues?.idTipoVisita,
-                        idTipoIngreso: formValues?.idTipoIngreso,
-                        idInstalacion: formValues?.idInstalacion,
-                        fechaIngreso: `${
-                          formValues?.fechaIngreso.split("T")[0]
-                        }T${toMilitarHours(formValues?.fechaIngresoHora)}`,
-                        fechaSalida: `${
-                          formValues?.fechaSalida.split("T")[0]
-                        }T${toMilitarHours(formValues?.fechaSalidaHora)}`,
-                        multiple: formValues?.multiple,
-                        notificaciones: formValues?.notificaciones,
-                        appGenerado: 0,
-                        nombreVisita: formValues?.nombre,
-                        id_caseta: formValues?.id_caseta,
-                      };
+                    const payload: {
+                      [key: string]: string | number | Array<any>;
+                    } = {
+                      idUsuario: formValues?.idUsuario,
+                      idTipoVisita: formValues?.idTipoVisita,
+                      idTipoIngreso: formValues?.idTipoIngreso,
+                      idInstalacion: formValues?.idInstalacion,
+                      fechaIngreso: `${
+                        formValues?.fechaIngreso.split("T")[0]
+                      }T${toMilitarHours(formValues?.fechaIngresoHora)}`,
+                      fechaSalida: `${
+                        formValues?.fechaSalida.split("T")[0]
+                      }T${toMilitarHours(formValues?.fechaSalidaHora)}`,
+                      multiple: formValues?.multiple,
+                      notificaciones: formValues?.notificaciones,
+                      appGenerado: 0,
+                      nombreVisita: formValues?.nombre,
+                      id_caseta: formValues?.id_caseta,
+                    };
                     if (["1"].includes(formValues?.idTipoIngreso))
                       payload.vehicles = formValues?.vehicles;
                     if (["2"].includes(formValues?.idTipoIngreso))
@@ -367,7 +371,9 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                     }
                   }
                 } else {
-                  setTab((prev) => visitaNavigatorForward(prev));
+                  setTab((prev) =>
+                    visitaNavigatorForward(prev, formValues?.idTipoIngreso),
+                  );
                 }
               }}
               saveText={getLabelApp(

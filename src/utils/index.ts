@@ -31,6 +31,29 @@ export const ROUTES = {
   LOGS: "logs",
 };
 
+export const formRouter = (idTipoIngreso: string) => ({
+  [TABS.MAIN]: {
+    next: ["1"].includes(idTipoIngreso) ? TABS.VEHICLES : TABS.DATE,
+    back: "",
+  },
+  [TABS.VEHICLES]: {
+    next: TABS.DATE,
+    back: TABS.MAIN,
+  },
+  [TABS.DATE]: {
+    next: ["2"].includes(idTipoIngreso) ? TABS.GUEST : TABS.SETTINGS,
+    back: ["1"].includes(idTipoIngreso) ? TABS.VEHICLES : TABS.MAIN,
+  },
+  [TABS.GUEST]: {
+    next: TABS.SETTINGS,
+    back: TABS.DATE,
+  },
+  [TABS.SETTINGS]: {
+    next: "",
+    back: ["2"].includes(idTipoIngreso) ? TABS.GUEST : TABS.DATE,
+  },
+});
+
 const TIME_ZONES = {
   CST: {
     id: 6,
@@ -144,32 +167,12 @@ export const datePoller = (callback: () => void) => {
   }, 1000);
 };
 
-export const visitaNavigatorForward = (tab: string) => {
-  switch (tab) {
-    case TABS.MAIN:
-      return TABS.VEHICLES;
-    case TABS.VEHICLES:
-      return TABS.DATE;
-    case TABS.DATE:
-      return TABS.GUEST;
-    case TABS.GUEST:
-      return TABS.SETTINGS;
-  }
-  return TABS.MAIN;
+export const visitaNavigatorForward = (tab: string, idTipoIngreso: string) => {
+  return formRouter(idTipoIngreso)[tab].next;
 };
 
-export const visitaNavigatorBack = (tab: string) => {
-  switch (tab) {
-    case TABS.SETTINGS:
-      return TABS.GUEST;
-    case TABS.GUEST:
-      return TABS.DATE;
-    case TABS.DATE:
-      return TABS.VEHICLES;
-    case TABS.VEHICLES:
-      return TABS.MAIN;
-  }
-  return TABS.MAIN;
+export const visitaNavigatorBack = (tab: string, idTipoIngreso: string) => {
+  return formRouter(idTipoIngreso)[tab].back;
 };
 
 export const validateForm = (form: any) => {
