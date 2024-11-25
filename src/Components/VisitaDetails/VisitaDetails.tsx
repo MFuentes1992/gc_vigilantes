@@ -5,9 +5,9 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import {
   VisitaDetailsProps,
+  badge_colors,
   defaultRow,
-  details_badge_active,
-  details_badge_inactive,
+  details_badge,
   details_badge_text,
   details_container,
   details_info,
@@ -30,47 +30,52 @@ export const VisitaDetails = ({
   seccion,
   direccion,
   selectedTab,
+  newVisita,
+  idTipoIngreso,
   handleChangeTab,
 }: VisitaDetailsProps) => {
   return (
     <>
-      <View style={details_container}>
-        <Image
-          width={100}
-          height={100}
-          source={{
-            uri: uri,
-          }}
-        />
-        <View style={details_info}>
-          <Text style={app_text_body}>{autor}</Text>
-          <Text style={[app_text_body, { color: app_colors.text_dark }]}>
-            {emailAutor}
-          </Text>
-          <View style={defaultRow}>
-            <Text style={app_text_property}>Num Int:</Text>
-            <Text style={app_text_body}>{num_int}</Text>
-            <Text style={app_text_property}>Seccion:</Text>
-            <Text style={app_text_body}>{seccion}</Text>
-          </View>
-          <Text style={app_text_body}>{direccion}</Text>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              width: "100%",
+      {!newVisita && (
+        <View style={details_container}>
+          <Image
+            width={100}
+            height={100}
+            source={{
+              uri: uri,
             }}
-          >
+          />
+          <View style={details_info}>
+            <Text style={app_text_body}>{autor}</Text>
+            <Text style={[app_text_body, { color: app_colors.text_dark }]}>
+              {emailAutor}
+            </Text>
+            <View style={defaultRow}>
+              <Text style={app_text_property}>Num Int:</Text>
+              <Text style={app_text_body}>{num_int}</Text>
+              <Text style={app_text_property}>Seccion:</Text>
+              <Text style={app_text_body}>{seccion}</Text>
+            </View>
+            <Text style={app_text_body}>{direccion}</Text>
             <View
-              style={estatus ? details_badge_active : details_badge_inactive}
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
             >
-              <Text style={details_badge_text}>
-                {estatus ? "Activa" : "Inactiva"}
-              </Text>
+              <View
+                style={[
+                  details_badge,
+                  { backgroundColor: badge_colors[estatus] },
+                ]}
+              >
+                <Text style={details_badge_text}>{estatus}</Text>
+              </View>
             </View>
           </View>
         </View>
-      </View>
+      )}
       <View style={details_menu}>
         <TouchableOpacity
           style={{
@@ -101,6 +106,39 @@ export const VisitaDetails = ({
             RESUMEN
           </Text>
         </TouchableOpacity>
+        {["1"].includes(idTipoIngreso) && (
+          <TouchableOpacity
+            style={{
+              paddingTop: 5,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            onPress={() => handleChangeTab(TABS.VEHICLES)}
+          >
+            <MaterialCommunityIcons
+              name="car-arrow-right"
+              size={18}
+              color={
+                selectedTab === TABS.VEHICLES
+                  ? app_colors.third
+                  : app_colors.ligth_bg
+              }
+            />
+            <Text
+              style={[
+                app_text_menu,
+                {
+                  color:
+                    selectedTab === TABS.VEHICLES
+                      ? app_colors.third
+                      : app_colors.text_gray,
+                },
+              ]}
+            >
+              VEHICULOS
+            </Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           style={{
             paddingTop: 5,
@@ -130,37 +168,39 @@ export const VisitaDetails = ({
             FECHAS
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            paddingTop: 5,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          onPress={() => handleChangeTab(TABS.GUEST)}
-        >
-          <MaterialIcons
-            name="people-alt"
-            size={18}
-            color={
-              selectedTab === TABS.GUEST
-                ? app_colors.third
-                : app_colors.ligth_bg
-            }
-          />
-          <Text
-            style={[
-              app_text_menu,
-              {
-                color:
-                  selectedTab === TABS.GUEST
-                    ? app_colors.third
-                    : app_colors.text_gray,
-              },
-            ]}
+        {["2"].includes(idTipoIngreso) && (
+          <TouchableOpacity
+            style={{
+              paddingTop: 5,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            onPress={() => handleChangeTab(TABS.GUEST)}
           >
-            INVITADOS
-          </Text>
-        </TouchableOpacity>
+            <MaterialIcons
+              name="people-alt"
+              size={18}
+              color={
+                selectedTab === TABS.GUEST
+                  ? app_colors.third
+                  : app_colors.ligth_bg
+              }
+            />
+            <Text
+              style={[
+                app_text_menu,
+                {
+                  color:
+                    selectedTab === TABS.GUEST
+                      ? app_colors.third
+                      : app_colors.text_gray,
+                },
+              ]}
+            >
+              PEATONES
+            </Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           style={{
             paddingTop: 5,
@@ -195,4 +235,9 @@ export const VisitaDetails = ({
       </View>
     </>
   );
+};
+VisitaDetails.defaultProps = {
+  newVisita: false,
+  handleChangeTab: () => {},
+  handleNotificaciones: () => {},
 };

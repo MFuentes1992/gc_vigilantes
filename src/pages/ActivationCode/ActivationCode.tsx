@@ -3,202 +3,100 @@ import { useDispatch, useSelector } from "react-redux";
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  authenticate,
   container,
   container_animation,
-  getActivationCode,
+  formRules,
   submit_button,
   title_container,
 } from "./constants";
 import { RootState } from "@gcVigilantes/store";
-import { ROUTES, getLabelApp } from "@gcVigilantes/utils";
-import { InitializeConnection } from "./constants";
+import {
+  LOCAL_STORAGE_KEYS,
+  ROUTES,
+  getLabelApp,
+  loadAsyncStorageData,
+} from "@gcVigilantes/utils";
 
 import { setUserData } from "@gcVigilantes/store/UserData";
 import { app_text_title } from "@gcVigilantes/utils/default.styles";
 import { card_styles } from "../VisitaInfo/constants";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { ScrollView } from "react-native-gesture-handler";
-import { setShowAlert } from "@gcVigilantes/store/Alerts";
-import { ALERT_TYPES } from "@gcVigilantes/Components/Alerts/constants";
 import LottieView from "lottie-react-native";
+import { useFormValidator } from "@gcVigilantes/Components/hooks/customFormValidator";
+import {
+  threeWayAuthentication,
+  twoWayAuthentication,
+} from "@gcVigilantes/store/Login/api";
+import { setScreen } from "@gcVigilantes/store/Pagination";
 
 export const ActivationCode = ({ navigation }: any) => {
   const dispatch = useDispatch();
-  const [activationCode, setActivationCode] = useState<string>("");
-  const [dataBaseCode, setDataBaseCod] = useState<string>("");
-  const { access_token } = useSelector((state: RootState) => state.userData);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { errors: formErrors, setFormData: setData } =
+    useFormValidator(formRules);
+  const [formData, setFormData] = useState<{ [key: string]: string }>({});
+  const [loading, setLoading] = useState<boolean>(false);
   const preferences = useSelector((state: RootState) => state.preferences);
 
   useEffect(() => {
     setLoading(true);
-    AsyncStorage.getItem("database_code")
-      .then((dbCode) => {
-        if (dbCode === "" || dbCode === null) {
-          setLoading(false);
-        }
-        if (dbCode) {
-          setDataBaseCod(dbCode);
-          AsyncStorage.getItem("token_instalacion")
-            .then((res) => {
-              if (res) {
-                Authenticate(dbCode).then((res) => {
-                  if (res) {
-                    AsyncStorage.getItem("activation_code")
-                      .then((res) => {
-                        if (res) {
-                          getActivationCode(res)
-                            .then((res) => res.json())
-                            .then((data) => {
-                              if (
-                                data.code === 203 ||
-                                data.code === "203" ||
-                                data.code === 200 ||
-                                data.code === "200"
-                              ) {
-                                navigation.replace(ROUTES.HOME);
-                              } else {
-                                setLoading(false);
-                              }
-                            })
-                            .catch((error) => {
-                              setLoading(false);
-                              console.log(
-                                "Error al obtener token de activación",
-                                error
-                              );
-                            });
-                        }
-                      })
-                      .catch((error) => {
-                        setLoading(false);
-                        console.log(
-                          "Error al obtener token de activación",
-                          error
-                        );
-                      });
-                  }
-                });
-              } else {
-                setLoading(false);
-              }
-            })
-            .catch((error) => {
-              setLoading(false);
-              console.log("Error al obtener token de instalación", error);
-            });
-        }
+    loadAsyncStorageData(
+      Object.keys(LOCAL_STORAGE_KEYS).map((key) => LOCAL_STORAGE_KEYS[key]),
+      AsyncStorage
+    )
+      .then((lsResult) => {
+        const [instalationToken, accessCode, dbCode, idCaseta] = lsResult;
+        dispatch(
+          setUserData({
+            access_token: instalationToken.Instalation_Token.toString() || "",
+            database_code: dbCode.DB_Code.toString() || "",
+            access_code: accessCode.Access_Code.toString() || "",
+            id_caseta: Number.parseInt(idCaseta?.id_caseta?.toString() || "0"),
+            name: "",
+            residence: "",
+            id: "",
+          }) as any
+        );
+        dispatch(
+          twoWayAuthentication(
+            dbCode?.DB_Code.toString() || "",
+            accessCode?.Access_Code.toString() || "",
+            navigation,
+            () => setLoading(false)
+          ) as any
+        );
       })
       .catch((error) => {
         setLoading(false);
-        console.log("Error al obtener database_code", error);
       });
+    navigation.addListener("focus", () => {
+      dispatch(setScreen(ROUTES.ACTIVATION_CODE));
+    });
   }, []);
 
-  const Authenticate = async (dbCode: string) => {
-    const res = await InitializeConnection(
-      "analisis@dasgalu.com.mx",
-      "analisis123",
-      dbCode,
-      authenticate
-    );
-    console.log("Authenticate Fetch", res);
-    if (res) {
-      dispatch(
-        setUserData({
-          access_token: res.access_token,
-          database_code: dbCode,
-          name: res.name,
-          residence: res.residence,
-          id: res.id,
-        })
-      );
-      return true;
-    }
-    return false;
+  useEffect(() => {
+    setData(formData);
+  }, [formData]);
+
+  const handleTextChange = (key: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleTextChange = (value: string) => {
-    setActivationCode(value);
-  };
-
-  const handleDataBaseChange = (value: string) => {
-    setDataBaseCod(value);
+  const handleDataBaseChange = (key: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleSubmit = () => {
-    if (dataBaseCode === "") {
-      setLoading(false);
-      Alert.alert(
-        "Error",
-        getLabelApp(preferences.language, "app_empty_field")
-      );
-      return;
-    }
-    if (activationCode === "") {
-      setLoading(false);
-      Alert.alert(
-        "Error",
-        getLabelApp(preferences.language, "app_empty_field")
-      );
-      return;
-    }
-    Authenticate(dataBaseCode)
-      .then((raw) => {
-        if (raw) {
-          getActivationCode(activationCode)
-            .then((res) => {
-              res
-                .json()
-                .then((data) => {
-                  const resp = JSON.parse(JSON.stringify(data));
-                  if (resp.code === 200 || resp.code === "200") {
-                    AsyncStorage.setItem(
-                      "token_instalacion",
-                      data.token_instalacion
-                    )
-                      .then(() => {
-                        AsyncStorage.setItem("activation_code", activationCode);
-                        AsyncStorage.setItem("database_code", dataBaseCode);
-                        navigation.replace(ROUTES.HOME);
-                      })
-                      .catch((error) => {
-                        dispatch(
-                          setShowAlert({
-                            showAlert: true,
-                            title: "Error",
-                            message: error,
-                            type: ALERT_TYPES.ERROR,
-                          })
-                        );
-                      });
-                  } else {
-                    dispatch(
-                      setShowAlert({
-                        showAlert: true,
-                        title: "Error",
-                        message: resp.message,
-                        type: ALERT_TYPES.ERROR,
-                      })
-                    );
-                  }
-                  return resp;
-                })
-                .catch((error) =>
-                  console.log("Error al parsear token de activación", error)
-                );
-            })
-            .catch((error) =>
-              console.log("Error al obtener token de activación", error)
-            );
-        }
-      })
-      .catch((error) => {
-        setLoading(false);
-        console.log("Error al Iniciar conexón", error);
-      })
-      .finally(() => setLoading(false));
+    if (formErrors.length) return;
+    setLoading(true);
+    dispatch(
+      threeWayAuthentication(
+        formData.dataBaseCode,
+        formData.activationCode,
+        navigation,
+        () => setLoading(false)
+      ) as any
+    );
   };
 
   return (
@@ -217,13 +115,16 @@ export const ActivationCode = ({ navigation }: any) => {
                 height: 40,
                 padding: 10,
               }}
-              value={activationCode}
-              onChangeText={handleTextChange}
+              value={formData.activationCode}
+              onChangeText={(value) =>
+                handleTextChange("activationCode", value)
+              }
               placeholder={getLabelApp(
                 preferences.language,
                 "app_activation_code_placeholder"
               )}
             />
+            <Text style={[]}>{formErrors["activationCode"]}</Text>
           </View>
           <View style={card_styles}>
             <TextInput
@@ -232,13 +133,16 @@ export const ActivationCode = ({ navigation }: any) => {
                 height: 40,
                 padding: 10,
               }}
-              value={dataBaseCode}
-              onChangeText={handleDataBaseChange}
+              value={formData.dataBaseCode}
+              onChangeText={(value) =>
+                handleDataBaseChange("dataBaseCode", value)
+              }
               placeholder={getLabelApp(
                 preferences.language,
                 "app_database_code"
               )}
             />
+            <Text style={[]}>{formErrors["dataBaseCode"]}</Text>
           </View>
           <View style={card_styles}>
             <TouchableOpacity style={submit_button} onPress={handleSubmit}>

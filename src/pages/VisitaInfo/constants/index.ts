@@ -1,11 +1,14 @@
 import { TTipoIngreso } from "@gcVigilantes/store/TipoIngreso/types";
 import { TipoVisita } from "@gcVigilantes/store/TipoVisitas/types";
+import { Instalacion } from "@gcVigilantes/store/Vigilancia/types";
 import { VehiclesResType } from "@gcVigilantes/store/Visita/types";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { ViewStyle } from "react-native";
+import { StyleSheet } from "react-native";
 
 export const TABS = {
   MAIN: "main",
+  VEHICLES: "vehicles",
   DATE: "date",
   GUEST: "guest",
   SETTINGS: "settings",
@@ -17,8 +20,22 @@ export const TIPO_INGRESO = {
 };
 
 export const SWITCHER_VALUES = {
-  TRUE: "1",
-  FALSE: "0",
+  TRUE: [1, "1", "true"],
+  FALSE: [0, "0", "false"],
+};
+
+export const NEW_VEHICLE = {
+  conductor: "",
+  marca: "",
+  modelo: "",
+  anio: "",
+  color: "",
+  placas: "",
+};
+
+export const NEW_PEDESTRIAN = {
+  nombre: "",
+  estatusRegistro: 1,
 };
 
 export type VisitaInfoProps = {
@@ -51,22 +68,38 @@ export type MainInfoProps = {
   nombreVisita: string;
   visitVehicles: VehiclesResType[];
   estatus: number;
+  newVisita: boolean;
+  selectedInstalacion: Instalacion;
+  instalaciones: Instalacion[];
+  errorValidator: { [key: string]: { required: boolean } };
   handleOnChange: (key: string, value: string) => void;
 };
 
 export type DateInfoProps = {
-  fromDate?: string;
-  toDate?: string;
-  dateType?: string;
-  fromHour?: number;
-  toHour?: number;
-  hourType?: string;
+  fechaIngreso: string;
+  fechaSalida: string;
+  horaIngreso: string;
+  horaSalida: string;
   estatus: number;
-  handleOnChange: (key: string, value: string) => void;
+  dateTypeInput: number;
+  edit: boolean;
+  handleOnChange: (key: string, value: string | number) => void;
+};
+
+export type VisitaPeaton = {
+  id: string;
+  idVisita: string;
+  nombre: string;
+  fechaRegistro: string;
+  fechaActualizacion: string;
+  estatusRegistro: number;
 };
 
 export type GuestInfoProps = {
-  estatus: number;
+  estatus: boolean;
+  peatones: VisitaPeaton[];
+  errorValidator: { [key: string]: { required: boolean } };
+  handleOnChange: (key: string, value: VisitaPeaton[]) => void;
 };
 
 export type settingsInfoProps = {
@@ -97,20 +130,12 @@ export const card_styles: ViewStyle = {
 };
 
 export const card_styles_extended: ViewStyle = {
-  margin: "5%",
-  flex: 0.5,
-  justifyContent: "center",
-  backgroundColor: app_colors.white,
-  paddingLeft: "5%",
-  paddingRight: "5%",
-  borderColor: app_colors.ligth_bg,
-  borderWidth: 0.5,
-  paddingBottom: "5%",
+  position: "relative",
+  width: "100%",
 };
 
 export const mainInfoVehicleScrollStyles: ViewStyle = {
   width: "100%",
-  height: 200,
   zIndex: 1,
   marginBottom: 0,
 };
@@ -127,3 +152,18 @@ export const DATE_TYPES = {
   START: 1,
   END: 2,
 };
+
+export const row_styles = StyleSheet.create({
+  container: {
+    position: "relative",
+    width: "100%",
+    flexDirection: "row",
+  },
+  column: {
+    position: "relative",
+    width: "50%",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "flex-start",
+  },
+});

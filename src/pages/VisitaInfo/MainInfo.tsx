@@ -1,35 +1,26 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   FontAwesome,
   FontAwesome5,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import * as Animatable from "react-native-animatable";
 import { CardTitle } from "@gcVigilantes/Components/CardTitle/CardTitle";
 import RadioGroup from "@gcVigilantes/Components/RadioGroup";
-
-import { TextInput, View, Image, Text, Modal } from "react-native";
-import {
-  MainInfoProps,
-  TIPO_INGRESO,
-  card_styles,
-  getVehicleInfoStyles,
-  mainInfoVehicleScrollStyles,
-} from "./constants";
-import { app_colors } from "@gcVigilantes/utils/default.colors";
-import { ScrollView } from "react-native-gesture-handler";
-import { VehicleCard } from "@gcVigilantes/Components/VehicleCard/VehicleCard";
-import { useSelector } from "react-redux";
 import { RootState } from "@gcVigilantes/store";
-import { VehiclesResType } from "@gcVigilantes/store/Visita/types";
-import { EditVehicles } from "@gcVigilantes/Components/EditVehicles/EditVehicles";
+import { useSelector } from "react-redux";
+
+import { TextInput, View, Text } from "react-native";
+import { MainInfoProps, card_styles } from "./constants";
+import { app_colors } from "@gcVigilantes/utils/default.colors";
+import { InstalationPicker } from "@gcVigilantes/Components/InstalationPicker/InstalationPicker";
+import { Instalacion } from "@gcVigilantes/store/Vigilancia/types";
+import { getLabelApp } from "@gcVigilantes/utils";
+import { app_error_required } from "@gcVigilantes/utils/default.styles";
 
 export const TipoVisitasIcon: { [key: string]: React.ReactNode } = {
-  Visita: <FontAwesome name="user" size={18} color="darkgray" />,
-  Provedor: <FontAwesome name="truck" size={18} color="darkgray" />,
-  ["Servicio domestico"]: (
-    <FontAwesome name="wrench" size={18} color="darkgray" />
-  ),
+  ["1"]: <FontAwesome name="user" size={18} color="darkgray" />,
+  ["3"]: <FontAwesome name="truck" size={18} color="darkgray" />,
+  ["2"]: <FontAwesome name="wrench" size={18} color="darkgray" />,
   ["Vehículo"]: <FontAwesome name="car" size={24} color="darkgray" />,
   Peatonal: <FontAwesome5 name="walking" size={24} color="darkgray" />,
   single: <FontAwesome name="user" size={24} color="darkgray" />,
@@ -48,33 +39,57 @@ export const MainInfo = ({
   nombreVisita,
   catalogVisitas,
   catalogIngreso,
-  visitVehicles,
   estatus,
+  newVisita,
+  selectedInstalacion,
+  instalaciones,
+  errorValidator,
   handleOnChange,
 }: MainInfoProps) => {
-  const [nombreVisitaState, setNombreVisita] = useState<string>(nombreVisita);
+  const preferences = useSelector((state: RootState) => state.preferences);
   // -- Disabling and enabling Cards
-  const [tipoVisitaDisabled, setTipoVisitaDisabled] = useState<boolean>(true);
-  const [tipoIngresoDisabled, setTipoIngresoDisabled] = useState<boolean>(true);
+  const [tipoVisitaDisabled, setTipoVisitaDisabled] =
+    useState<boolean>(!newVisita);
+  const [tipoIngresoDisabled, setTipoIngresoDisabled] =
+    useState<boolean>(!newVisita);
   const [nombreVisitaDisabled, setNombreVisitaDisabled] =
-    useState<boolean>(true);
-  // -- Vehicle info
+    useState<boolean>(!newVisita);
 
-  const [vehicles, setVehicles] = useState<VehiclesResType[]>([]);
-  const [editVehicle, setEditVehicle] = useState<{
-    id: number | undefined;
-    visible: boolean;
-  }>({
-    id: undefined,
-    visible: false,
-  });
-
-  useEffect(() => {
-    setVehicles(visitVehicles);
-  }, [visitVehicles]);
+  const handleOnChangeInstalacion = (_instalacion: string) => {
+    const instalacion = JSON.parse(_instalacion) as Instalacion;
+    const idInstalacion = instalacion.idInstalacion;
+    handleOnChange("idInstalacion", idInstalacion);
+    const idUsuario = instalacion.idUsuario;
+    handleOnChange("idUsuario", idUsuario);
+    const owner = instalacion.owner;
+    handleOnChange("autor", owner);
+    const seccion = instalacion.seccion;
+    handleOnChange("residencialSeccion", seccion);
+    const numInt = instalacion.numInt;
+    handleOnChange("residencialNumInterior", numInt);
+  };
 
   return (
     <View>
+      {newVisita && (
+        <View style={card_styles}>
+          <InstalationPicker
+            instalaciones={instalaciones}
+            selectedInstalacion={selectedInstalacion}
+            handleOnChange={handleOnChangeInstalacion}
+          />
+
+          {Object.hasOwn(errorValidator, "idInstalacion") &&
+            errorValidator.idInstalacion.required && (
+              <Text style={[app_error_required]}>
+                {getLabelApp(
+                  preferences.language,
+                  "app_default_required_field",
+                )}
+              </Text>
+            )}
+        </View>
+      )}
       <View style={card_styles}>
         <CardTitle
           title="tipo de visita"
@@ -88,14 +103,18 @@ export const MainInfo = ({
           options={catalogVisitas.map((catalog) => ({
             id: catalog.id,
             label: catalog.tipo_visita,
-            icon: TipoVisitasIcon[
-              catalog.tipo_visita
-            ] as unknown as React.ReactNode,
+            icon: TipoVisitasIcon[catalog.id] as unknown as React.ReactNode,
           }))}
           handleChange={(value: string) => {
-            handleOnChange("tipo_visita", value);
+            handleOnChange("idTipoVisita", value);
           }}
         />
+        {Object.hasOwn(errorValidator, "idTipoVisita") &&
+          errorValidator.idTipoVisita.required && (
+            <Text style={[app_error_required]}>
+              {getLabelApp(preferences.language, "app_default_required_field")}
+            </Text>
+          )}
       </View>
       <View style={card_styles}>
         <CardTitle
@@ -110,24 +129,36 @@ export const MainInfo = ({
           </Text>
         )}
         {!nombreVisitaDisabled && (
-          <TextInput
-            style={{
-              width: "90%",
-              height: 40,
-              borderBottomColor: "gray",
-              borderBottomWidth: 0.5,
-              left: 10,
-              color: app_colors.text_dark,
-            }}
-            value={nombreVisita}
-            placeholder="Ingrese aqui el nombre de la visita"
-            onChangeText={(value: string) => {
-              setNombreVisita(value);
-              handleOnChange("nombre_visita", value);
-            }}
-            autoCapitalize="words"
-            maxLength={50}
-          />
+          <>
+            <TextInput
+              style={{
+                width: "90%",
+                height: 40,
+                borderBottomColor: "gray",
+                borderBottomWidth: 0.5,
+                left: 10,
+                color: app_colors.text_dark,
+                marginBottom: 10,
+              }}
+              value={nombreVisita}
+              placeholder="Ingrese aqui el nombre de la visita"
+              onChangeText={(value: string) => {
+                handleOnChange("nombre", value);
+              }}
+              autoCapitalize="words"
+              maxLength={50}
+            />
+
+            {Object.hasOwn(errorValidator, "nombreVisita") &&
+              errorValidator.nombreVisita.required && (
+                <Text style={[app_error_required]}>
+                  {getLabelApp(
+                    preferences.language,
+                    "app_default_required_field",
+                  )}
+                </Text>
+              )}
+          </>
         )}
       </View>
       <View
@@ -156,54 +187,29 @@ export const MainInfo = ({
           selectedValue={tipoIngreso}
           disabled={tipoIngresoDisabled}
           handleChange={(value: string) => {
-            handleOnChange("tipo_ingreso", value);
+            handleOnChange("idTipoIngreso", value);
           }}
         />
+
+        {Object.hasOwn(errorValidator, "idTipoIngreso") &&
+          errorValidator?.idTipoIngreso?.required && (
+            <Text style={[app_error_required]}>
+              {getLabelApp(preferences.language, "app_default_required_field")}
+            </Text>
+          )}
       </View>
-      {tipoIngreso == TIPO_INGRESO.VEHICULO.id && (
-        <>
-          <ScrollView
-            style={mainInfoVehicleScrollStyles}
-            contentContainerStyle={getVehicleInfoStyles(vehicles)}
-            horizontal
-          >
-            {vehicles?.map((vehicle: VehiclesResType, index: number) => (
-              <VehicleCard
-                key={vehicle.placas}
-                id={index}
-                vehicle={vehicle}
-                openModal={(id) => setEditVehicle({ id, visible: true })}
-              />
-            ))}
-          </ScrollView>
-        </>
-      )}
-      {editVehicle.visible && (
-        <EditVehicles
-          id={editVehicle.id || 0}
-          visible={editVehicle.visible}
-          brand={vehicles[editVehicle?.id || 0]?.marca}
-          model={vehicles[editVehicle?.id || 0]?.modelo}
-          year={vehicles[editVehicle?.id || 0]?.anio}
-          color={vehicles[editVehicle?.id || 0]?.color}
-          plate={vehicles[editVehicle?.id || 0]?.placas}
-          handleOnChange={(index: number, key: string, value: string) => {
-            const newVehicles = vehicles?.map((vehicle, i) => {
-              if (i === index) {
-                return {
-                  ...vehicle,
-                  [key]: value,
-                };
-              }
-              return vehicle;
-            });
-            handleOnChange("vehicles", newVehicles as any);
-          }}
-          handleClose={() => {
-            setEditVehicle({ id: undefined, visible: false });
-          }}
-        />
-      )}
     </View>
   );
+};
+
+MainInfo.defaultProps = {
+  catalogVisitas: [],
+  catalogIngreso: [],
+  tipoVisita: "",
+  tipoIngreso: "",
+  nombreVisita: "",
+  visitVehicles: [],
+  estatus: 0,
+  newVisita: false,
+  handleOnChange: () => {},
 };

@@ -2,64 +2,97 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IVisita, VehiclesResType } from "./types";
 
 const initialState: IVisita = {
-	visita_id: "",
-	nombre: "",
-	desde: "",
-	hasta: "",
-	tipo_ingreso: "",
-	tipoIngresoText: "",
-	multiple_entrada: "",
-	notificaciones: "",
-	nameAutor: "",
-	emailAutor: "",
-	tipo_visita: "",
-	tipoVisitaText: "",
-	uniqueID: "",
-	seccion: "",
-	num_int: "",
-	residencial: "",
-	calle: "",
-	num_ext: "",
-	colonia: "",
-	ciudad: "",
-	estado: "",
-	cp: "",
-	vehicles: [],
+  visitaId: "",
+  idTipoVisita: "",
+  idTipoIngreso: "",
+  idUsuario: "",
+  fechaIngreso: "",
+  fechaSalida: "",
+  multiple: "",
+  notificaciones: "",
+  appGenerado: "",
+  vigenciaQR: "",
+  uniqueId: "",
+  autor: "",
+  emailAutor: "",
+  residencialSeccion: "",
+  residencialNumInterior: "",
+  residencialNumExterior: "",
+  residencialCalle: "",
+  residencialColonia: "",
+  residencialCiudad: null,
+  residencialEstado: "",
+  residencialCP: "",
+  residencialNombre: "",
+  nombre: "",
+  estatusVisita: "",
+  vehicles: [],
+  pedestrians: [],
 };
 
 const visitaSlice = createSlice({
-	name: "visita",
-	initialState,
-	reducers: {
-		setVisita(state, action: PayloadAction<IVisita>) {
-			state.visita_id = action.payload.visita_id;
-			state.calle = action.payload.calle;
-			state.ciudad = action.payload.ciudad;
-			state.colonia = action.payload.colonia;
-			state.cp = action.payload.cp;
-			state.desde = action.payload.desde;
-			state.nameAutor = action.payload.nameAutor;
-			state.emailAutor = action.payload.emailAutor;
-			state.estado = action.payload.estado;
-			state.hasta = action.payload.hasta;
-			state.multiple_entrada = action.payload.multiple_entrada;
-			state.nombre = action.payload.nombre;
-			state.notificaciones = action.payload.notificaciones;
-			state.num_ext = action.payload.num_ext;
-			state.num_int = action.payload.num_int;
-			state.residencial = action.payload.residencial;
-			state.seccion = action.payload.seccion;
-			state.tipo_visita = action.payload.tipo_visita;
-			state.tipo_ingreso = action.payload.tipo_ingreso;
-			state.tipoIngresoText = action.payload.tipoIngresoText;
-			state.tipoVisitaText = action.payload.tipoVisitaText;
-			state.uniqueID = action.payload.uniqueID;
-		},
-		setVehicles(state, action: PayloadAction<VehiclesResType[]>) {
-			state.vehicles = action.payload;
-		},
-	},
+  name: "visita",
+  initialState,
+  reducers: {
+    setVisita(state, action: PayloadAction<IVisita>) {
+      state.visitaId = action.payload.visitaId;
+      state.residencialCalle = action.payload.residencialCalle;
+      state.residencialCiudad = action.payload.residencialCiudad;
+      state.residencialColonia = action.payload.residencialColonia;
+      state.residencialCP = action.payload.residencialCP;
+      state.fechaIngreso = action.payload.fechaIngreso;
+      state.autor = action.payload.autor;
+      state.emailAutor = action.payload.emailAutor;
+      state.residencialEstado = action.payload.residencialEstado;
+      state.fechaSalida = action.payload.fechaSalida;
+      state.multiple = action.payload.multiple;
+      state.nombre = action.payload.nombre;
+      state.notificaciones = action.payload.notificaciones;
+      state.residencialNumExterior = action.payload.residencialNumExterior;
+      state.residencialNumInterior = action.payload.residencialNumInterior;
+      state.residencialNombre = action.payload.residencialNombre;
+      state.residencialSeccion = action.payload.residencialSeccion;
+      state.idTipoVisita = action.payload.idTipoVisita;
+      state.idTipoIngreso = action.payload.idTipoIngreso;
+      state.vigenciaQR = action.payload.vigenciaQR;
+      state.appGenerado = action.payload.appGenerado;
+      state.uniqueId = action.payload.uniqueId;
+      state.vehicles = action.payload.vehicles;
+      state.pedestrians = action.payload.pedestrians;
+      state.estatusVisita = action.payload.estatusVisita;
+    },
+    setVehicles(state, action: PayloadAction<VehiclesResType[]>) {
+      state.vehicles = action.payload;
+    },
+    clearVisita(state) {
+      state.visitaId = "";
+      state.residencialCalle = "";
+      state.residencialCiudad = null;
+      state.residencialColonia = "";
+      state.residencialCP = "";
+      state.fechaIngreso = "";
+      state.autor = "";
+      state.emailAutor = "";
+      state.residencialEstado = "";
+      state.fechaSalida = "";
+      state.multiple = "";
+      state.nombre = "";
+      state.notificaciones = "";
+      state.residencialNumExterior = "";
+      state.residencialNumInterior = "";
+      state.residencialNombre = "";
+      state.residencialSeccion = "";
+      state.idTipoVisita = "";
+      state.idTipoIngreso = "";
+      state.vigenciaQR = "";
+      state.appGenerado = "";
+      state.uniqueId = "";
+      state.vehicles = [];
+      state.pedestrians = [];
+      state.estatusVisita = "";
+    },
+  },
 });
 
-export const { setVisita, setVehicles } = visitaSlice.actions;
+export const { setVisita, setVehicles, clearVisita } = visitaSlice.actions;
 export default visitaSlice.reducer;

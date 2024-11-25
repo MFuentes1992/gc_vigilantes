@@ -1,45 +1,54 @@
 import React, { useState } from "react";
-import { TextInput, TouchableOpacity, View } from "react-native";
+import { TextInput, TouchableOpacity, View, Text } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import {
-  TGuestPicker,
   add_guest,
   guest_input,
   guest_input_container,
   guest_row,
   guestpicker_contaier,
 } from "./constants";
+import { getLabelApp } from "@gcVigilantes/utils";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
+import { VisitaPeaton } from "@gcVigilantes/pages/VisitaInfo/constants";
+import { addVehicleNotificationsStyles } from "../AddVehicle/constants";
+import { useSelector } from "react-redux";
+import { RootState } from "@gcVigilantes/store";
 
 export const GuestPicker = ({
-  guests,
+  peatones,
   estatus,
-  handlePicker,
+  handleOnChange,
 }: {
-  estatus: number;
-  guests?: TGuestPicker[];
-  handlePicker?: (_i: number, _v: string) => void;
+  estatus: boolean;
+  peatones: VisitaPeaton[];
+  handleOnChange: (key: string, value: VisitaPeaton[]) => void;
 }) => {
-  const [guestForm, setGuestForm] = useState<TGuestPicker[]>(guests || []);
-  const handleTextChange = (index: number, value: string) => {
-    const newGuestForm = [...guestForm];
-    newGuestForm[index].fulName = value;
-    setGuestForm(newGuestForm);
-    if (handlePicker) handlePicker(index, value);
+  const preferences = useSelector((state: RootState) => state.preferences);
+  const handleTextChange = (id: string, value: string) => {
+    const peaton = peatones.find((peaton) => peaton?.id === id);
+    const filteredPeatones = peatones.filter((peaton) => peaton?.id !== id);
+    if (peaton) {
+      const tmp = { ...peaton, nombre: value };
+      filteredPeatones.push(tmp);
+      handleOnChange("peatones", filteredPeatones);
+    }
   };
 
   const handleAddGuest = (estatus: boolean) => {
     if (estatus) {
-      const newGuestForm = [...guestForm];
-      newGuestForm.push({ fulName: "" });
-      setGuestForm(newGuestForm);
+      const tmp: VisitaPeaton = {
+        id: Math.random().toString(36).substr(2, 9),
+        nombre: "",
+        estatusRegistro: 1,
+      };
+      handleOnChange("peatones", [...peatones, tmp]);
     }
   };
 
-  const handleRemoveGuest = (index: number) => {
-    const newGuestForm = [...guestForm];
-    newGuestForm.splice(index, 1);
-    setGuestForm(newGuestForm);
+  const handleRemoveGuest = (id: string) => {
+    const filteredPeatones = peatones.filter((peaton) => peaton.id !== id);
+    handleOnChange("peatones", filteredPeatones);
   };
 
   return (
@@ -55,17 +64,21 @@ export const GuestPicker = ({
         />
       </TouchableOpacity>
       <View style={guest_input_container}>
-        {guestForm.map((guest, index) => {
+        {peatones.map((pedestrian, index) => {
           return (
             <View style={guest_row}>
               <TextInput
                 key={index}
-                value={guest.fulName}
+                value={pedestrian.nombre}
                 style={guest_input}
                 placeholder="Nombre del invitado"
-                onChangeText={(value: string) => handleTextChange(index, value)}
+                onChangeText={(value: string) =>
+                  handleTextChange(pedestrian.id, value)
+                }
               />
-              <TouchableOpacity onPress={() => handleRemoveGuest(index)}>
+              <TouchableOpacity
+                onPress={() => handleRemoveGuest(pedestrian.id)}
+              >
                 <AntDesign
                   name="close"
                   size={18}
