@@ -3,7 +3,7 @@ import lang_es from "@gcVigilantes/utils/Messages/lang_esp.json";
 
 export const ENDPOINTS = {
   BASE_URL: "https://movil.gestioncomunidad.mx",
-  WEB_SERVER: "https://apimovilgc.dasgalu.net",
+  WEB_SERVER: "https://movil.gestioncomunidad.mx",
   QR: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=",
   CATALOG_TIPO_VISITAS: "/visita/catalogs/GetTipoVisita/index.php",
   CATALOG_TIPO_INGRESO: "/visita/catalogs/GetTipoIngreso/index.php",
