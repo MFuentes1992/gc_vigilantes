@@ -1,5 +1,6 @@
 import { ALERT_TYPES } from "@gcVigilantes/Components/Alerts/constants";
 import { setShowAlert } from "@gcVigilantes/store/Alerts";
+import { setLoading } from "@gcVigilantes/store/UI";
 import {
   ENDPOINTS,
   getLabelApp,
@@ -49,7 +50,7 @@ export const getActivationCode = async (accessCode: string) => {
 
   const res = await fetch(
     `${ENDPOINTS.BASE_URL}${ENDPOINTS.VIGILANTE.CODE}`,
-    requestOptions
+    requestOptions,
   );
   return res.json();
 };
@@ -61,25 +62,52 @@ export const getActivationCode = async (accessCode: string) => {
  * @returns 3-way authentication results, index 2 is instalation code.
  */
 export const threeWayAuthentication =
-  (dbCode: string, accessCode: string, navigation: any) =>
+  (
+    dbCode: string,
+    accessCode: string,
+    navigation: any,
+    errorFallback: () => void,
+  ) =>
   async (dispatch: any) => {
     try {
-      const initRes = await InitializeConnection(dbCode);
-      const loginRes = await login(accessCode);
+      await InitializeConnection(dbCode);
+      await login(accessCode);
       const activationRes = await getActivationCode(accessCode);
 
       if (["203", 203].includes(activationRes.code)) {
-        throw new Error("Invalid activation code");
+        dispatch(
+          setShowAlert({
+            showAlert: true,
+            title: getLabelApp("es", "app_error_message_title"),
+            message: getLabelApp("es", "app_activation_code_used"),
+            type: ALERT_TYPES.ERROR,
+          }),
+        );
+        errorFallback();
+        return;
+      }
+
+      if (["400", 400].includes(activationRes.code)) {
+        dispatch(
+          setShowAlert({
+            showAlert: true,
+            title: getLabelApp("es", "app_error_message_title"),
+            message: getLabelApp("es", "app_activation_code_invalid"),
+            type: ALERT_TYPES.ERROR,
+          }),
+        );
+        errorFallback();
+        return;
       }
 
       if (activationRes) {
         AsyncStorage.setItem(
           LOCAL_STORAGE_KEYS.INSTALATION_TOKEN,
-          activationRes.token_instalacion
+          activationRes.token_instalacion,
         );
         AsyncStorage.setItem(
           LOCAL_STORAGE_KEYS.ID_CASETA,
-          activationRes.id_caseta
+          activationRes.id_caseta,
         );
         AsyncStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_CODE, accessCode);
         AsyncStorage.setItem(LOCAL_STORAGE_KEYS.DB_CODE, dbCode);
@@ -90,9 +118,9 @@ export const threeWayAuthentication =
         setShowAlert({
           showAlert: true,
           title: getLabelApp("es", "app_error_message_title"),
-          message: getLabelApp("es", "app_error_message"),
+          message: error as string,
           type: ALERT_TYPES.ERROR,
-        })
+        }),
       );
     }
   };
@@ -115,7 +143,7 @@ export const twoWayAuthentication =
           title: getLabelApp("es", "app_error_message_title"),
           message: getLabelApp("es", "app_error_message"),
           type: ALERT_TYPES.ERROR,
-        })
+        }),
       );
     }
   };
