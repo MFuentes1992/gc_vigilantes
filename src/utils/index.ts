@@ -112,7 +112,7 @@ export const toMilitarHours = (hour: string) => {
       .replace(/AM|PM/g, "")
       .replace(/\s/g, ":00")}`;
   }
-  return `${hour.replace(/AM|PM/g, "").replace(" ", ":00")}`;
+  return `${hour.replace(/AM|PM/g, "").replace(/\s/g, ":00")}`;
 };
 
 export const stringTemplateAddQuery = (cadena: string, object: any) => {

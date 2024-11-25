@@ -62,14 +62,16 @@ export const VisitaInfo = ({ navigation, route }: any) => {
     idInstalacion: "",
     idUsuario: "",
     fechaIngreso: new Date().toISOString(),
-    fechaIngresoHora: new Date().toLocaleTimeString(preferences.locale, {
+    fechaIngresoHora: new Date().toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
+      hourCycle: "h12",
     }),
     fechaSalida: new Date().toISOString(),
-    fechaSalidaHora: new Date().toLocaleTimeString(preferences.locale, {
+    fechaSalidaHora: new Date().toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
+      hourCycle: "h12",
     }),
     dateTypeInput: DATE_TYPES.END,
     multiple: 1,

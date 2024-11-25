@@ -214,14 +214,14 @@ export const DateInfo = ({
                 setStartHourAmPm(value);
                 handleOnChange(
                   "fechaIngresoHora",
-                  `${horaIngreso.replaceAll(/AM|PM/g, value)}`,
+                  `${horaIngreso.replaceAll(/\b([ap]\.?\s?m\.?|AM|PM)\b/g, value)}`,
                 );
                 break;
               case "end":
                 setEndHourAmPm(value);
                 handleOnChange(
                   "fechaSalidaHora",
-                  `${horaSalida.replaceAll(/AM|PM/g, value)}`,
+                  `${horaSalida.replaceAll(/\b([ap]\.?\s?m\.?|AM|PM)\b/g, value)}`,
                 );
                 break;
               default:
