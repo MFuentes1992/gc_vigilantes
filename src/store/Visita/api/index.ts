@@ -53,7 +53,7 @@ export const getVehicles = (uniqueID: string) => (dispatch: any) => {
 };
 
 export const updateVisita =
-  (visita: { [key: string]: any }) => (dispatch: any) => {
+  (visita: { [key: string]: any }, callback: () => void) => (dispatch: any) => {
     dispatch(setLoading(true));
     const url = `${ENDPOINTS.BASE_URL}${ENDPOINTS.VISITAS.UPDATE}`;
     const formData = new FormData();
@@ -77,6 +77,7 @@ export const updateVisita =
                 type: ALERT_TYPES.SUCCESS,
               }),
             );
+            callback();
           })
           .catch(() => {
             dispatch(setLoading(false));
@@ -120,7 +121,7 @@ export const logVisitaIngressEgress = async (
 };
 
 export const createVisita =
-  (visita: { [key: string]: any }) => (dispatch: any) => {
+  (visita: { [key: string]: any }, callback: () => void) => (dispatch: any) => {
     const formValues = new FormData();
     Object.keys(visita).forEach((key) => {
       formValues.append(key, visita[key]);
@@ -144,6 +145,7 @@ export const createVisita =
               type: ALERT_TYPES.SUCCESS,
             }),
           );
+          callback();
         });
       })
       .catch((error) => {

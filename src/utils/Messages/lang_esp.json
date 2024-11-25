@@ -4,6 +4,8 @@
   "app_database_code": "Por favor, Ingresa el código de la base de datos.",
   "app_database_code_placeholder": "DB Código.",
   "app_empty_field": "Por favor, rellene todos los campos.",
+  "app_activation_code_used": "Código de activación en uso.",
+  "app_activation_code_invalid": "Código de activación inexistente",
   "app_empty_vehicles": "Por favor, registre al menos 1 vehículo.",
   "app_empty_pedestrians": "Por favor, registre al menos 1 peatón.",
   "app_activation_code_placeholder": "Código.",

@@ -62,14 +62,16 @@ export const VisitaInfo = ({ navigation, route }: any) => {
     idInstalacion: "",
     idUsuario: "",
     fechaIngreso: new Date().toISOString(),
-    fechaIngresoHora: new Date().toLocaleTimeString(preferences.locale, {
+    fechaIngresoHora: new Date().toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
+      hourCycle: "h12",
     }),
     fechaSalida: new Date().toISOString(),
-    fechaSalidaHora: new Date().toLocaleTimeString(preferences.locale, {
+    fechaSalidaHora: new Date().toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
+      hourCycle: "h12",
     }),
     dateTypeInput: DATE_TYPES.END,
     multiple: 1,
@@ -310,16 +312,19 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                       id_caseta: formValues?.id_caseta,
                     };
                     if (["1"].includes(formValues?.idTipoIngreso))
-                      payload.vehicles = formValues?.vehicles;
+                      payload.vehiculos = formValues?.vehicles;
                     if (["2"].includes(formValues?.idTipoIngreso))
                       payload.peatones = formValues?.peatones;
                     const formValid = validateForm(payload);
-                    console.log("formValid ====>", formValid);
 
                     if (formValid.isValid) {
                       payload.vehiculos = JSON.stringify(payload?.vehiculos);
                       payload.peatones = JSON.stringify(payload?.peatones);
-                      dispatch(createVisita(payload) as any);
+                      dispatch(
+                        createVisita(payload, () =>
+                          navigation.navigate(ROUTES.LOGS),
+                        ) as any,
+                      );
                     } else {
                       setErrors(formValid.errors);
                       dispatch(
@@ -355,7 +360,11 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                     };
                     const formValid = validateForm(payload);
                     if (formValid.isValid) {
-                      dispatch(updateVisita(payload) as any);
+                      dispatch(
+                        updateVisita(payload, () =>
+                          navigation.navigate(ROUTES.LOGS),
+                        ) as any,
+                      );
                     } else {
                       setErrors(formValid.errors);
                       dispatch(

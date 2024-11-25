@@ -42,7 +42,7 @@ export const ActivationCode = ({ navigation }: any) => {
     setLoading(true);
     loadAsyncStorageData(
       Object.keys(LOCAL_STORAGE_KEYS).map((key) => LOCAL_STORAGE_KEYS[key]),
-      AsyncStorage
+      AsyncStorage,
     )
       .then((lsResult) => {
         const [instalationToken, accessCode, dbCode, idCaseta] = lsResult;
@@ -55,15 +55,15 @@ export const ActivationCode = ({ navigation }: any) => {
             name: "",
             residence: "",
             id: "",
-          }) as any
+          }) as any,
         );
         dispatch(
           twoWayAuthentication(
             dbCode?.DB_Code.toString() || "",
             accessCode?.Access_Code.toString() || "",
             navigation,
-            () => setLoading(false)
-          ) as any
+            () => setLoading(false),
+          ) as any,
         );
       })
       .catch((error) => {
@@ -93,8 +93,9 @@ export const ActivationCode = ({ navigation }: any) => {
       threeWayAuthentication(
         formData.dataBaseCode,
         formData.activationCode,
-        navigation
-      ) as any
+        navigation,
+        () => setLoading(false),
+      ) as any,
     );
   };
 
@@ -120,7 +121,7 @@ export const ActivationCode = ({ navigation }: any) => {
               }
               placeholder={getLabelApp(
                 preferences.language,
-                "app_activation_code_placeholder"
+                "app_activation_code_placeholder",
               )}
             />
             <Text style={[]}>{formErrors["activationCode"]}</Text>
@@ -138,7 +139,7 @@ export const ActivationCode = ({ navigation }: any) => {
               }
               placeholder={getLabelApp(
                 preferences.language,
-                "app_database_code"
+                "app_database_code",
               )}
             />
             <Text style={[]}>{formErrors["dataBaseCode"]}</Text>
@@ -157,7 +158,7 @@ export const ActivationCode = ({ navigation }: any) => {
           <Text>
             {getLabelApp(
               preferences.language,
-              "app_activation_code_initialize"
+              "app_activation_code_initialize",
             )}
           </Text>
           <LottieView
