@@ -360,7 +360,11 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                     };
                     const formValid = validateForm(payload);
                     if (formValid.isValid) {
-                      dispatch(updateVisita(payload) as any);
+                      dispatch(
+                        updateVisita(payload, () =>
+                          navigation.navigate(ROUTES.LOGS),
+                        ) as any,
+                      );
                     } else {
                       setErrors(formValid.errors);
                       dispatch(
