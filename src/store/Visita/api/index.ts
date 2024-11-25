@@ -120,7 +120,7 @@ export const logVisitaIngressEgress = async (
 };
 
 export const createVisita =
-  (visita: { [key: string]: any }) => (dispatch: any) => {
+  (visita: { [key: string]: any }, callback: () => void) => (dispatch: any) => {
     const formValues = new FormData();
     Object.keys(visita).forEach((key) => {
       formValues.append(key, visita[key]);
@@ -144,6 +144,7 @@ export const createVisita =
               type: ALERT_TYPES.SUCCESS,
             }),
           );
+          callback();
         });
       })
       .catch((error) => {
