@@ -3,7 +3,7 @@ import lang_es from "@gcVigilantes/utils/Messages/lang_esp.json";
 
 export const ENDPOINTS = {
   BASE_URL: "https://movil.gestioncomunidad.mx",
-  WEB_SERVER: "https://movil.gestioncomunidad.mx",
+  WEB_SERVER: "https://gestioncomunidad.mx",
   QR: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=",
   CATALOG_TIPO_VISITAS: "/visita/catalogs/GetTipoVisita/index.php",
   CATALOG_TIPO_INGRESO: "/visita/catalogs/GetTipoIngreso/index.php",
@@ -141,7 +141,7 @@ export const hourFormat = (time: number) => {
 
 export const loadAsyncStorageData = async (
   keys: string[],
-  AsyncStorage: any
+  AsyncStorage: any,
 ) => {
   const promises = keys.map((key) => AsyncStorage.getItem(key));
   const results: { [key: string]: string | number }[] = [];
