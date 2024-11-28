@@ -1,17 +1,15 @@
 import { ALERT_TYPES } from "@gcVigilantes/Components/Alerts/constants";
 import { setShowAlert } from "@gcVigilantes/store/Alerts";
-import { setLoading } from "@gcVigilantes/store/UI";
 import {
   ENDPOINTS,
   getLabelApp,
   LOCAL_STORAGE_KEYS,
-  promiseQueuer,
   ROUTES,
 } from "@gcVigilantes/utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // -- REMOVE DEFAULT PARAMS
-export const InitializeConnection = async (dbCode: string) => {
+export const InitializeConnection = (dbCode: string) => {
   const formdata = new FormData();
   formdata.append("prefix", "u579469339");
   formdata.append("code", dbCode);
@@ -19,8 +17,7 @@ export const InitializeConnection = async (dbCode: string) => {
     method: "POST",
     body: formdata,
   };
-  const response = await fetch(`${ENDPOINTS.BASE_URL}`, requestOptions);
-  return response.json();
+  return fetch(`${ENDPOINTS.BASE_URL}`, requestOptions);
 };
 
 export const login = async (accessCode: string) => {
@@ -55,6 +52,10 @@ export const getActivationCode = async (accessCode: string) => {
   return res.json();
 };
 
+export const endSession = async () => {
+  await fetch(`${ENDPOINTS.BASE_URL}?logout`);
+};
+
 /**
  *
  * @param dbCode
@@ -70,34 +71,19 @@ export const threeWayAuthentication =
   ) =>
   async (dispatch: any) => {
     try {
-      await InitializeConnection(dbCode);
-      await login(accessCode);
+      const authRes = await InitializeConnection(dbCode);
+      if (authRes.status !== 200) {
+        throw new Error("Código de base de datos erróneo o inactivo.");
+      }
+      //TODO: evaluate if necessary request, await login(accessCode);
       const activationRes = await getActivationCode(accessCode);
 
       if (["203", 203].includes(activationRes.code)) {
-        dispatch(
-          setShowAlert({
-            showAlert: true,
-            title: getLabelApp("es", "app_error_message_title"),
-            message: getLabelApp("es", "app_activation_code_used"),
-            type: ALERT_TYPES.ERROR,
-          }),
-        );
-        errorFallback();
-        return;
+        throw new Error(getLabelApp("es", "app_activation_code_used"));
       }
 
       if (["400", 400].includes(activationRes.code)) {
-        dispatch(
-          setShowAlert({
-            showAlert: true,
-            title: getLabelApp("es", "app_error_message_title"),
-            message: getLabelApp("es", "app_activation_code_invalid"),
-            type: ALERT_TYPES.ERROR,
-          }),
-        );
-        errorFallback();
-        return;
+        throw new Error(getLabelApp("es", "app_activation_code_invalid"));
       }
 
       if (activationRes) {
@@ -113,15 +99,18 @@ export const threeWayAuthentication =
         AsyncStorage.setItem(LOCAL_STORAGE_KEYS.DB_CODE, dbCode);
         navigation.replace(ROUTES.HOME);
       }
-    } catch (error) {
+    } catch (error: any) {
+      await endSession();
+      errorFallback();
       dispatch(
         setShowAlert({
           showAlert: true,
           title: getLabelApp("es", "app_error_message_title"),
-          message: error as string,
+          message: `${error}`,
           type: ALERT_TYPES.ERROR,
         }),
       );
+      return;
     }
   };
 
@@ -129,19 +118,24 @@ export const twoWayAuthentication =
   (dbCode: string, accessCode: string, navigation: any, callback: () => void) =>
   async (dispatch: any) => {
     try {
-      const initRes = await InitializeConnection(dbCode);
+      const authRes = await InitializeConnection(dbCode);
+      if (authRes.status !== 200) {
+        throw new Error("Código de base de datos erróneo o inactivo.");
+      }
       const loginRes = await login(accessCode);
       if (["200", 200].includes(loginRes.code)) {
         navigation.replace(ROUTES.HOME);
       } else {
-        callback();
+        throw new Error(getLabelApp("es", "app_error_message"));
       }
     } catch (error) {
+      await endSession();
+      callback();
       dispatch(
         setShowAlert({
           showAlert: true,
           title: getLabelApp("es", "app_error_message_title"),
-          message: getLabelApp("es", "app_error_message"),
+          message: `${error}`,
           type: ALERT_TYPES.ERROR,
         }),
       );
