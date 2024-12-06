@@ -232,7 +232,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               horaSalida={formValues?.fechaSalidaHora}
               dateTypeInput={formValues?.dateTypeInput}
               estatus={formValues?.estatusVisita}
-              edit={[""].includes(uniqueID)}
+              edit
               handleOnChange={handleOnChange}
             />
           )}
@@ -358,6 +358,37 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                       peatones: JSON.stringify(formValues?.peatones),
                       id_caseta: formValues?.id_caseta,
                     };
+                    const now = new Date();
+                    const initialDate = new Date(payload.fechaIngreso);
+                    const endDate = new Date(payload.fechaSalida);
+                    if (now < initialDate) {
+                      dispatch(
+                        setShowAlert({
+                          showAlert: true,
+                          title: "Error",
+                          message: getLabelApp(
+                            preferences.language,
+                            "app_screen_visit_info_error_invalid_initial_date",
+                          ),
+                          type: ALERT_TYPES.ERROR,
+                        }) as any,
+                      );
+                      return;
+                    }
+                    if (now > endDate) {
+                      dispatch(
+                        setShowAlert({
+                          showAlert: true,
+                          title: "Error",
+                          message: getLabelApp(
+                            preferences.language,
+                            "app_screen_visit_info_error_invalid_final_date",
+                          ),
+                          type: ALERT_TYPES.ERROR,
+                        }) as any,
+                      );
+                      return;
+                    }
                     const formValid = validateForm(payload);
                     if (formValid.isValid) {
                       dispatch(
