@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, View, Text } from "react-native";
+import { useDispatch } from "react-redux";
 import { HeaderActionButton } from "../HeaderActionButton/HeaderActionButton";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { vehicleCardStyles, addVehicleNotificationsStyles } from "./constants";
@@ -16,15 +17,18 @@ import { getLabelApp } from "@gcVigilantes/utils";
 import { RootState } from "@gcVigilantes/store";
 import { useSelector } from "react-redux";
 import { EditVehicles } from "../EditVehicles/EditVehicles";
+import { setInnerSpinner } from "@gcVigilantes/store/UI";
 
 type AddVehicleProps = {
   visitVehicles: VehiclesResType[];
+  uniqueId: string;
   register: boolean;
   errorValidator: { [key: string]: { required: boolean } };
   handleOnChange: (key: string, value: any) => void;
 };
 
 export const AddVehicle = (props: AddVehicleProps) => {
+  const dispatch = useDispatch();
   const preferences = useSelector((state: RootState) => state.preferences);
   // -- Vehicle info
   const [vehicles, setVehicles] = useState<VehiclesResType[]>([]);
@@ -40,6 +44,41 @@ export const AddVehicle = (props: AddVehicleProps) => {
       id: Math.random().toString(36).substr(2, 9),
     };
     setVehicles([...vehicles, tmpVehicle]);
+  };
+
+  const handleAttachCallback = (resources: any, vehicleId: string) => {
+    console.log("vehicle id ====>", vehicleId);
+    const formData = new FormData();
+    resources.forEach((asset: any, index: number) => {
+      formData.append(`uploadedFile_${index}`, {
+        uri: asset.uri,
+        type: "image/png",
+        name: asset.fileName,
+      });
+    });
+    formData.append("idVehiculo", vehicleId);
+    formData.append("uniqueId", props.uniqueId);
+    formData.append("tipoEvidencia", "vehiculo");
+    // setLoadingImg(true);
+    dispatch(setInnerSpinner(true));
+    fetch("https://apimovilgc.dasgalu.net/visita/attachments/index.php", {
+      method: "POST",
+      body: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        // setLoadingImg(false);
+        dispatch(setInnerSpinner(false));
+      })
+      .catch((error) => {
+        console.error(error);
+        //  setLoadingImg(false);
+        dispatch(setInnerSpinner(false));
+      });
   };
 
   return (
@@ -111,6 +150,7 @@ export const AddVehicle = (props: AddVehicleProps) => {
               year={vehicle.anio}
               color={vehicle.color}
               plate={vehicle.placas}
+              onAttachCallback={handleAttachCallback}
               handleOnChange={(id: string, key: string, value: string) => {
                 const currVehicle = vehicles.find(
                   (vehicle) => vehicle.id === id,

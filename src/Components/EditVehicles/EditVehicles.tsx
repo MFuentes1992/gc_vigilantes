@@ -1,10 +1,15 @@
 import React, { useEffect } from "react";
-import { TextInput, View } from "react-native";
+import { TextInput, View, Text, ActivityIndicator } from "react-native";
+import { useSelector } from "react-redux";
+import { RootState } from "@gcVigilantes/store";
 import { inputStyles } from "./constants";
 import { CardTitle } from "../CardTitle/CardTitle";
 import { card_styles_extended } from "@gcVigilantes/pages/VisitaInfo/constants";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { HeaderActionButton } from "../HeaderActionButton/HeaderActionButton";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { app_text_title_normal } from "@gcVigilantes/utils/default.styles";
+import { launchImageLibrary } from "react-native-image-picker";
 
 type EditVehiclesProps = {
   id: string;
@@ -15,6 +20,7 @@ type EditVehiclesProps = {
   color: string;
   plate: string;
   handleOnChange: (id: string, key: string, value: string) => void;
+  onAttachCallback: (resources: any, id: string) => void;
   handleClose: () => void;
 };
 
@@ -27,8 +33,55 @@ export const EditVehicles = ({
   color,
   plate,
   handleOnChange,
+  onAttachCallback,
   handleClose,
 }: EditVehiclesProps) => {
+  // const [loadingImg, setLoadingImg] = React.useState<boolean>(false);
+  const { innerSpinner } = useSelector((state: RootState) => state.ui);
+  const handleOpenLibrary = () => {
+    launchImageLibrary({
+      mediaType: "photo",
+      includeBase64: false,
+      maxHeight: 200,
+      maxWidth: 200,
+      selectionLimit: 0,
+    })
+      .then((response) => {
+        if (response?.assets) {
+          /* console.log(response.assets);
+          const formData = new FormData();
+          response.assets.forEach((asset, index) => {
+            formData.append(`uploadedFile_${index}`, {
+              uri: asset.uri,
+              type: "image/png",
+              name: asset.fileName,
+            });
+          });
+          setLoadingImg(true);
+          fetch("https://apimovilgc.dasgalu.net/visita/attachments/index.php", {
+            method: "POST",
+            body: formData,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+            .then((res) => res.json())
+            .then((res) => {
+              console.log(res);
+              setLoadingImg(false);
+            })
+            .catch((error) => {
+              console.error(error);
+              setLoadingImg(false);
+            }); */
+          onAttachCallback(response?.assets || [], id);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   return (
     <View key="container-edit-vehicle" style={card_styles_extended}>
       <View
@@ -84,6 +137,20 @@ export const EditVehicles = ({
         value={plate}
         placeholder="Matrícula del vehículo"
       />
+      <TouchableOpacity onPress={handleOpenLibrary}>
+        {!innerSpinner && (
+          <Text style={[app_text_title_normal, { color: app_colors.black }]}>
+            Attach image
+          </Text>
+        )}
+        {innerSpinner && (
+          <ActivityIndicator
+            size="small"
+            color={app_colors.black}
+            // animating={loadingImg}
+          />
+        )}
+      </TouchableOpacity>
     </View>
   );
 };

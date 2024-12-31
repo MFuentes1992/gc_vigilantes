@@ -213,6 +213,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
             ["1"].includes(formValues?.idTipoIngreso) && (
               <AddVehicle
                 visitVehicles={formValues.vehicles}
+                uniqueId={uniqueID}
                 errorValidator={errors}
                 register={[""].includes(uniqueID)}
                 handleOnChange={(key: string, value: any) => {
