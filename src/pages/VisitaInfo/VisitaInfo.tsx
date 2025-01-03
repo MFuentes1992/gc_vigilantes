@@ -288,11 +288,6 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                 if ([TABS.SETTINGS].includes(tab)) {
                   // TODO: Update visita or create visita.
                   if ([""].includes(uniqueID)) {
-                    console.log({
-                      horaSalida: formValues?.fechaSalidaHora,
-                      horaEntrada: formValues?.fechaIngresoHora,
-                    });
-
                     const payload: {
                       [key: string]: string | number | Array<any>;
                     } = {

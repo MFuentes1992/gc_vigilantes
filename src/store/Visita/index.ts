@@ -25,7 +25,7 @@ const initialState: IVisita = {
   residencialCP: "",
   residencialNombre: "",
   nombre: "",
-  estatusVisita: "",
+  estatusVisita: "Activa",
   vehicles: [],
   pedestrians: [],
 };
@@ -89,7 +89,7 @@ const visitaSlice = createSlice({
       state.uniqueId = "";
       state.vehicles = [];
       state.pedestrians = [];
-      state.estatusVisita = "";
+      state.estatusVisita = "Activa";
     },
   },
 });

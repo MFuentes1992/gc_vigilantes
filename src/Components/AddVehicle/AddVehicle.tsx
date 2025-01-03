@@ -56,10 +56,7 @@ export const AddVehicle = (props: AddVehicleProps) => {
         name: asset.fileName,
       });
     });
-    formData.append("idVehiculo", vehicleId);
-    formData.append("uniqueId", props.uniqueId);
-    formData.append("tipoEvidencia", "vehiculo");
-    // setLoadingImg(true);
+    formData.append("id", vehicleId);
     dispatch(setInnerSpinner(true));
     fetch("https://apimovilgc.dasgalu.net/visita/attachments/index.php", {
       method: "POST",
@@ -70,13 +67,10 @@ export const AddVehicle = (props: AddVehicleProps) => {
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
-        // setLoadingImg(false);
         dispatch(setInnerSpinner(false));
       })
       .catch((error) => {
         console.error(error);
-        //  setLoadingImg(false);
         dispatch(setInnerSpinner(false));
       });
   };
