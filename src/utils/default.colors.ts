@@ -8,6 +8,7 @@ export const app_colors = {
   header: "#B39CD0",
   white: "#FFFFFF",
   ligth_bg: "#dadada",
+  light_pale_bg: "#f5f5f5",
   text_gray: "#6c757d",
   text_dark: "#343a40",
   black: "#000000",

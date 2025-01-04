@@ -1,14 +1,21 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import Fontisto from "@expo/vector-icons/Fontisto";
 import { TextInput, View, Text, ActivityIndicator } from "react-native";
 import { useSelector } from "react-redux";
 import { RootState } from "@gcVigilantes/store";
-import { inputStyles } from "./constants";
+import { inputStyles, pill_styles } from "./constants";
 import { CardTitle } from "../CardTitle/CardTitle";
 import { card_styles_extended } from "@gcVigilantes/pages/VisitaInfo/constants";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { HeaderActionButton } from "../HeaderActionButton/HeaderActionButton";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { app_text_title_normal } from "@gcVigilantes/utils/default.styles";
+import {
+  app_text_body,
+  app_text_h2,
+  app_text_h3,
+  app_text_menu,
+  app_text_title_normal,
+} from "@gcVigilantes/utils/default.styles";
 import { launchImageLibrary } from "react-native-image-picker";
 
 type EditVehiclesProps = {
@@ -36,8 +43,8 @@ export const EditVehicles = ({
   onAttachCallback,
   handleClose,
 }: EditVehiclesProps) => {
-  // const [loadingImg, setLoadingImg] = React.useState<boolean>(false);
   const { innerSpinner } = useSelector((state: RootState) => state.ui);
+  const [selectedImgs, setSelectedImgs] = useState<string[]>([]);
   const handleOpenLibrary = () => {
     launchImageLibrary({
       mediaType: "photo",
@@ -48,33 +55,8 @@ export const EditVehicles = ({
     })
       .then((response) => {
         if (response?.assets) {
-          /* console.log(response.assets);
-          const formData = new FormData();
-          response.assets.forEach((asset, index) => {
-            formData.append(`uploadedFile_${index}`, {
-              uri: asset.uri,
-              type: "image/png",
-              name: asset.fileName,
-            });
-          });
-          setLoadingImg(true);
-          fetch("https://apimovilgc.dasgalu.net/visita/attachments/index.php", {
-            method: "POST",
-            body: formData,
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-            .then((res) => res.json())
-            .then((res) => {
-              console.log(res);
-              setLoadingImg(false);
-            })
-            .catch((error) => {
-              console.error(error);
-              setLoadingImg(false);
-            }); */
-          onAttachCallback(response?.assets || [], id);
+          // onAttachCallback(response?.assets || [], id);
+          setSelectedImgs(response.assets.map((asset) => `${asset.fileName}`));
         }
       })
       .catch((error) => {
@@ -137,20 +119,72 @@ export const EditVehicles = ({
         value={plate}
         placeholder="Matrícula del vehículo"
       />
-      <TouchableOpacity onPress={handleOpenLibrary}>
-        {!innerSpinner && (
-          <Text style={[app_text_title_normal, { color: app_colors.black }]}>
-            Attach image
+      <View
+        style={{
+          width: "100%",
+          flexDirection: "row",
+          justifyContent: "flex-start",
+          alignItems: "center",
+        }}
+      >
+        <TouchableOpacity style={pill_styles} onPress={handleOpenLibrary}>
+          <Text
+            style={[
+              app_text_title_normal,
+              {
+                color: app_colors.text_gray,
+                display: "flex",
+                alignItems: "flex-start",
+              },
+            ]}
+          >
+            <Fontisto
+              name="plus-a"
+              size={app_text_body.fontSize}
+              color={app_colors.text_gray}
+            />
           </Text>
-        )}
-        {innerSpinner && (
-          <ActivityIndicator
-            size="small"
-            color={app_colors.black}
-            // animating={loadingImg}
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            {
+              position: "relative",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              width: 200,
+              marginLeft: 10,
+            },
+          ]}
+          onPress={
+            () => {}
+            // setSelectedImgs((prev) => prev.filter((i) => i != fileName))
+          }
+        >
+          <Fontisto
+            name="picture"
+            style={{ marginRight: 10 }}
+            size={app_text_h3.fontSize}
+            color={app_colors.text_gray}
           />
+          <Text
+            style={[
+              app_text_body,
+              {
+                color: app_colors.text_gray,
+                display: "flex",
+                alignItems: "flex-start",
+              },
+            ]}
+          >
+            {selectedImgs.length}
+          </Text>
+        </TouchableOpacity>
+        {innerSpinner && (
+          <ActivityIndicator size="small" color={app_colors.text_gray} />
         )}
-      </TouchableOpacity>
+      </View>
     </View>
   );
 };

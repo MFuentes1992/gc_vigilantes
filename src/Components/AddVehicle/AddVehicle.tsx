@@ -184,40 +184,11 @@ export const AddVehicle = (props: AddVehicleProps) => {
                 key={vehicle.placas}
                 id={index}
                 vehicle={{ ...vehicle, id: vehicle.id || "" }}
-                openModal={() => setEditVehicle({ ...vehicle })}
+                openModal={() => {}}
               />
             ))}
         </ScrollView>
       </>
-      {editVehicle?.id && (
-        <EditVehicles
-          id={editVehicle.id || ""}
-          driver={editVehicle.conductor}
-          brand={editVehicle.marca}
-          model={editVehicle.modelo}
-          year={editVehicle.anio}
-          color={editVehicle.color}
-          plate={editVehicle.placas}
-          handleOnChange={(id: string, key: string, value: string) => {
-            const currVehicle = vehicles.find((vehicle) => vehicle.id === id);
-            if (currVehicle) {
-              const tmp = { ...currVehicle, [key]: value };
-              const updatedVehicles = vehicles.map((vehicle) =>
-                vehicle.id === id ? tmp : vehicle,
-              );
-              setVehicles(updatedVehicles);
-              props.handleOnChange("vehicles", updatedVehicles as any);
-            }
-          }}
-          handleClose={() => {
-            const fltrVehicles = vehicles.filter(
-              (v) => v.id !== editVehicle.id,
-            );
-            setVehicles(fltrVehicles);
-            props.handleOnChange("vehicles", fltrVehicles as any);
-          }}
-        />
-      )}
     </>
   );
 };

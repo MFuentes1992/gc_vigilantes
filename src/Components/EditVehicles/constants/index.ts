@@ -34,3 +34,10 @@ export const inputStyles: TextStyle = {
   borderRadius: 5,
   color: app_colors.text_gray,
 };
+
+export const pill_styles: ViewStyle = {
+  backgroundColor: app_colors.light_pale_bg,
+  borderRadius: 20,
+  padding: 10,
+  margin: 5,
+};
