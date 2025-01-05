@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, View, Text } from "react-native";
+import { ScrollView, View, Text, Image } from "react-native";
 import { useDispatch } from "react-redux";
 import { HeaderActionButton } from "../HeaderActionButton/HeaderActionButton";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
@@ -18,6 +18,9 @@ import { RootState } from "@gcVigilantes/store";
 import { useSelector } from "react-redux";
 import { EditVehicles } from "../EditVehicles/EditVehicles";
 import { setInnerSpinner } from "@gcVigilantes/store/UI";
+import * as Animatable from "react-native-animatable";
+import { slideInRight, slideOutRight, styles } from "../Filters/styles.default";
+import { AttachmentLibrary } from "../AttachmentLibrary/AttachmentLibrary";
 
 type AddVehicleProps = {
   visitVehicles: VehiclesResType[];
@@ -32,8 +35,8 @@ export const AddVehicle = (props: AddVehicleProps) => {
   const preferences = useSelector((state: RootState) => state.preferences);
   // -- Vehicle info
   const [vehicles, setVehicles] = useState<VehiclesResType[]>([]);
-  const [editVehicle, setEditVehicle] = useState<VehiclesResType>(NEW_VEHICLE);
-
+  const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
+  const [currentAttachments, setCurrentAttachments] = useState<string[]>([]);
   useEffect(() => {
     setVehicles(props.visitVehicles);
   }, [props.visitVehicles]);
@@ -73,6 +76,11 @@ export const AddVehicle = (props: AddVehicleProps) => {
         console.error(error);
         dispatch(setInnerSpinner(false));
       });
+  };
+
+  const handleViewAttachments = (uris: string[]) => {
+    setCurrentAttachments(uris);
+    setDrawerVisible(true);
   };
 
   return (
@@ -145,6 +153,7 @@ export const AddVehicle = (props: AddVehicleProps) => {
               color={vehicle.color}
               plate={vehicle.placas}
               onAttachCallback={handleAttachCallback}
+              onViewAttachments={handleViewAttachments}
               handleOnChange={(id: string, key: string, value: string) => {
                 const currVehicle = vehicles.find(
                   (vehicle) => vehicle.id === id,
@@ -188,6 +197,16 @@ export const AddVehicle = (props: AddVehicleProps) => {
               />
             ))}
         </ScrollView>
+        <Animatable.View
+          animation={drawerVisible ? slideInRight : slideOutRight}
+          duration={500}
+          style={styles.drawer}
+        >
+          <AttachmentLibrary
+            uris={currentAttachments}
+            handleClose={() => setDrawerVisible(false)}
+          />
+        </Animatable.View>
       </>
     </>
   );

@@ -28,6 +28,7 @@ type EditVehiclesProps = {
   plate: string;
   handleOnChange: (id: string, key: string, value: string) => void;
   onAttachCallback: (resources: any, id: string) => void;
+  onViewAttachments: (uris: string[]) => void;
   handleClose: () => void;
 };
 
@@ -41,6 +42,7 @@ export const EditVehicles = ({
   plate,
   handleOnChange,
   onAttachCallback,
+  onViewAttachments,
   handleClose,
 }: EditVehiclesProps) => {
   const { innerSpinner } = useSelector((state: RootState) => state.ui);
@@ -56,7 +58,7 @@ export const EditVehicles = ({
       .then((response) => {
         if (response?.assets) {
           // onAttachCallback(response?.assets || [], id);
-          setSelectedImgs(response.assets.map((asset) => `${asset.fileName}`));
+          setSelectedImgs(response.assets.map((a) => `${a.uri}`) || []);
         }
       })
       .catch((error) => {
@@ -158,8 +160,11 @@ export const EditVehicles = ({
             },
           ]}
           onPress={
-            () => {}
+            () => {
+              onViewAttachments(selectedImgs);
+            }
             // setSelectedImgs((prev) => prev.filter((i) => i != fileName))
+            // TODO: Implement bottom drawer: https://rnas.vercel.app/guides/scrolling
           }
         >
           <Fontisto
