@@ -10,10 +10,13 @@ import {
   mainInfoVehicleScrollStyles,
   NEW_VEHICLE,
 } from "@gcVigilantes/pages/VisitaInfo/constants";
-import { VehiclesResType } from "@gcVigilantes/store/Visita/types";
+import {
+  AttachmentType,
+  VehiclesResType,
+} from "@gcVigilantes/store/Visita/types";
 import { VehicleCard } from "../VehicleCard/VehicleCard";
 import { CardTitle } from "../CardTitle/CardTitle";
-import { getLabelApp } from "@gcVigilantes/utils";
+import { ENDPOINTS, getLabelApp } from "@gcVigilantes/utils";
 import { RootState } from "@gcVigilantes/store";
 import { useSelector } from "react-redux";
 import { EditVehicles } from "../EditVehicles/EditVehicles";
@@ -21,6 +24,7 @@ import { setInnerSpinner } from "@gcVigilantes/store/UI";
 import * as Animatable from "react-native-animatable";
 import { slideInRight, slideOutRight, styles } from "../Filters/styles.default";
 import { AttachmentLibrary } from "../AttachmentLibrary/AttachmentLibrary";
+import { launchImageLibrary } from "react-native-image-picker";
 
 type AddVehicleProps = {
   visitVehicles: VehiclesResType[];
@@ -36,7 +40,10 @@ export const AddVehicle = (props: AddVehicleProps) => {
   // -- Vehicle info
   const [vehicles, setVehicles] = useState<VehiclesResType[]>([]);
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
-  const [currentAttachments, setCurrentAttachments] = useState<string[]>([]);
+  const [currentAttachments, setCurrentAttachments] = useState<{
+    vehicleId: string;
+    attachments: string[];
+  }>({ vehicleId: "", attachments: [] });
   useEffect(() => {
     setVehicles(props.visitVehicles);
   }, [props.visitVehicles]);
@@ -49,9 +56,48 @@ export const AddVehicle = (props: AddVehicleProps) => {
     setVehicles([...vehicles, tmpVehicle]);
   };
 
-  const handleAttachCallback = (resources: any, vehicleId: string) => {
-    console.log("vehicle id ====>", vehicleId);
-    const formData = new FormData();
+  const handleAttachCallback = (vehicleId: string) => {
+    launchImageLibrary({
+      mediaType: "photo",
+      includeBase64: false,
+      maxHeight: 200,
+      maxWidth: 200,
+      selectionLimit: 0,
+    })
+      .then((response) => {
+        if (response?.assets) {
+          response?.assets.forEach((asset: any) => {
+            const attachment: AttachmentType = {
+              id: Math.random().toString(36).substr(2, 9),
+              archivo: asset.uri || "",
+              tipoEvidencia: "vehiculo",
+              idVehiculo: vehicleId,
+              idPeaton: "",
+              fechaRegistro: new Date().toISOString(),
+              fechaActualizacion: new Date().toISOString(),
+              estatusRegistro: "1",
+            };
+            const vehicle = vehicles.find((v) => v.id === vehicleId);
+            if (vehicle) {
+              const updatedVehicle = {
+                ...vehicle,
+                attachedFiles: vehicle.attachedFiles
+                  ? [...vehicle.attachedFiles, attachment]
+                  : [attachment],
+              };
+              const updatedVehicles = vehicles.map((v) =>
+                v.id === vehicleId ? updatedVehicle : v,
+              );
+              setVehicles(updatedVehicles);
+              props.handleOnChange("vehicles", updatedVehicles as any);
+            }
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    /* const formData = new FormData();
     resources.forEach((asset: any, index: number) => {
       formData.append(`uploadedFile_${index}`, {
         uri: asset.uri,
@@ -75,16 +121,36 @@ export const AddVehicle = (props: AddVehicleProps) => {
       .catch((error) => {
         console.error(error);
         dispatch(setInnerSpinner(false));
-      });
+      }); */
   };
 
-  const handleViewAttachments = (uris: string[]) => {
-    setCurrentAttachments(uris);
+  const handleViewAttachments = (vehicleId: string) => {
+    const vehicle = vehicles.find((vehicle) => vehicle.id === vehicleId);
+    const attachments = vehicle?.attachedFiles?.map((at) => at.archivo) || [];
+    setCurrentAttachments({ vehicleId, attachments });
     setDrawerVisible(true);
   };
 
-  const handleDeleteAttachment = (uri: string) => {
-    setCurrentAttachments((prev) => prev.filter((_uri) => _uri !== uri));
+  const handleDeleteAttachment = (vehicleId: string, uri: string) => {
+    const vehicle = vehicles.find((vehicle) => vehicle.id === vehicleId);
+    if (vehicle) {
+      const updatedVehicle = {
+        ...vehicle,
+        attachedFiles: vehicle.attachedFiles?.filter(
+          (at) => at.archivo !== uri,
+        ),
+      };
+      const updatedVehicles = vehicles.map((v) =>
+        v.id === vehicleId ? updatedVehicle : v,
+      );
+      setVehicles(updatedVehicles);
+      props.handleOnChange("vehicles", updatedVehicles as any);
+      setCurrentAttachments({
+        vehicleId,
+        attachments:
+          updatedVehicle.attachedFiles?.map((at) => at.archivo) || [],
+      });
+    }
   };
 
   return (
@@ -156,6 +222,9 @@ export const AddVehicle = (props: AddVehicleProps) => {
               year={vehicle.anio}
               color={vehicle.color}
               plate={vehicle.placas}
+              attachedFiles={
+                vehicle.attachedFiles?.map((at) => at.archivo) || []
+              }
               onAttachCallback={handleAttachCallback}
               onViewAttachments={handleViewAttachments}
               handleOnChange={(id: string, key: string, value: string) => {
@@ -207,9 +276,11 @@ export const AddVehicle = (props: AddVehicleProps) => {
           style={styles.drawer}
         >
           <AttachmentLibrary
-            uris={currentAttachments}
+            uris={currentAttachments.attachments}
             handleClose={() => setDrawerVisible(false)}
-            onDelete={handleDeleteAttachment}
+            onDelete={(uri: string) =>
+              handleDeleteAttachment(currentAttachments.vehicleId, uri)
+            }
           />
         </Animatable.View>
       </>

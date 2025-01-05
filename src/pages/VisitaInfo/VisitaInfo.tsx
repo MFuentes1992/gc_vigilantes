@@ -129,6 +129,14 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 
   useEffect(() => {
     if (![""].includes(visitaRedux.visitaId)) {
+      console.log("VisitaRedux attachments =====>", {
+        attachmentsP: visitaRedux.pedestrians.map((item) =>
+          item.attachedFiles.map((at) => at.archivo),
+        ),
+        attachmentsV: visitaRedux.vehicles.map((item) =>
+          item.attachedFiles.map((at) => at.archivo),
+        ),
+      });
       AsyncStorage.getItem("id_caseta")
         .then((data) => {
           setFormValues(() => ({

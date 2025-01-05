@@ -16,6 +16,7 @@ export const AttachmentLibrary = (props: AttachmentLibraryProps) => {
     <ScrollView
       contentContainerStyle={{
         maxHeight: 800,
+        minHeight: 600,
       }}
     >
       <CardTitle title="Adjuntos" removeIcon handleRemove={props.handleClose} />
