@@ -83,6 +83,10 @@ export const AddVehicle = (props: AddVehicleProps) => {
     setDrawerVisible(true);
   };
 
+  const handleDeleteAttachment = (uri: string) => {
+    setCurrentAttachments((prev) => prev.filter((_uri) => _uri !== uri));
+  };
+
   return (
     <>
       {Object.hasOwn(props.errorValidator, "vehiculos") &&
@@ -205,6 +209,7 @@ export const AddVehicle = (props: AddVehicleProps) => {
           <AttachmentLibrary
             uris={currentAttachments}
             handleClose={() => setDrawerVisible(false)}
+            onDelete={handleDeleteAttachment}
           />
         </Animatable.View>
       </>
