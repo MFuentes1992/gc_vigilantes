@@ -1,11 +1,14 @@
-import { Image, View } from "react-native";
+import { Image, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { CardTitle } from "../CardTitle/CardTitle";
+import Fontisto from "@expo/vector-icons/Fontisto";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
+import { styles } from "./style.default";
 
 export type AttachmentLibraryProps = {
   uris: string[];
   handleClose: () => void;
+  onDelete: (uri: string) => void;
 };
 
 export const AttachmentLibrary = (props: AttachmentLibraryProps) => {
@@ -28,6 +31,12 @@ export const AttachmentLibrary = (props: AttachmentLibraryProps) => {
               height: 200,
             }}
           >
+            <TouchableOpacity
+              style={styles.trashBin}
+              onPress={() => props.onDelete(uri)}
+            >
+              <Fontisto name="trash" size={24} color="black" />
+            </TouchableOpacity>
             <Image
               source={{ uri }}
               style={{ width: "100%", height: 200 }}
