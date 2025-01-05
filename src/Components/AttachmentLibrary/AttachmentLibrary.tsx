@@ -4,6 +4,7 @@ import { CardTitle } from "../CardTitle/CardTitle";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { styles } from "./style.default";
+import { ENDPOINTS } from "@gcVigilantes/utils";
 
 export type AttachmentLibraryProps = {
   uris: string[];
@@ -12,6 +13,7 @@ export type AttachmentLibraryProps = {
 };
 
 export const AttachmentLibrary = (props: AttachmentLibraryProps) => {
+  console.log("uris =====>", props.uris);
   return (
     <ScrollView
       contentContainerStyle={{
@@ -39,9 +41,14 @@ export const AttachmentLibrary = (props: AttachmentLibraryProps) => {
               <Fontisto name="trash" size={24} color="black" />
             </TouchableOpacity>
             <Image
-              source={{ uri }}
-              style={{ width: "100%", height: 200 }}
-              resizeMode="cover"
+              source={{
+                uri: uri.includes("uploads")
+                  ? `${ENDPOINTS.BASE_URL}/${uri}`
+                  : uri,
+                cache: "reload",
+                headers: { Pragma: "no-cache" },
+              }}
+              style={{ width: 150, height: 150 }}
             />
           </View>
         ))}

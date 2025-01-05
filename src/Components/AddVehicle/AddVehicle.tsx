@@ -66,6 +66,7 @@ export const AddVehicle = (props: AddVehicleProps) => {
     })
       .then((response) => {
         if (response?.assets) {
+          const tmpAttachments: AttachmentType[] = [];
           response?.assets.forEach((asset: any) => {
             const attachment: AttachmentType = {
               id: Math.random().toString(36).substr(2, 9),
@@ -77,21 +78,21 @@ export const AddVehicle = (props: AddVehicleProps) => {
               fechaActualizacion: new Date().toISOString(),
               estatusRegistro: "1",
             };
-            const vehicle = vehicles.find((v) => v.id === vehicleId);
-            if (vehicle) {
-              const updatedVehicle = {
-                ...vehicle,
-                attachedFiles: vehicle.attachedFiles
-                  ? [...vehicle.attachedFiles, attachment]
-                  : [attachment],
-              };
-              const updatedVehicles = vehicles.map((v) =>
-                v.id === vehicleId ? updatedVehicle : v,
-              );
-              setVehicles(updatedVehicles);
-              props.handleOnChange("vehicles", updatedVehicles as any);
-            }
+            tmpAttachments.push(attachment);
           });
+          const vehicle = vehicles.find((v) => v.id === vehicleId);
+          if (vehicle) {
+            const updatedVehicle = {
+              ...vehicle,
+              attachedFiles: vehicle.attachedFiles
+                ? [...vehicle.attachedFiles, ...tmpAttachments]
+                : [...tmpAttachments],
+            };
+            const updatedVehicles = vehicles.map((v) =>
+              v.id === vehicleId ? updatedVehicle : v,
+            );
+            props.handleOnChange("vehicles", updatedVehicles as any);
+          }
         }
       })
       .catch((error) => {
