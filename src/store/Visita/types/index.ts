@@ -1,5 +1,23 @@
-import { VisitaPeaton } from "@gcVigilantes/pages/VisitaInfo/constants";
+export type AttachmentType = {
+  id: string;
+  tipoEvidencia: string;
+  idVehiculo: string;
+  idPeaton: string;
+  archivo: string;
+  fechaRegistro: string;
+  fechaActualizacion: string;
+  estatusRegistro: string;
+};
 
+export type VisitaPeaton = {
+  id: string;
+  idVisita: string;
+  nombre: string;
+  fechaRegistro: string;
+  fechaActualizacion: string;
+  estatusRegistro: number;
+  attachedFiles?: AttachmentType[];
+};
 export type VehiclesResType = {
   id?: string;
   idVisita?: string;
@@ -12,6 +30,7 @@ export type VehiclesResType = {
   fechaRegistro?: string;
   fechaActualizacion?: string;
   estatusRegistro?: string;
+  attachedFiles?: AttachmentType[];
 };
 
 export interface IVisita {

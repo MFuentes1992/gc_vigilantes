@@ -129,6 +129,14 @@ export const VisitaInfo = ({ navigation, route }: any) => {
 
   useEffect(() => {
     if (![""].includes(visitaRedux.visitaId)) {
+      console.log("VisitaRedux attachments =====>", {
+        attachmentsP: visitaRedux.pedestrians.map((item) =>
+          item.attachedFiles.map((at) => at.archivo),
+        ),
+        attachmentsV: visitaRedux.vehicles.map((item) =>
+          item.attachedFiles.map((at) => at.archivo),
+        ),
+      });
       AsyncStorage.getItem("id_caseta")
         .then((data) => {
           setFormValues(() => ({
@@ -213,6 +221,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
             ["1"].includes(formValues?.idTipoIngreso) && (
               <AddVehicle
                 visitVehicles={formValues.vehicles}
+                uniqueId={uniqueID}
                 errorValidator={errors}
                 register={[""].includes(uniqueID)}
                 handleOnChange={(key: string, value: any) => {
@@ -287,11 +296,6 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                 if ([TABS.SETTINGS].includes(tab)) {
                   // TODO: Update visita or create visita.
                   if ([""].includes(uniqueID)) {
-                    console.log({
-                      horaSalida: formValues?.fechaSalidaHora,
-                      horaEntrada: formValues?.fechaIngresoHora,
-                    });
-
                     const payload: {
                       [key: string]: string | number | Array<any>;
                     } = {
