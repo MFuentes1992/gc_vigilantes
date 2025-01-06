@@ -65,6 +65,7 @@ export const AddVehicle = (props: AddVehicleProps) => {
       selectionLimit: 0,
     })
       .then((response) => {
+        const resources = response?.assets || [];
         if (response?.assets) {
           const tmpAttachments: AttachmentType[] = [];
           response?.assets.forEach((asset: any) => {
@@ -94,35 +95,35 @@ export const AddVehicle = (props: AddVehicleProps) => {
             props.handleOnChange("vehicles", updatedVehicles as any);
           }
         }
+        const formData = new FormData();
+        resources.forEach((asset: any, index: number) => {
+          formData.append(`uploadedFile_${index}`, {
+            uri: asset.uri,
+            type: "image/png",
+            name: asset.fileName,
+          });
+        });
+        formData.append("id", vehicleId);
+        dispatch(setInnerSpinner(true));
+        fetch("https://apimovilgc.dasgalu.net/visita/attachments/index.php", {
+          method: "POST",
+          body: formData,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+          .then((res) => res.json())
+          .then((res) => {
+            dispatch(setInnerSpinner(false));
+          })
+          .catch((error) => {
+            console.error(error);
+            dispatch(setInnerSpinner(false));
+          });
       })
       .catch((error) => {
         console.error(error);
       });
-    /* const formData = new FormData();
-    resources.forEach((asset: any, index: number) => {
-      formData.append(`uploadedFile_${index}`, {
-        uri: asset.uri,
-        type: "image/png",
-        name: asset.fileName,
-      });
-    });
-    formData.append("id", vehicleId);
-    dispatch(setInnerSpinner(true));
-    fetch("https://apimovilgc.dasgalu.net/visita/attachments/index.php", {
-      method: "POST",
-      body: formData,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        dispatch(setInnerSpinner(false));
-      })
-      .catch((error) => {
-        console.error(error);
-        dispatch(setInnerSpinner(false));
-      }); */
   };
 
   const handleViewAttachments = (vehicleId: string) => {
