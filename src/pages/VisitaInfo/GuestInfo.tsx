@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@gcVigilantes/store";
 import { Text, View } from "react-native";
@@ -9,17 +9,17 @@ import { GuestInfoProps } from "./constants";
 import { getLabelApp } from "@gcVigilantes/utils";
 import { addVehicleNotificationsStyles } from "@gcVigilantes/Components/AddVehicle/constants";
 import { launchImageLibrary } from "react-native-image-picker";
-import { AttachmentType, VisitaPeaton } from "@gcVigilantes/store/Visita/types";
+import { AttachmentType } from "@gcVigilantes/store/Visita/types";
 import { setInnerSpinner } from "@gcVigilantes/store/UI";
 
 export const GuestInfo = ({
   estatus,
   peatones,
   errorValidator,
+  handleViewAttachment,
   handleOnChange,
 }: GuestInfoProps) => {
   const preferences = useSelector((state: RootState) => state.preferences);
-
   const dispatch = useDispatch();
 
   const handleOpenLibrary = (pedestrianId: string) => {
@@ -92,7 +92,6 @@ export const GuestInfo = ({
         console.error(error);
       });
   };
-  const handleViewAttachment = (id: string) => {};
 
   return (
     <>
