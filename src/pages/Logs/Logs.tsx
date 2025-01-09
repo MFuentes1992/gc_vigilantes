@@ -8,10 +8,10 @@ import { Filters } from "@gcVigilantes/Components/Filters/Filters";
 import { TFilter } from "@gcVigilantes/Components/Filters/Drawer/Drawer";
 import { LogCard } from "@gcVigilantes/pages/Logs/component/LogCard/LogCard";
 import { getLogs } from "@gcVigilantes/store/Logs/api";
-import { hourFormat, timeZone } from "@gcVigilantes/utils";
+import { ENDPOINTS, hourFormat, ROUTES, timeZone } from "@gcVigilantes/utils";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export const Logs = () => {
+export const Logs = ({ navigation, route }: any) => {
   const dispatch = useDispatch();
   const { logs } = useSelector((state: RootState) => state.logs);
   const userData = useSelector((state: RootState) => state.userData);
@@ -26,7 +26,7 @@ export const Logs = () => {
           fechaInicio: "",
           fechaFin: "",
         },
-      }) as any
+      }) as any,
     );
   }, []);
 
@@ -38,7 +38,7 @@ export const Logs = () => {
         filtros: {
           ...values,
         },
-      }) as any
+      }) as any,
     );
   };
 
@@ -53,8 +53,16 @@ export const Logs = () => {
           fechaInicio: "",
           fechaFin: "",
         },
-      }) as any
+      }) as any,
     );
+  };
+
+  const handleGoToVisitaInfo = (uniqueID: string) => {
+    navigation.navigate(ROUTES.VISIT_INFO, {
+      uniqueID,
+      uri: `${ENDPOINTS.QR}${uniqueID}`,
+      tabAction: 0,
+    });
   };
 
   return (
@@ -80,13 +88,15 @@ export const Logs = () => {
                   day: "numeric",
                   year: "numeric",
                   hour12: true,
-                }
+                },
               )}
               time={hourFormat(new Date(log.fecha_lectura).getTime())}
               address={`${log.seccion} ${log.numero}`}
               name={log.nombre_visita}
               type={log.tipo_visita}
               ingress={log.tipo_ingreso}
+              uniqueID={log.uniqueID}
+              onVisitInfo={handleGoToVisitaInfo}
             />
           ))}
         </ScrollView>

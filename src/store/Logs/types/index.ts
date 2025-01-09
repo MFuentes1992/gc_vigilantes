@@ -10,6 +10,7 @@ export type LogItem = {
   numero: string;
   nombre_visita: string;
   fecha_lectura: string;
+  uniqueID: string;
 };
 
 export type Logs = {

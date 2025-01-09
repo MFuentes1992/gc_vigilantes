@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { getCatalogTipoVisitas } from "@gcVigilantes/store/TipoVisitas/api";
 import { RootState } from "@gcVigilantes/store";
 import { getCatalogTipoIngreso } from "@gcVigilantes/store/TipoIngreso/api";
@@ -15,9 +14,7 @@ import { GuestInfo } from "./GuestInfo";
 import { SettingsInfo } from "./SettingsInfo";
 import {
   createVisita,
-  getVehicles,
   getVisitaByUniqueID,
-  logVisitaIngressEgress,
   updateVisita,
 } from "@gcVigilantes/store/Visita/api";
 import {
@@ -47,7 +44,6 @@ import {
   styles,
 } from "@gcVigilantes/Components/Filters/styles.default";
 import { AttachmentLibrary } from "@gcVigilantes/Components/AttachmentLibrary/AttachmentLibrary";
-import { app_colors } from "@gcVigilantes/utils/default.colors";
 
 export const VisitaInfo = ({ navigation, route }: any) => {
   const { uniqueID, uri, tabAction } = route?.params;
