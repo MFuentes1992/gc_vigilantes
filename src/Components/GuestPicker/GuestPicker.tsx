@@ -100,27 +100,29 @@ export const GuestPicker = ({
                   style={{ marginTop: "50%", color: app_colors.text_gray }}
                 />
               </TouchableOpacity>
-              <TouchableOpacity
-                style={pill_styles}
-                onPress={() => onOpenLibrary(pedestrian.id)}
-              >
-                <Text
-                  style={[
-                    app_text_title_normal,
-                    {
-                      color: app_colors.text_gray,
-                      display: "flex",
-                      alignItems: "flex-start",
-                    },
-                  ]}
+              {estatus && (
+                <TouchableOpacity
+                  style={pill_styles}
+                  onPress={() => onOpenLibrary(pedestrian.id)}
                 >
-                  <Fontisto
-                    name="plus-a"
-                    size={app_text_body.fontSize}
-                    color={app_colors.text_gray}
-                  />
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={[
+                      app_text_title_normal,
+                      {
+                        color: app_colors.text_gray,
+                        display: "flex",
+                        alignItems: "flex-start",
+                      },
+                    ]}
+                  >
+                    <Fontisto
+                      name="plus-a"
+                      size={app_text_body.fontSize}
+                      color={app_colors.text_gray}
+                    />
+                  </Text>
+                </TouchableOpacity>
+              )}
               <TouchableOpacity
                 style={[
                   {

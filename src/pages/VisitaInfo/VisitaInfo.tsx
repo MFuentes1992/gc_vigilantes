@@ -267,6 +267,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                 uniqueId={uniqueID}
                 errorValidator={errors}
                 register={[""].includes(uniqueID)}
+                estatusVisita={formValues?.estatusVisita}
                 handleOnChange={(key: string, value: any) => {
                   setFormValues((prev) => {
                     const tmp = { ...prev };
@@ -494,6 +495,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
         <AttachmentLibrary
           uris={currentAttachments.attachments}
           handleClose={() => showAttachmentDrawer(false)}
+          estatusVisita={formValues?.estatusVisita}
           onDelete={(uri: string) => {
             handleDeleteAttachment(
               currentAttachments.id,

@@ -30,6 +30,7 @@ type AddVehicleProps = {
   visitVehicles: VehiclesResType[];
   uniqueId: string;
   register: boolean;
+  estatusVisita: string;
   errorValidator: { [key: string]: { required: boolean } };
   handleOnChange: (key: string, value: any) => void;
 };
@@ -224,6 +225,7 @@ export const AddVehicle = (props: AddVehicleProps) => {
               year={vehicle.anio}
               color={vehicle.color}
               plate={vehicle.placas}
+              estatusVisita={props.estatusVisita}
               attachedFiles={
                 vehicle.attachedFiles?.map((at) => at.archivo) || []
               }
@@ -280,6 +282,7 @@ export const AddVehicle = (props: AddVehicleProps) => {
           <AttachmentLibrary
             uris={currentAttachments.attachments}
             handleClose={() => setDrawerVisible(false)}
+            estatusVisita={props.estatusVisita}
             onDelete={(uri: string) =>
               handleDeleteAttachment(currentAttachments.vehicleId, uri)
             }
