@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { TextInput, TouchableOpacity, View, Text } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import Fontisto from "@expo/vector-icons/Fontisto";
 import {
   add_guest,
   guest_input,
@@ -10,18 +11,28 @@ import {
 } from "./constants";
 import { getLabelApp } from "@gcVigilantes/utils";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
-import { VisitaPeaton } from "@gcVigilantes/pages/VisitaInfo/constants";
 import { addVehicleNotificationsStyles } from "../AddVehicle/constants";
 import { useSelector } from "react-redux";
 import { RootState } from "@gcVigilantes/store";
+import {
+  app_text_body,
+  app_text_h3,
+  app_text_title_normal,
+} from "@gcVigilantes/utils/default.styles";
+import { VisitaPeaton } from "@gcVigilantes/store/Visita/types";
+import { pill_styles } from "../EditVehicles/constants";
 
 export const GuestPicker = ({
   peatones,
   estatus,
+  onViewAttachments,
+  onOpenLibrary,
   handleOnChange,
 }: {
   estatus: boolean;
   peatones: VisitaPeaton[];
+  onViewAttachments: (id: string) => void;
+  onOpenLibrary: (id: string) => void;
   handleOnChange: (key: string, value: VisitaPeaton[]) => void;
 }) => {
   const preferences = useSelector((state: RootState) => state.preferences);
@@ -39,7 +50,10 @@ export const GuestPicker = ({
     if (estatus) {
       const tmp: VisitaPeaton = {
         id: Math.random().toString(36).substr(2, 9),
+        idVisita: "",
         nombre: "",
+        fechaRegistro: new Date().toISOString(),
+        fechaActualizacion: new Date().toISOString(),
         estatusRegistro: 1,
       };
       handleOnChange("peatones", [...peatones, tmp]);
@@ -85,6 +99,64 @@ export const GuestPicker = ({
                   color="black"
                   style={{ marginTop: "50%", color: app_colors.text_gray }}
                 />
+              </TouchableOpacity>
+              {estatus && (
+                <TouchableOpacity
+                  style={pill_styles}
+                  onPress={() => onOpenLibrary(pedestrian.id)}
+                >
+                  <Text
+                    style={[
+                      app_text_title_normal,
+                      {
+                        color: app_colors.text_gray,
+                        display: "flex",
+                        alignItems: "flex-start",
+                      },
+                    ]}
+                  >
+                    <Fontisto
+                      name="plus-a"
+                      size={app_text_body.fontSize}
+                      color={app_colors.text_gray}
+                    />
+                  </Text>
+                </TouchableOpacity>
+              )}
+              <TouchableOpacity
+                style={[
+                  {
+                    position: "relative",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    width: 200,
+                    marginLeft: 10,
+                  },
+                ]}
+                onPress={() => {
+                  onViewAttachments(pedestrian.id);
+                }}
+              >
+                <Fontisto
+                  name="picture"
+                  style={{ marginRight: 10 }}
+                  size={app_text_h3.fontSize}
+                  color={app_colors.text_gray}
+                />
+                <Text
+                  style={[
+                    app_text_body,
+                    {
+                      color: app_colors.text_gray,
+                      display: "flex",
+                      alignItems: "flex-start",
+                    },
+                  ]}
+                >
+                  {pedestrian.attachedFiles?.length || []}
+                </Text>
               </TouchableOpacity>
             </View>
           );

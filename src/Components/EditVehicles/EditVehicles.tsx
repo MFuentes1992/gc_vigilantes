@@ -23,6 +23,7 @@ type EditVehiclesProps = {
   color: string;
   plate: string;
   attachedFiles: string[];
+  estatusVisita: string;
   handleOnChange: (id: string, key: string, value: string) => void;
   onAttachCallback: (id: string) => void;
   onViewAttachments: (id: string) => void;
@@ -38,6 +39,7 @@ export const EditVehicles = ({
   color,
   plate,
   attachedFiles,
+  estatusVisita,
   handleOnChange,
   onAttachCallback,
   onViewAttachments,
@@ -111,24 +113,26 @@ export const EditVehicles = ({
           alignItems: "center",
         }}
       >
-        <TouchableOpacity style={pill_styles} onPress={handleOpenLibrary}>
-          <Text
-            style={[
-              app_text_title_normal,
-              {
-                color: app_colors.text_gray,
-                display: "flex",
-                alignItems: "flex-start",
-              },
-            ]}
-          >
-            <Fontisto
-              name="plus-a"
-              size={app_text_body.fontSize}
-              color={app_colors.text_gray}
-            />
-          </Text>
-        </TouchableOpacity>
+        {estatusVisita.includes("Activa") && (
+          <TouchableOpacity style={pill_styles} onPress={handleOpenLibrary}>
+            <Text
+              style={[
+                app_text_title_normal,
+                {
+                  color: app_colors.text_gray,
+                  display: "flex",
+                  alignItems: "flex-start",
+                },
+              ]}
+            >
+              <Fontisto
+                name="plus-a"
+                size={app_text_body.fontSize}
+                color={app_colors.text_gray}
+              />
+            </Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           style={[
             {

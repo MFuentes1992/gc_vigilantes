@@ -8,12 +8,12 @@ import { ENDPOINTS } from "@gcVigilantes/utils";
 
 export type AttachmentLibraryProps = {
   uris: string[];
+  estatusVisita: string;
   handleClose: () => void;
   onDelete: (uri: string) => void;
 };
 
 export const AttachmentLibrary = (props: AttachmentLibraryProps) => {
-  console.log("uris =====>", props.uris);
   return (
     <ScrollView
       contentContainerStyle={{
@@ -28,18 +28,18 @@ export const AttachmentLibrary = (props: AttachmentLibraryProps) => {
             key={index}
             style={{
               padding: 10,
-              borderColor: app_colors.red,
-              borderWidth: 2,
               width: "50%",
               height: 200,
             }}
           >
-            <TouchableOpacity
-              style={styles.trashBin}
-              onPress={() => props.onDelete(uri)}
-            >
-              <Fontisto name="trash" size={24} color="black" />
-            </TouchableOpacity>
+            {props.estatusVisita.includes("Activa") && (
+              <TouchableOpacity
+                style={styles.trashBin}
+                onPress={() => props.onDelete(uri)}
+              >
+                <Fontisto name="trash" size={24} color={app_colors.red} />
+              </TouchableOpacity>
+            )}
             <Image
               source={{
                 uri: uri.includes("uploads")

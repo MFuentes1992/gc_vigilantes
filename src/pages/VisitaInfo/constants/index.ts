@@ -1,7 +1,10 @@
 import { TTipoIngreso } from "@gcVigilantes/store/TipoIngreso/types";
 import { TipoVisita } from "@gcVigilantes/store/TipoVisitas/types";
 import { Instalacion } from "@gcVigilantes/store/Vigilancia/types";
-import { VehiclesResType } from "@gcVigilantes/store/Visita/types";
+import {
+  VehiclesResType,
+  VisitaPeaton,
+} from "@gcVigilantes/store/Visita/types";
 import { app_colors } from "@gcVigilantes/utils/default.colors";
 import { ViewStyle } from "react-native";
 import { StyleSheet } from "react-native";
@@ -86,19 +89,11 @@ export type DateInfoProps = {
   handleOnChange: (key: string, value: string | number) => void;
 };
 
-export type VisitaPeaton = {
-  id: string;
-  idVisita: string;
-  nombre: string;
-  fechaRegistro: string;
-  fechaActualizacion: string;
-  estatusRegistro: number;
-};
-
 export type GuestInfoProps = {
   estatus: boolean;
   peatones: VisitaPeaton[];
   errorValidator: { [key: string]: { required: boolean } };
+  handleViewAttachment: (id: string) => void;
   handleOnChange: (key: string, value: VisitaPeaton[]) => void;
 };
 
