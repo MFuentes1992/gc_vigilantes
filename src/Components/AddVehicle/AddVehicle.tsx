@@ -106,7 +106,7 @@ export const AddVehicle = (props: AddVehicleProps) => {
         });
         formData.append("id", vehicleId);
         dispatch(setInnerSpinner(true));
-        fetch("https://apimovilgc.dasgalu.net/visita/attachments/index.php", {
+        fetch(`${ENDPOINTS.BASE_URL}/visita/attachments/index.php`, {
           method: "POST",
           body: formData,
           headers: {

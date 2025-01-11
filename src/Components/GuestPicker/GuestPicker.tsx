@@ -50,7 +50,7 @@ export const GuestPicker = ({
     if (estatus) {
       const tmp: VisitaPeaton = {
         id: Math.random().toString(36).substr(2, 9),
-        idVisita: "",
+        idVisita: Math.random().toString(36).substr(2, 9),
         nombre: "",
         fechaRegistro: new Date().toISOString(),
         fechaActualizacion: new Date().toISOString(),
