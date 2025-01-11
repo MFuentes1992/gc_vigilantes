@@ -6,7 +6,7 @@ import { card_styles } from "./constants";
 import { CardTitle } from "@gcVigilantes/Components/CardTitle/CardTitle";
 import { GuestPicker } from "@gcVigilantes/Components/GuestPicker/GuestPicker";
 import { GuestInfoProps } from "./constants";
-import { getLabelApp } from "@gcVigilantes/utils";
+import { ENDPOINTS, getLabelApp } from "@gcVigilantes/utils";
 import { addVehicleNotificationsStyles } from "@gcVigilantes/Components/AddVehicle/constants";
 import { launchImageLibrary } from "react-native-image-picker";
 import { AttachmentType } from "@gcVigilantes/store/Visita/types";
@@ -72,7 +72,7 @@ export const GuestInfo = ({
         });
         formData.append("id", pedestrianId);
         dispatch(setInnerSpinner(true));
-        fetch("https://apimovilgc.dasgalu.net/visita/attachments/index.php", {
+        fetch(`${ENDPOINTS.BASE_URL}/visita/attachments/index.php`, {
           method: "POST",
           body: formData,
           headers: {
