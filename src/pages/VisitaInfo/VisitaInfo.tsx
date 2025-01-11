@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, ScrollView } from "react-native";
+import { SafeAreaView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { getCatalogTipoVisitas } from "@gcVigilantes/store/TipoVisitas/api";
 import { RootState } from "@gcVigilantes/store";
 import { getCatalogTipoIngreso } from "@gcVigilantes/store/TipoIngreso/api";
 import { VisitaDetails } from "@gcVigilantes/Components/VisitaDetails/VisitaDetails";
-import { DATE_TYPES, SWITCHER_VALUES, TABS, VisitaPeaton } from "./constants";
+import { DATE_TYPES, SWITCHER_VALUES, TABS } from "./constants";
 import { MainInfo } from "./MainInfo";
 import { FormSaveButtons } from "@gcVigilantes/Components/FormSaveButtons/FormSaveButtons";
 import { DateInfo } from "./DateInfo";
@@ -365,7 +365,6 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                     if (["2"].includes(formValues?.idTipoIngreso))
                       payload.peatones = formValues?.peatones;
                     const formValid = validateForm(payload);
-
                     if (formValid.isValid) {
                       payload.vehiculos = JSON.stringify(payload?.vehiculos);
                       payload.peatones = JSON.stringify(payload?.peatones);
