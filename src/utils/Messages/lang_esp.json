@@ -32,5 +32,7 @@
   "app_screen_visit_info_cancel_button": "Cancelar",
   "app_screen_visit_info_cancel_button_back": "Regresar",
   "app_screen_visit_info_settings_autor": "Residente/Propietario:",
-  "app_screen_visit_info_settings_instalacion": "Instalación:"
+  "app_screen_visit_info_settings_instalacion": "Instalación:",
+  "app_screen_visit_info_error_invalid_initial_date": "La fecha actual no coincide con la fecha de entrada.",
+  "app_screen_visit_info_error_invalid_final_date": "La fecha actual no coincide con la fecha de salida."
 }

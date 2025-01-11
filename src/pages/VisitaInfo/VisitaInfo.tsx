@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { getCatalogTipoVisitas } from "@gcVigilantes/store/TipoVisitas/api";
 import { RootState } from "@gcVigilantes/store";
 import { getCatalogTipoIngreso } from "@gcVigilantes/store/TipoIngreso/api";
@@ -15,12 +14,13 @@ import { GuestInfo } from "./GuestInfo";
 import { SettingsInfo } from "./SettingsInfo";
 import {
   createVisita,
-  getVehicles,
   getVisitaByUniqueID,
-  logVisitaIngressEgress,
   updateVisita,
 } from "@gcVigilantes/store/Visita/api";
-import { VehiclesResType } from "@gcVigilantes/store/Visita/types";
+import {
+  AttachmentType,
+  VehiclesResType,
+} from "@gcVigilantes/store/Visita/types";
 import { setLoading } from "@gcVigilantes/store/UI";
 import {
   ENDPOINTS,
@@ -37,6 +37,13 @@ import { clearVisita } from "@gcVigilantes/store/Visita";
 import { setShowAlert } from "@gcVigilantes/store/Alerts";
 import { ALERT_TYPES } from "@gcVigilantes/Components/Alerts/constants";
 import { AddVehicle } from "@gcVigilantes/Components/AddVehicle/AddVehicle";
+import * as Animatable from "react-native-animatable";
+import {
+  slideInRight,
+  slideOutRight,
+  styles,
+} from "@gcVigilantes/Components/Filters/styles.default";
+import { AttachmentLibrary } from "@gcVigilantes/Components/AttachmentLibrary/AttachmentLibrary";
 
 export const VisitaInfo = ({ navigation, route }: any) => {
   const { uniqueID, uri, tabAction } = route?.params;
@@ -44,6 +51,12 @@ export const VisitaInfo = ({ navigation, route }: any) => {
   const { instalaciones } = useSelector((state: RootState) => state.vigilancia);
   const { id_caseta } = useSelector((state: RootState) => state.userData);
   const [tab, setTab] = useState<string>(TABS.MAIN);
+  const [attachmentDrawer, showAttachmentDrawer] = useState<boolean>(false);
+  const [currentAttachments, setCurrentAttachments] = useState<{
+    id: string;
+    type: string;
+    attachments: string[];
+  }>({ id: "", type: "", attachments: [] });
   const [errors, setErrors] = useState<{
     [key: string]: { required: boolean };
   }>({});
@@ -163,10 +176,48 @@ export const VisitaInfo = ({ navigation, route }: any) => {
     dispatch(setLoading(false));
   }, [visitaRedux]);
 
+  const handleViewAttachmentPedestrian = (id: string) => {
+    const pedestrian = formValues.peatones.find(
+      (p: VisitaPeaton) => p.id === id,
+    );
+    setCurrentAttachments({
+      id: id,
+      type: "peatones",
+      attachments:
+        pedestrian?.attachedFiles?.map((a: VisitaPeaton) => a.archivo) || [],
+    });
+    showAttachmentDrawer(true);
+  };
+
+  const handleDeleteAttachment = (id: string, uri: string, type: string) => {
+    const updatedAttachments = formValues[type].map((item: any) => {
+      if (item.id === id) {
+        const updatedFiles = item.attachedFiles.filter(
+          (file: AttachmentType) => file.archivo !== uri,
+        );
+        return { ...item, attachedFiles: updatedFiles };
+      }
+      return item;
+    });
+    setFormValues((prev) => ({
+      ...prev,
+      [type]: updatedAttachments,
+    }));
+    setCurrentAttachments((prev) => ({
+      ...prev,
+      attachments: prev.attachments.filter((a) => a !== uri),
+    }));
+  };
+
   return (
     <SafeAreaView>
       {(visitaRedux?.visitaId !== "" || [""].includes(uniqueID)) && (
-        <KeyboardAwareScrollView>
+        <KeyboardAwareScrollView
+          style={{
+            position: "relative",
+            height: "100%",
+          }}
+        >
           <VisitaDetails
             uri={!uri.includes("preview") ? uri : `${ENDPOINTS.QR}${uniqueID}`}
             autor={formValues?.autor || ""}
@@ -213,8 +264,10 @@ export const VisitaInfo = ({ navigation, route }: any) => {
             ["1"].includes(formValues?.idTipoIngreso) && (
               <AddVehicle
                 visitVehicles={formValues.vehicles}
+                uniqueId={uniqueID}
                 errorValidator={errors}
                 register={[""].includes(uniqueID)}
+                estatusVisita={formValues?.estatusVisita}
                 handleOnChange={(key: string, value: any) => {
                   setFormValues((prev) => {
                     const tmp = { ...prev };
@@ -232,7 +285,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               horaSalida={formValues?.fechaSalidaHora}
               dateTypeInput={formValues?.dateTypeInput}
               estatus={formValues?.estatusVisita}
-              edit={[""].includes(uniqueID)}
+              edit
               handleOnChange={handleOnChange}
             />
           )}
@@ -241,6 +294,7 @@ export const VisitaInfo = ({ navigation, route }: any) => {
               estatus={["Activa"].includes(formValues?.estatusVisita)}
               peatones={formValues?.peatones || []}
               errorValidator={errors}
+              handleViewAttachment={handleViewAttachmentPedestrian}
               handleOnChange={(key: string, value: any) => {
                 setFormValues((prev) => {
                   const tmp = { ...prev };
@@ -287,11 +341,6 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                 if ([TABS.SETTINGS].includes(tab)) {
                   // TODO: Update visita or create visita.
                   if ([""].includes(uniqueID)) {
-                    console.log({
-                      horaSalida: formValues?.fechaSalidaHora,
-                      horaEntrada: formValues?.fechaIngresoHora,
-                    });
-
                     const payload: {
                       [key: string]: string | number | Array<any>;
                     } = {
@@ -358,6 +407,37 @@ export const VisitaInfo = ({ navigation, route }: any) => {
                       peatones: JSON.stringify(formValues?.peatones),
                       id_caseta: formValues?.id_caseta,
                     };
+                    const now = new Date();
+                    const initialDate = new Date(payload.fechaIngreso);
+                    const endDate = new Date(payload.fechaSalida);
+                    if (now < initialDate) {
+                      dispatch(
+                        setShowAlert({
+                          showAlert: true,
+                          title: "Error",
+                          message: getLabelApp(
+                            preferences.language,
+                            "app_screen_visit_info_error_invalid_initial_date",
+                          ),
+                          type: ALERT_TYPES.ERROR,
+                        }) as any,
+                      );
+                      return;
+                    }
+                    if (now > endDate) {
+                      dispatch(
+                        setShowAlert({
+                          showAlert: true,
+                          title: "Error",
+                          message: getLabelApp(
+                            preferences.language,
+                            "app_screen_visit_info_error_invalid_final_date",
+                          ),
+                          type: ALERT_TYPES.ERROR,
+                        }) as any,
+                      );
+                      return;
+                    }
                     const formValid = validateForm(payload);
                     if (formValid.isValid) {
                       dispatch(
@@ -407,6 +487,24 @@ export const VisitaInfo = ({ navigation, route }: any) => {
           )}
         </KeyboardAwareScrollView>
       )}
+      <Animatable.View
+        animation={attachmentDrawer ? slideInRight : slideOutRight}
+        duration={500}
+        style={[styles.drawer, { bottom: -100 }]}
+      >
+        <AttachmentLibrary
+          uris={currentAttachments.attachments}
+          handleClose={() => showAttachmentDrawer(false)}
+          estatusVisita={formValues?.estatusVisita}
+          onDelete={(uri: string) => {
+            handleDeleteAttachment(
+              currentAttachments.id,
+              uri,
+              currentAttachments.type,
+            );
+          }}
+        />
+      </Animatable.View>
     </SafeAreaView>
   );
 };
